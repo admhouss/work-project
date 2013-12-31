@@ -1,0 +1,24 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	version="1.0">
+	<persistence-unit name="JpaPersistenceUnit" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+            <!-- <property name="hibernate.hbm2ddl.auto" value="create"/> -->
+			<property name="hibernate.show_sql" value="false"/>
+            <property name="hibernate.connection.characterEncoding" value="Cp1251"/>
+            <property name="hibernate.connection.charSet" value="Cp1251" />
+            <property name="hibernate.hbm2ddl.auto" value="create" />
+		</properties>
+	</persistence-unit>
+	<persistence-unit name="tothought-tutorial-test" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<properties>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create" />
+			<property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.connection.characterEncoding" value="Cp1251"/>
+            <property name="hibernate.connection.charSet" value="Cp1251" />
+		</properties>
+	</persistence-unit>
+</persistence>

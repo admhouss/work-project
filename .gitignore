@@ -1,0 +1,17 @@
+*.class
+logger.txt
+
+# SQL Model
+*.mwb
+
+# Maven
+target/
+
+# IDEA
+*.iml
+.idea/
+
+# Package Files #
+*.jar
+*.war
+*.ear

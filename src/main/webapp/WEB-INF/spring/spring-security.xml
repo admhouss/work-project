@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/security
+       http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <bean class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
+
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder">
+        <constructor-arg name="strength" value="256"/>
+    </bean>
+
+    <bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+        <property name="userPropertyToUse" value="username"/>
+    </bean>
+
+    <security:http auto-config="true" access-denied-page="/accessDenied">
+        <security:intercept-url pattern="/auth/**"
+                                access="ROLE_ADMINISTRATOR"/>
+        <security:form-login login-page="/login"
+                             default-target-url="/auth/order"
+                             always-use-default-target="true"
+                             authentication-failure-url="/loginFailed"/>
+        <security:logout invalidate-session="true"
+                         logout-success-url="/login"/>
+        <security:remember-me key="dinnersAppKey"
+                              token-validity-seconds="864000"
+                              user-service-ref="customUserDetailsService"/>
+    </security:http>
+
+    <bean id="customUserDetailsService" class="by.premia.olga.project.util.auth.CustomUserDetailsService"/>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="customUserDetailsService">
+            <security:password-encoder ref="passwordEncoder">
+                <security:salt-source ref="saltSource"/>
+            </security:password-encoder>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+</beans>
+
