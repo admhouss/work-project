@@ -8,8 +8,9 @@
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
-            classpath*:META-INF/application-context.xml
-            /WEB-INF/spring/spring-security.xml
+            /WEB-INF/config/application-context.xml
+            /WEB-INF/config/hibernate.xml
+            /WEB-INF/config/spring-security.xml
         </param-value>
     </context-param>
 
@@ -25,8 +26,9 @@
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>
-                classpath*:META-INF/application-context.xml
-                /WEB-INF/spring/appServlet/servlet-context.xml
+                <!--/WEB-INF/config/application-context.xml-->
+                <!--/WEB-INF/config/hibernate.xml-->
+                /WEB-INF/config/appServlet/servlet-context.xml
             </param-value>
         </init-param>
         <load-on-startup>1</load-on-startup>
@@ -45,4 +47,9 @@
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
+
+    <error-page>
+        <error-code>401</error-code>
+        <location>/error/401</location>
+    </error-page>
 </web-app>

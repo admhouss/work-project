@@ -19,7 +19,7 @@ public class User implements Serializable {
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "EMAIL", nullable = false, unique = true)
+    @Column(name = "LOGIN", nullable = false, unique = true)
     private String login;
 
     @Column(name = "PASSWORD_HASH", nullable = false)

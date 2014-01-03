@@ -18,17 +18,18 @@
     </bean>
 
     <security:http auto-config="true" access-denied-page="/accessDenied">
-        <security:intercept-url pattern="/auth/**"
-                                access="ROLE_ADMINISTRATOR"/>
-        <security:form-login login-page="/login"
-                             default-target-url="/auth/order"
-                             always-use-default-target="true"
-                             authentication-failure-url="/loginFailed"/>
+        <security:intercept-url pattern="/admin/**"
+                                access="ROLE_ADMINISTRATOR" />
+        <!--<security:form-login default-target-url="/admin/main"-->
+                             <!--always-use-default-target="true"-->
+                             <!--authentication-failure-url="/loginFailed"/>-->
         <security:logout invalidate-session="true"
-                         logout-success-url="/login"/>
+                         logout-success-url="/"/>
         <security:remember-me key="dinnersAppKey"
                               token-validity-seconds="864000"
                               user-service-ref="customUserDetailsService"/>
+        <security:http-basic/>
+
     </security:http>
 
     <bean id="customUserDetailsService" class="by.premia.olga.project.util.auth.CustomUserDetailsService"/>

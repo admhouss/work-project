@@ -2,59 +2,52 @@ package by.premia.olga.project.dao.impl;
 
 import by.premia.olga.project.dao.UserDAO;
 import by.premia.olga.project.entity.User;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import java.util.List;
 
 /**
  * @author vabramov
  */
-@Repository
 public class UserDaoImpl implements UserDAO {
 
-    private EntityManager entityManager;
+    private SessionFactory sessionFactory;
 
-    public EntityManager getEntityManager() {
-        return entityManager;
-    }
-
-    @PersistenceContext
-    @Qualifier(value = "entityManagerFactory")
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
     @Override
     @Transactional
     public void addUser(User newUser) {
-        entityManager.persist(newUser);
+        getSession().persist(newUser);
     }
 
     @Override
     @Transactional
     public void updateUser(User updatedUser) {
-        entityManager.refresh(updatedUser);
+        getSession().refresh(updatedUser);
     }
 
     @Override
     @Transactional(readOnly = true)
     public User getUserById(Integer id) {
-        return entityManager.find(User.class, id);
+        return (User) getSession().get(User.class, id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserByEmail(String email) {
-        Query query = entityManager.createQuery("from User user where user.login = :email");
-        query.setParameter("email", email);
+    public User getUserByLogin(String login) {
+        Query query = getSession().createQuery("from User user where user.login = :login");
+        query.setParameter("login", login);
 
         @SuppressWarnings("rawtypes")
-        List resultList = query.getResultList();
+        List resultList = query.list();
 
         return (resultList.isEmpty()) ? null : (User) resultList.get(0);
     }
@@ -65,7 +58,7 @@ public class UserDaoImpl implements UserDAO {
         User user = getUserById(id);
 
         if (user != null) {
-            entityManager.remove(user);
+            getSession().delete(user);
         }
     }
 
@@ -73,7 +66,11 @@ public class UserDaoImpl implements UserDAO {
     @Override
     @Transactional(readOnly = true)
     public List<User> getUsers() {
-        Query query = entityManager.createQuery("from User");
-        return (List<User>) query.getResultList();
+        Query query = getSession().createQuery("from User");
+        return (List<User>) query.list();
+    }
+
+    private Session getSession(){
+        return sessionFactory.getCurrentSession();
     }
 }

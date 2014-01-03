@@ -20,10 +20,8 @@ public class CustomUserDetailsService implements UserDetailsService {
     private UserDAO userDao;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String userEmail)
-            throws UsernameNotFoundException {
-        by.premia.olga.project.entity.User domainUser = userDao
-                .getUserByEmail(userEmail);
+    public CustomUserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+        by.premia.olga.project.entity.User domainUser = userDao.getUserByLogin(userEmail);
 
         if (domainUser == null) {
             throw new UsernameNotFoundException(userEmail);
