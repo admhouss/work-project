@@ -8,3 +8,5 @@ create table USERS (
   PASSWORD_HASH varchar(255) not null,
   USER_ROLE varchar(255) not null,
   primary key (ID));
+
+insert into USERS (FIRST_NAME, SECOND_NAME, LOGIN, PASSWORD_HASH, USER_ROLE) values (?, ?, ?, ?, ?)

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author vabramov
  */
-public interface UserDAO {
+public interface UserDao {
 
     void addUser(User newUser);
 

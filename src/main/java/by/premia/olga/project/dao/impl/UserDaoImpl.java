@@ -1,12 +1,10 @@
 package by.premia.olga.project.dao.impl;
 
-import by.premia.olga.project.dao.UserDAO;
+import by.premia.olga.project.dao.UserDao;
 import by.premia.olga.project.entity.User;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -14,7 +12,7 @@ import java.util.List;
 /**
  * @author vabramov
  */
-public class UserDaoImpl implements UserDAO {
+public class UserDaoImpl implements UserDao {
 
     private SessionFactory sessionFactory;
 
