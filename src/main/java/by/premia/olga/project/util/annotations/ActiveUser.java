@@ -5,6 +5,8 @@ import java.lang.annotation.*;
 /**
  * This annotation was made for retrieving registered users from Spring context.
  *
+ * @see java.security.Principal
+ *
  * @author Vlad Abramov
  */
 @Target(ElementType.PARAMETER)
