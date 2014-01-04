@@ -25,6 +25,7 @@
             <list>
                <value>
                    by.premia.olga.project.entity.User
+                   by.premia.olga.project.entity.Wheel
                </value>
             </list>
         </property>

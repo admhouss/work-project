@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/error")
-public class ExceptionController {
+public class ErrorsController {
 
     @RequestMapping("/401")
     private String error401(Exception e) {

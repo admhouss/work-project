@@ -18,14 +18,14 @@
     </bean>
 
     <security:http auto-config="true" access-denied-page="/accessDenied">
-        <security:intercept-url pattern="/admin/**"
+        <security:intercept-url pattern="/admin/editor/**"
                                 access="ROLE_ADMINISTRATOR" />
         <!--<security:form-login default-target-url="/admin/main"-->
                              <!--always-use-default-target="true"-->
                              <!--authentication-failure-url="/loginFailed"/>-->
         <security:logout invalidate-session="true"
                          logout-success-url="/"/>
-        <security:remember-me key="dinnersAppKey"
+        <security:remember-me key="olgaProjectAppKey"
                               token-validity-seconds="864000"
                               user-service-ref="customUserDetailsService"/>
         <security:http-basic/>
