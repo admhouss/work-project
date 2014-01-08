@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * @author vabramov
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/editor")
 public class AdminController {
 
 

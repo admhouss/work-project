@@ -1,3 +1,7 @@
+create schema `olga_base` default charset utf8;
+use `olga_base`;
+
+
 drop table if exists USERS;
 
 create table USERS (
