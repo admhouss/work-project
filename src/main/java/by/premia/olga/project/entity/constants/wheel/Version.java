@@ -1,9 +1,16 @@
 package by.premia.olga.project.entity.constants.wheel;
 
+import by.premia.olga.project.entity.constants.Const;
+
 /**
  * @author Vlad Abramov
  */
-public enum Version {
+public enum Version{
+    NAN {
+        {
+            type = "--";
+        }
+    },
     TUBELESS {
         {
             type = "Безкамерная";

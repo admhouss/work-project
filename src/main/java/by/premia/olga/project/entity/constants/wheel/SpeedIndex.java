@@ -4,7 +4,11 @@ package by.premia.olga.project.entity.constants.wheel;
  * @author Vlad Abramov
  */
 public enum SpeedIndex {
-
+    NAN {
+        {
+            maxSpeed = 0;
+        }
+    },
     A1 {
         {
             maxSpeed = 5;
