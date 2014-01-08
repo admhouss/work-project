@@ -1,5 +1,7 @@
 package by.premia.olga.project.controller;
 
+import by.premia.olga.project.entity.User;
+import by.premia.olga.project.util.annotations.ActiveUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,5 +19,10 @@ public class AdminController {
 
 
         return "hello";
+    }
+
+    @RequestMapping(value = "/new/wheel",method = RequestMethod.GET)
+    private String newWheel(@ActiveUser User user) {
+        return "";
     }
 }

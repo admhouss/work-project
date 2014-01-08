@@ -1,0 +1,37 @@
+.mpbanner{
+    margin: 7px 7px 0;
+    border: 5px #33968E solid;
+}
+.mpbanner:hover{
+    border: 5px #e4ad42 solid;
+}
+#mptopbannertext{
+    padding: 15px 7px 7px;
+    font-size: 1.3em;
+    font-weight: normal;
+    color: #01826E;
+    text-align: justify;
+}
+
+#mptopbannerheader, .mpleftbannerheader{
+    font-size: 1.2em;
+    font-weight: normal;
+    color: #01826E;
+}
+
+#mptopbannerheader{
+    padding: 0 25px 7px;
+    margin-left: 7px;
+    background-image: url("./images/mp_bullet.gif");
+    background-repeat: no-repeat;
+    background-position: 0 2px;
+}
+
+.mpleftbannerheader{
+    padding: 15px 22px 10px;
+    margin: 0;
+}
+
+#mptopbannerheader a, #mptopbannertext a, .mpleftbannerheader a{
+    text-decoration: none;
+}

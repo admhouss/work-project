@@ -1,0 +1,200 @@
+/************************************************
+*	^4 Navbar
+************************************************/
+#navbar {
+    position: relative;
+    top: 37px;
+    /*	width: 1024px;*/
+    margin: 0;
+    color: #FFFFFF;
+    padding: 0px;
+    height: 37px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
+
+#navbar .wrapper{
+    background-color: #6D6D6D;
+    background-image: url("./images/menu_bg.png");
+    height: 100%;
+    font-size: 15px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    border-radius: 0 0 5px 5px;
+}
+
+#navbar ul {/* меню */
+    float: left;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    height: 37px;
+}
+
+#navbar li {/* пункт меню */
+    float: left;
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    height: 100%;
+}
+
+#navbar li a{
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin: 0px;
+    padding: 10px 15px;
+}
+#navbar li a, #navbar li a:link, #navbar li a:visited {/* ссылка внутри пункта меню */
+    color: #FFFFFF;
+    display: block;
+    text-decoration:none;
+    background-image: url("./images/menu_sep.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+
+#navbar li a:hover, #navbar li a:active {/* ссылка внутри пункта меню при наведении*/
+
+}
+
+#navbar li li{/* подпункт меню */
+    height: auto;
+}
+
+#navbar li li a, #navbar li li a:link, #navbar li li a:visited {/* ссылка внутри подпункта меню */
+    background-color: #515151;
+    background-image: none;
+    /*	width: 150px;*/
+    color: #ffffff;
+    font-weight: normal;
+    text-transform: none;
+    float: none;
+    border-bottom: 1px solid #3A4139;
+    border-left: 1px solid #3A4139;
+    border-right: 1px solid #3A4139;
+    /*	height: auto;*/
+}
+#navbar li li a:hover, #navbar li li a:active {/* ссылка внутри подпункта меню при наведении*/
+    background-image: url("./images/menu_bg.png");
+    background-repeat: repeat-x;
+    /*	height: auto;*/
+}
+
+#navbar li ul {/* подменю */
+    z-index: 9999;
+    position: absolute;
+    left: -999em;
+    /*	height: auto;*/
+    width: 160px;
+    margin: 0px;
+    padding: 0px;
+}
+
+#navbar li ul a { /* ссылка в подменю */
+    width: 150px;
+}
+
+#navbar li ul ul { /* под-подменю */
+    margin: -25px 0 0 151px;
+    -moz-border-radius: 0 5px 5px 5px;
+    -webkit-border-radius: 0 5px 5px 5px;
+    border-radius: 0 5px 5px 5px;
+}
+
+#navbar li:hover ul ul, #navbar li:hover ul ul ul, #navbar li.sfhover1 ul ul, #navbar li.sfhover1 ul ul ul { /* прячем под-подменю */
+    left: -999em;
+}
+
+#navbar li:hover ul, #navbar li li:hover ul, #navbar li li li:hover ul, #navbar li.sfhover1 ul, #navbar li li.sfhover1 ul, #navbar li li li.sfhover1 ul {
+    /* показываем подеменю */
+    left: auto;
+}
+
+#navbar li:hover, #navbar li.sfhover { /* текущий пункт меню при наведеении */
+    position: static;
+}
+
+#navbar li.current-menu-item a, #navbar li.current-menu-item a:visited {/* пункт меню текущей страницы*/
+
+}
+#navbar li.menu-item-2066 a{color:#e4ad42;font-size: 17px;font-weight: bold;} /*Выделяем слово АКЦИИ КРАСНЫМ*/
+
+/************************************************
+*	^5 SideNavbar
+************************************************/
+#sidemenu { /* само меню */
+    font-size: 1.0em;
+    font-weight: bold;
+    margin: 0 0 0px;
+    padding: 15px 20px 15px;
+    border-bottom: 1px #e5e5e5 solid;
+}
+
+#sidemenu .wrapper{ /* враппер */
+}
+
+#sidemenu ul { /* 1-уровень меню */
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+#sidemenu * li { /* пункт меню */
+    list-style: none;
+    margin: 7px 0 0;
+    padding: 7px 0 0 ;
+    border-top: 1px #e5e5e5 solid;
+}
+#sidemenu li:first-child{
+    margin: 0;
+    padding: 0 ;
+    border-top: none;
+}
+
+#sidemenu li a, #sidemenu li a:link, #sidemenu li a:visited {  /* ссылка пункта меню */
+    text-decoration:none;
+}
+
+#sidemenu li a:hover, #sidemenu li a:active {  /* ссылка пункта меню при наведении */
+}
+
+#sidemenu li li a, #sidemenu li li a:link, #sidemenu li li a:visited {  /* ссылка пункта подменю */
+
+}
+
+#sidemenu li li a:hover, #sidemenu li li a:active {  /* ссылка пункта подменю при наведении */
+
+}
+
+#sidemenu li ul {  /* подменю */
+    margin: 7px 0 0 40px;
+    padding-top: 7px;
+    border-top: 1px #e5e5e5 solid;
+    display: none;
+}
+li.current-menu-ancestor > ul, li.current-menu-item > ul{
+    display: block !important;
+}
+
+#sidemenu li ul a { /* ссылка пункта подменю */
+}
+
+#sidemenu li ul ul {/* подменю 3 уровня*/
+}
+
+#sidemenu li:hover ul ul, #sidemenu li:hover ul ul ul, #sidemenu li.sfhover1 ul ul, #sidemenu li.sfhover1 ul ul ul {
+    /* прячем под-подменю */
+}
+
+#sidemenu li:hover ul, #sidemenu li li:hover ul, #sidemenu li li li:hover ul, #sidemenu li.sfhover1 ul, #sidemenu li li.sfhover1 ul, #sidemenu li li li.sfhover1 ul {
+    /* показываем под-подменю */
+}
+
+#sidemenu li:hover, #sidemenu li.sfhover { /* текущий пункт меню при наведеении */
+}
+#sidemenu li.current-menu-item > a, #sidemenu li.current-menu-item > a:visited {/* пункт меню текущей страницы*/
+    color:#e4ad42
+}

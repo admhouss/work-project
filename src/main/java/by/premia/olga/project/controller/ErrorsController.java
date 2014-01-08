@@ -1,17 +1,19 @@
 package by.premia.olga.project.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author vabramov
  */
 @Controller
-@RequestMapping("/error")
 public class ErrorsController {
 
-    @RequestMapping("/401")
-    private String error401(Exception e) {
-        return "error";
+    @RequestMapping("/error")
+    private String errorHandle(ModelMap model, @RequestParam int code) {
+        model.put("error", code);
+        return "errorPage";
     }
 }

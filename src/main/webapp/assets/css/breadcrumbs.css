@@ -1,0 +1,23 @@
+.breadcrumbs{
+    color:  #e4ad42;
+    font-weight: bold;
+    margin: 0 10px 0;
+    padding-bottom: 15px;
+    font-size: 1.0em;
+    border-bottom: 1px #e5e5e5 solid;
+}
+
+.breadcrumbs a{
+    color:  #008274;
+    text-decoration: none;
+}
+
+.breadcrumbs a:hover{
+    color:  #e4ad42;
+}
+
+.breadcrumbs .bcseparator{
+    color:  #008274;
+    padding: 0 7px;
+}
+

@@ -1,7 +1,5 @@
 package by.premia.olga.project.entity.constants.wheel;
 
-import by.premia.olga.project.entity.constants.Const;
-
 /**
  * @author Vlad Abramov
  */

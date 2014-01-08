@@ -50,6 +50,10 @@
 
     <error-page>
         <error-code>401</error-code>
-        <location>/error/401</location>
+        <location>/error?code=401</location>
+    </error-page>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error?code=404</location>
     </error-page>
 </web-app>

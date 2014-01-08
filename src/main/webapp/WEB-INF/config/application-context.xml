@@ -19,7 +19,7 @@
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames" value="classpath:messages"/>
+        <property name="basenames" value="/WEB-INF/config/messages"/>
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 

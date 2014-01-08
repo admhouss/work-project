@@ -3,7 +3,9 @@ package by.premia.olga.project.util.auth;
 import by.premia.olga.project.entity.User;
 import by.premia.olga.project.util.annotations.ActiveUser;
 import org.springframework.core.MethodParameter;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -32,7 +34,13 @@ public class CustomUserDetailsMethodArgumentResolver implements HandlerMethodArg
                                   WebDataBinderFactory webDataBinderFactory) throws Exception {
         if (this.supportsParameter(methodParameter)) {
             Principal principal = nativeWebRequest.getUserPrincipal();
-            return ((CustomUserDetails) ((Authentication) principal).getPrincipal()).getUser();
+            UserRole role = methodParameter.getMethodAnnotation(ActiveUser.class).withRole();
+            CustomUserDetails userDetails = (CustomUserDetails) ((Authentication) principal).getPrincipal();
+            if (userDetails.getAuthorities().contains(new GrantedAuthorityImpl(role.toString()))) {
+                return userDetails.getUser();
+            } else {
+                throw new AccessDeniedException("Access is denied");
+            }
         } else {
             return WebArgumentResolver.UNRESOLVED;
         }

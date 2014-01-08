@@ -23,6 +23,14 @@
 	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<beans:property name="prefix" value="/WEB-INF/pages/" />
 		<beans:property name="suffix" value=".jsp" />
+
+        <beans:property name="alwaysInclude" value="true"/>
+        <beans:property name="contentType" value="text/html; charset=UTF-8"/>
+        <beans:property name="exposedContextBeanNames">
+            <beans:list>
+                <beans:value>properties</beans:value>
+            </beans:list>
+        </beans:property>
 	</beans:bean>
 
     <context:component-scan base-package="by.premia.olga.project">

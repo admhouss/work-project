@@ -1,5 +1,7 @@
 package by.premia.olga.project.util.annotations;
 
+import by.premia.olga.project.util.auth.UserRole;
+
 import java.lang.annotation.*;
 
 /**
@@ -13,4 +15,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ActiveUser {
+
+    UserRole withRole() default UserRole.ROLE_ADMINISTRATOR;
 }

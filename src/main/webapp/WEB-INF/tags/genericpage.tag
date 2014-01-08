@@ -1,0 +1,25 @@
+<%@tag description="The generic page template. Uses bootstrap, jquery and navbar"
+       pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
+
+<%@attribute name="scripts" fragment="true"%>
+<%@attribute name="head" fragment="true"%>
+
+<c:set var="contextPath" value="${pageContext.request.contextPath}" scope="application"/>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <t:defaulthead />
+        <jsp:invoke fragment="head"/>
+    </head>
+    <body>
+        <c:if test="${empty param.internal or empty param.error}">
+            <t:navbar />
+        </c:if>
+        <jsp:doBody />
+        <t:defaultscripts />
+        <jsp:invoke fragment="scripts"/>
+    </body>
+</html>
