@@ -19,7 +19,7 @@
 
     <security:http auto-config="true" access-denied-page="/accessDenied">
         <security:intercept-url pattern="/admin/editor/**"
-                                access="ROLE_ADMINISTRATOR" />
+                                access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
         <!--<security:form-login default-target-url="/admin/main"-->
                              <!--always-use-default-target="true"-->
                              <!--authentication-failure-url="/loginFailed"/>-->
