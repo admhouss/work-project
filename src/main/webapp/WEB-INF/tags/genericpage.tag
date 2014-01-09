@@ -15,7 +15,7 @@
         <jsp:invoke fragment="head"/>
     </head>
     <body>
-        <c:if test="${empty param.internal or empty param.error}">
+        <c:if test="${empty param.nonav}">
             <t:navbar />
         </c:if>
         <jsp:doBody />
