@@ -25,9 +25,10 @@
     <div id="myNav" class="navbar">
         <div class="navbar-inner">
             <ul class="nav">
-                <li id="navHome"><a href="${contextPath}/show?c=all"><spring:message code="navbar.all"/></a></li>
-                <li id="navHome"><a href="${contextPath}/show?c=wheels&m=all"><spring:message code="navbar.wheels"/></a></li>
-                <li id="navMenu"><a href="${contextPath}/show?c=accumulators&m=all"><spring:message code="navbar.accumulator"/></a></li>
+                <li id="navAll"><a href="${contextPath}/show?c=all"><spring:message code="navbar.all"/></a></li>
+                <li id="navWheels"><a href="${contextPath}/show?c=wheels&m=all"><spring:message code="navbar.wheels"/></a></li>
+                <li id="navAccumulators"><a href="${contextPath}/show?c=accumulators&m=all"><spring:message code="navbar.accumulators"/></a></li>
+                <li id="navRadiators"><a href="${contextPath}/show?c=radiators&m=all"><spring:message code="navbar.radiators"/></a></li>
 
                 <%--<sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">--%>
                     <%--<li id="navUsers"><a href="${contextPath}/users">--%>
@@ -53,7 +54,7 @@
                 <%--</sec:authorize>--%>
             </ul>
             <form class="navbar-search pull-right" action="${contextPath}/search/light" method="get">
-                <input type="text" class="search-query" name="" placeholder="Поиск по продукции">
+                <input type="text" class="search-query" name="searchText" placeholder="Поиск по продукции">
             </form>
         </div>
     </div>
