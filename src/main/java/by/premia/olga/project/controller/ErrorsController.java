@@ -1,5 +1,6 @@
 package by.premia.olga.project.controller;
 
+import by.premia.olga.project.util.Pages;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +15,6 @@ public class ErrorsController {
     @RequestMapping("/error")
     private String errorHandle(ModelMap model, @RequestParam int code) {
         model.put("error", code);
-        return "errorPage";
+        return Pages.ERROR_PAGE;
     }
 }

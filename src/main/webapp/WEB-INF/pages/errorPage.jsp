@@ -14,7 +14,7 @@
     <jsp:body>
         <div style="margin-top: 70px">
             <div class="container">
-                <img src="${contextPath}/image/error?code=${error}" alt="Ошибка ${error}" >
+                <img src="${contextPath}/image/errors/${error}" alt="Ошибка ${error}" >
             </div>
         </div>
 
