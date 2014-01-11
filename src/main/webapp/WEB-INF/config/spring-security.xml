@@ -17,12 +17,9 @@
         <property name="userPropertyToUse" value="username"/>
     </bean>
 
-    <security:http auto-config="true" access-denied-page="/accessDenied">
+    <security:http auto-config="true">
         <security:intercept-url pattern="/admin**"
                                 access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
-        <!--<security:form-login default-target-url="/admin/main"-->
-                             <!--always-use-default-target="true"-->
-                             <!--authentication-failure-url="/loginFailed"/>-->
         <security:logout invalidate-session="true"
                          logout-success-url="/"/>
         <security:remember-me key="olgaProjectAppKey"
@@ -32,7 +29,7 @@
 
     </security:http>
 
-    <bean id="customUserDetailsService" class="by.premia.olga.project.util.auth.CustomUserDetailsService"/>
+    <bean id="customUserDetailsService" class="by.premiya.olga.project.util.auth.CustomUserDetailsService"/>
 
     <security:authentication-manager>
         <security:authentication-provider user-service-ref="customUserDetailsService">

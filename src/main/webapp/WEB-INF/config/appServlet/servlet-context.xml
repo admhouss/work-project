@@ -10,9 +10,9 @@
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
 	<!-- Enables the Spring MVC @Controller programming model -->
-	<annotation-driven>
-        <argument-resolvers>
-            <beans:bean class="by.premia.olga.project.util.auth.CustomUserDetailsMethodArgumentResolver"/>
+	<annotation-driven >
+        <argument-resolvers >
+            <beans:bean class="by.premiya.olga.project.util.auth.CustomUserDetailsMethodArgumentResolver"/>
         </argument-resolvers>
     </annotation-driven>
 
@@ -33,7 +33,7 @@
         </beans:property>
 	</beans:bean>
 
-    <context:component-scan base-package="by.premia.olga.project">
+    <context:component-scan base-package="by.premiya.olga.project">
         <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
     </context:component-scan>
 

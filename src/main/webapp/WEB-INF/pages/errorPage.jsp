@@ -5,7 +5,7 @@
 <t:genericpage>
 
     <jsp:attribute name="head">
-        <title><spring:message code="title.error.${error}"/></title>
+        <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.error.${error}"/></title>
     </jsp:attribute>
 
     <jsp:attribute name="scripts">

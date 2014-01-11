@@ -23,13 +23,13 @@
         </property>
         <property name="annotatedClasses">
             <list>
-               <value>by.premia.olga.project.entity.User</value>
-               <value>by.premia.olga.project.entity.Wheel</value>
+               <value>by.premiya.olga.project.entity.User</value>
+               <value>by.premiya.olga.project.entity.Wheel</value>
             </list>
         </property>
     </bean>
 
-    <bean id="userDao" class="by.premia.olga.project.dao.impl.UserDaoImpl">
+    <bean id="userDao" class="by.premiya.olga.project.dao.impl.UserDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
