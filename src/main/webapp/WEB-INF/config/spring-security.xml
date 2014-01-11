@@ -17,9 +17,8 @@
         <property name="userPropertyToUse" value="username"/>
     </bean>
 
-    <!--<security:http auto-config="true" access-denied-page="/accessDenied">-->
-    <security:http auto-config="true">
-        <security:intercept-url pattern="/admin/**"
+    <security:http auto-config="true" access-denied-page="/accessDenied">
+        <security:intercept-url pattern="/admin**"
                                 access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
         <!--<security:form-login default-target-url="/admin/main"-->
                              <!--always-use-default-target="true"-->
