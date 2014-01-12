@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author vabramov
  */
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/auth/administration")
 public class AdminController {
 
     @Autowired
@@ -27,26 +30,23 @@ public class AdminController {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;
     }
 
-    @RequestMapping(value = "editor", method = RequestMethod.GET)
-    private String adminEditor(@ActiveUser User user, ModelMap model) {
-        model.put("userId", user.getId());
-        model.put("userFullName", user.getFullName());
-        return Pages.HOME_PAGE;
-    }
-
-    @RequestMapping(value = "new/wheel", method = RequestMethod.GET)
-    private String newWheel(@ActiveUser User user) {
-        return "";
-    }
-
     @RequestMapping(value = "users", method = RequestMethod.GET)
     private String users(ModelMap model) {
-        userService.getAllUsers();
+        model.addAttribute(userService.getAllUsers());
         return Pages.USERS_PAGE;
     }
 
-    @RequestMapping(value = "/user/edit/{userLogin}", method = RequestMethod.GET)
-    private String editUserPage(ModelMap model, @PathVariable String userLogin, @ActiveUser(withRole = UserRole.ROLE_SUPERVISOR) User curUser) {
+    @RequestMapping(value = "/users/edit/{userLogin}", method = RequestMethod.GET)
+    private String editUserPage(ModelMap model, @PathVariable String userLogin, @ActiveUser(UserRole.ROLE_SUPERVISOR) User curUser) {
+        if (userLogin.equals(curUser.getLogin())) {
+            model.put("user", curUser);
+        } else {
+            model.put("user", userService.getByLogin(userLogin));
+        }
+        return Pages.PROFILE_PAGE;
+    }
+    @RequestMapping(value = "/users/do/edit/", method = RequestMethod.GET)
+    private String editActionUserPage(ModelMap model, @PathVariable String userLogin, @ActiveUser(UserRole.ROLE_SUPERVISOR) User curUser) {
         if (userLogin.equals(curUser.getLogin())) {
             model.put("user", curUser);
         } else {

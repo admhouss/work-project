@@ -23,9 +23,6 @@
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
-    <bean id="webexpressionHandler"
-          class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler"/>
-
     <bean id="properties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location">
             <value>/WEB-INF/config/database.properties</value>

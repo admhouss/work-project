@@ -16,5 +16,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface ActiveUser {
 
-    UserRole withRole() default UserRole.ROLE_ADMINISTRATOR;
+    UserRole value() default UserRole.ROLE_ADMINISTRATOR;
 }

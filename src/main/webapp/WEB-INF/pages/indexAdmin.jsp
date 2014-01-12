@@ -4,14 +4,14 @@
 <%--<%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>--%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:genericpage>
+<t:adminGenericPage>
 
     <jsp:attribute name="head">
         <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.index"/></title>
     </jsp:attribute>
 
     <jsp:attribute name="scripts">
-        <script type="text/javascript">
+        <script>
         </script>
     </jsp:attribute>
 
@@ -104,4 +104,4 @@
         <%--</div>--%>
     </jsp:body>
 
-</t:genericpage>
+</t:adminGenericPage>

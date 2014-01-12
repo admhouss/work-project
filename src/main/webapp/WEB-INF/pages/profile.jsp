@@ -4,80 +4,116 @@
 <%--<%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>--%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:genericpage>
+<t:adminGenericPage>
 
     <jsp:attribute name="head">
         <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.users"/></title>
     </jsp:attribute>
 
-    <jsp:attribute name="scripts">
+   <jsp:attribute name="scripts">
         <script type="text/javascript">
-            //            $("#navUsers").addClass("active");
-            $(function() {
-                $('[data-toggle="tooltip"]').tooltip({'placement': 'top'});
-                $(".userInfo").click(function(e) {
-                    e.preventDefault();
-                    var userId = $(this).attr("id");
-                    openModal(userId);
-                });
-            });
-            function openModal(userId) {
-                var frame = $(".modal-body").children('iframe');
-                frame.attr('src','${contextPath}/user/'+userId+"?internal=true");
-                $("#editModal").modal("show");
-                frame.load(function() {
-                    frame.contents().find('.btn').hide();
-                    var form = frame.contents().find('.form-horizontal');
-                    $('.btn-primary').click(function () {
-                        form.find('.btn').trigger('click');
-                    });
-                });
-
+            var doRegistration = true;
+            function nameCheck() {
+                var firstNameStr = $('#inputFirstName').val();
+                var lastNameStr = $('#inputLastName').val();
+                var loginStr = $('#inputLogin').val();
+                if (firstNameStr.length == 0 ||
+                        lastNameStr.length == 0 ||
+                        loginStr.length == 0) {
+                    $('#error').removeClass("hidden");
+                    doRegistration &= false;
+                } else {
+                    $('#error').addClass("hidden");
+                    doRegistration &= true;
+                }
+            }
+            function validate() {
+                doRegistration = true;
+                nameCheck();
+                postCheck();
+                if (doRegistration) {
+                    var form = $('.form-horizontal');
+                    $.post(form.attr('action'),form.serialize())
+                            .done(function() {
+                                $('#success').removeClass("hidden");
+                            });
+                }
             }
         </script>
     </jsp:attribute>
 
     <jsp:body>
-        profile
-        <%--<div class="container">--%>
-            <%--<c:set var="passInfo"><spring:message code="users.table.tooltip"/></c:set>--%>
-            <%--<table class="table table-striped" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="${passInfo}">--%>
-                <%--<tr>--%>
-                    <%--<th><spring:message code="users.table.number"/></th>--%>
-                    <%--<th><spring:message code="users.table.login"/></th>--%>
-                    <%--<th><spring:message code="users.table.name"/></th>--%>
-                <%--</tr>--%>
-                <%--<c:forEach var="curUser" items="${users}" varStatus="st">--%>
-                    <%--&lt;%&ndash;<joda:format var="joinDate" value="${curUser.joinDate}" pattern="dd-MM-yyyy"/>&ndash;%&gt;--%>
-                    <%--<tr id="${curUser.id}" class="userInfo">--%>
-                        <%--<td>${st.index+1}</td>--%>
-                        <%--<td>${curUser.login}</td>--%>
-                        <%--<td>${curUser.fullName}</td>--%>
-                        <%--<td><spring:message code="${curUser.post}"/></td>--%>
-                    <%--</tr>--%>
-                <%--</c:forEach>--%>
-            <%--</table>--%>
-            <%--<!-- Modal -->--%>
-            <%--<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">--%>
-                <%--<div class="modal-dialog">--%>
-                    <%--<div class="modal-content">--%>
-                        <%--<div class="modal-header">--%>
-                            <%--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>--%>
-                            <%--<h3 id="myModalLabel"><spring:message code="users.table.edit"/></h3>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-body">--%>
-                            <%--<iframe src="" frameborder="0" height="500" width="99.6%"></iframe>--%>
-                        <%--</div>--%>
-                        <%--<div class="modal-footer">--%>
-                            <%--<button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="users.table.modal.close"/></button>--%>
-                            <%--<button class="btn btn-primary"><spring:message code="users.table.modal.save"/></button>--%>
-                        <%--</div>--%>
-                    <%--</div>--%>
-                    <%--<!-- /.modal-content -->--%>
-                <%--</div>--%>
-                <%--<!-- /.modal-dialog -->--%>
-            <%--</div>--%>
-        <%--</div>--%>
+        <c:if test="${empty param.nonav}">
+            <%--<div class="offset3 span6">--%>
+            <div class="container">
+        </c:if>
+
+        <form class="form-horizontal" role="form" action="${contextPath}/auth/administration/users/do/edit/" method="post">
+            <c:set var="loginPH"><spring:message code="edit.login"/></c:set>
+            <c:set var="firstNamePH"><spring:message code="edit.firstName"/></c:set>
+            <c:set var="lastNamePH"><spring:message code="edit.lastName"/></c:set>
+            <c:set var="passwordPH"><spring:message code="edit.password"/></c:set>
+
+            <div class="control-group">
+                <label for="inputFirstName" class="control-label">${firstNamePH}</label>
+
+                <div class="controls">
+                    <input type="text" value="${user.firstName}" class="form-control" id="inputFirstName"
+                           placeholder="${firstNamePH}" name="userFirstName" required="true">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="inputLastName" class="control-label">${lastNamePH}</label>
+
+                <div class="controls">
+                    <input type="text" value="${user.lastName}" class="form-control" id="inputLastName" placeholder="${lastNamePH}" name="userLastName" required="true">
+                </div>
+            </div>
+            <div class="control-group">
+                <label for="inputLogin" class="control-label">${loginPH}</label>
+
+                <div class="controls">
+                    <input type="text" value="${user.login}" class="form-control" id="inputLogin" placeholder="${loginPH}" name="userLogin" required="true">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="inputPassword3" class="control-label">${passwordPH}</label>
+
+                <div class="controls">
+                    <c:set var="passInfo"><spring:message code="edit.passInfo"/></c:set>
+                    <input type="password" class="form-control" id="inputPassword3" placeholder="${passwordPH}" name="userPassword"
+                           data-toggle="tooltip" data-placement="top" title="" data-original-title="${passInfo}">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class=" controls">
+                    <button type="button" class="btn btn-default" onclick="validate()"><spring:message code="edit.submit"/></button>
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <div class="row">
+                        <div class="alert alert-danger hidden" id="error">
+                            <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="alert alert-danger hidden" id="errorPost">
+                            <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.post"/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="alert alert-success hidden" id="success">
+                            <spring:message code="edit.submit.success"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <c:if test="${empty param.nonav}">
+            </div>
+        </c:if>
     </jsp:body>
 
-</t:genericpage>
+</t:adminGenericPage>

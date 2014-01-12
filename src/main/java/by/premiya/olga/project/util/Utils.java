@@ -5,9 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 /**
  * @author vabramov
@@ -38,5 +41,25 @@ public final class Utils {
             logger.error("Default image \'" + url + "\' not send");
         }
         return false;
+    }
+
+    public static boolean hasLogOutCookie(HttpServletRequest req) {
+        for (Cookie cookie : req.getCookies()) {
+            if (cookie.getName().equals("loc")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void sendBasicAuthentication(HttpServletRequest request, HttpServletResponse response) {
+        response.addHeader("Access-Control-Allow-Origin", "null");
+        response.addHeader("WWW-Authenticate", "Basic realm=\"Olga Project\"");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("loc")) {
+                cookie.setMaxAge(0);
+            }
+        }
     }
 }

@@ -1,13 +1,11 @@
 package by.premiya.olga.project.util.auth;
 
 import by.premiya.olga.project.entity.User;
-import by.premiya.olga.project.service.UserService;
 import by.premiya.olga.project.util.annotations.ActiveUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -23,9 +21,6 @@ import java.security.Principal;
  */
 @Component
 public class CustomUserDetailsMethodArgumentResolver implements HandlerMethodArgumentResolver {
-
-    @Autowired
-    private UserService userService;
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
@@ -45,10 +40,12 @@ public class CustomUserDetailsMethodArgumentResolver implements HandlerMethodArg
         return WebArgumentResolver.UNRESOLVED;
     }
 
-    private User resolveActiveUserArgument(MethodParameter methodParameter, NativeWebRequest nativeWebRequest) {
-        UserRole role = methodParameter.getParameterAnnotation(ActiveUser.class).withRole();
+    private Object resolveActiveUserArgument(MethodParameter methodParameter, NativeWebRequest nativeWebRequest) {
+        UserRole role = methodParameter.getParameterAnnotation(ActiveUser.class).value();
         CustomUserDetails userDetails = getUserDetails(nativeWebRequest);
-        if (userDetails.getAuthorities().contains(new GrantedAuthorityImpl(role.toString()))) {
+        if (userDetails == null)
+            return WebArgumentResolver.UNRESOLVED;
+        if (userDetails.getAuthorities().contains(new SimpleGrantedAuthority(role.toString()))) {
             return userDetails.getUser();
         } else {
             throw new AccessDeniedException("Access is denied");

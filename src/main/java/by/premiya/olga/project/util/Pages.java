@@ -10,6 +10,8 @@ public final class Pages {
     public static final String REDIRECT = "redirect:/";
     public static final String PROFILE_PAGE = "profile";
     public static final String ERROR_PAGE = "errorPage";
+    public static final String ADMIN_HOME_PAGE = "indexAdmin";
+    public static final String LOGIN_PAGE = "loginPage";
 
     private Pages() {
 

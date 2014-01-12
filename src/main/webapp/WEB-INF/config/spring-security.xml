@@ -17,21 +17,48 @@
         <property name="userPropertyToUse" value="username"/>
     </bean>
 
-    <security:http auto-config="true">
-        <security:intercept-url pattern="/admin**"
-                                access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
+    <security:http create-session="stateless" auto-config="true" entry-point-ref="basicEntryPoint">
+        <security:intercept-url pattern="/auth/administration/users**" access="ROLE_SUPERVISOR" />
+        <security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
+        <!--<security:form-login login-page="/auth/login"-->
+                             <!--default-target-url="/auth/administration/editor"-->
+                             <!--always-use-default-target="true"-->
+                             <!--username-parameter="login"-->
+                             <!--password-parameter="password"-->
+                             <!--login-processing-url="/login_check"/>-->
         <security:logout invalidate-session="true"
-                         logout-success-url="/"/>
+                         logout-success-url="/?act=logout" delete-cookies="JSESSIONID"/>
         <security:remember-me key="olgaProjectAppKey"
                               token-validity-seconds="864000"
-                              user-service-ref="customUserDetailsService"/>
-        <security:http-basic/>
-
+                              user-service-ref="customUserDetailsService" use-secure-cookie="true"/>
+        <!--<security:http-basic/>-->
+        <security:custom-filter ref="basicFilter" after="BASIC_AUTH_FILTER" />
     </security:http>
+
+    <bean id="digestFilter"
+                class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">
+        <property name="userDetailsService" ref="customUserDetailsService" />
+        <property name="authenticationEntryPoint" ref="digestEntryPoint" />
+    </bean>
+    <bean id="digestEntryPoint"
+                class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">
+        <property name="realmName" value="Olga Project" />
+        <property name="key" value="olgaProjectAppKey" />
+    </bean>
+
+    <bean id="basicFilter"
+                class="by.premiya.olga.project.util.auth.CustomBasicAuthenticationFilter">
+        <constructor-arg name="authenticationManager" ref="authenticationManager" />
+        <constructor-arg name="authenticationEntryPoint" ref="basicEntryPoint" />
+    </bean>
+    <bean id="basicEntryPoint"
+                class="by.premiya.olga.project.util.auth.PlainTextBasicAuthenticationEntryPoint">
+        <property name="realmName" value="Olga Project" />
+    </bean>
 
     <bean id="customUserDetailsService" class="by.premiya.olga.project.util.auth.CustomUserDetailsService"/>
 
-    <security:authentication-manager>
+    <security:authentication-manager alias="authenticationManager" erase-credentials="true">
         <security:authentication-provider user-service-ref="customUserDetailsService">
             <security:password-encoder ref="passwordEncoder">
                 <security:salt-source ref="saltSource"/>

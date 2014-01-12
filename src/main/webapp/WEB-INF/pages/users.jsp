@@ -4,7 +4,7 @@
 <%--<%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>--%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:genericpage>
+<t:adminGenericPage>
 
     <jsp:attribute name="head">
         <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.users"/></title>
@@ -39,7 +39,6 @@
 
     <jsp:body>
         <div class="container">
-            <c:set var="passInfo"><spring:message code="users.table.tooltip"/></c:set>
             <table class="table table-striped" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="${passInfo}">
                 <tr>
                     <th><spring:message code="users.table.number"/></th>
@@ -52,7 +51,6 @@
                         <td>${st.index+1}</td>
                         <td>${curUser.login}</td>
                         <td>${curUser.fullName}</td>
-                        <td><spring:message code="${curUser.post}"/></td>
                     </tr>
                 </c:forEach>
             </table>
@@ -62,14 +60,14 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h3 id="myModalLabel"><spring:message code="users.table.edit"/></h3>
+                            <%--<h3 id="myModalLabel"><spring:message code="users.table.edit"/></h3>--%>
                         </div>
                         <div class="modal-body">
                             <iframe src="" frameborder="0" height="500" width="99.6%"></iframe>
                         </div>
                         <div class="modal-footer">
-                            <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="users.table.modal.close"/></button>
-                            <button class="btn btn-primary"><spring:message code="users.table.modal.save"/></button>
+                            <%--<button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="users.table.modal.close"/></button>--%>
+                            <%--<button class="btn btn-primary"><spring:message code="users.table.modal.save"/></button>--%>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -79,4 +77,4 @@
         </div>
     </jsp:body>
 
-</t:genericpage>
+</t:adminGenericPage>
