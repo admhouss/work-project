@@ -1,4 +1,4 @@
-package by.premiya.olga.project.util.auth;
+package by.premiya.olga.project.util.auth.basic;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.AuthenticationException;
@@ -18,7 +18,7 @@ import java.io.PrintWriter;
 /**
  * @author vlad
  */
-public class PlainTextBasicAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
+public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
     //~ Instance fields ================================================================================================
 
     private String realmName;

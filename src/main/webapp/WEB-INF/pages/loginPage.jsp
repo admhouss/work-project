@@ -10,7 +10,7 @@
     <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.index"/></title>
     <link href="${pageContext.request.contextPath}/assets/css/bootstrap.css" rel="stylesheet" media="screen" type="text/css"/>
     <link href="${pageContext.request.contextPath}/assets/css/bootstrap-responsive.css" rel="stylesheet" media="screen" type="text/css"/>
-    <script src="${pageContext.request.contextPath}/assets/js/jquery-2.0.3.min.js"></script>
+    <script src="${pageContext.request.contextPath}/assets/js/jquery-2.0.3.js"></script>
     <script src="${pageContext.request.contextPath}/assets/js/bootstrap.js"></script>
     <style type="text/css">
         body {

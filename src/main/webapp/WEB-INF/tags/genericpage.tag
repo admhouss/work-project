@@ -19,12 +19,12 @@
         <c:if test="${empty param.nonav}">
             <t:navbar/>
         </c:if>
-        <div class="jumbotron subhead">
-            <div class="container">
-                <h1>Шины, Аккумуляторы и Радиаторы</h1>
-                <p>Шины, Аккумуляторы и Радиаторы</p>
-            </div>
-        </div>
+        <%--<div class="jumbotron subhead">--%>
+            <%--<div class="container">--%>
+                <%--<h1>Шины, Аккумуляторы и Радиаторы</h1>--%>
+                <%--<p>Шины, Аккумуляторы и Радиаторы</p>--%>
+            <%--</div>--%>
+        <%--</div>--%>
         <jsp:doBody />
         <t:defaultscripts />
         <jsp:invoke fragment="scripts"/>

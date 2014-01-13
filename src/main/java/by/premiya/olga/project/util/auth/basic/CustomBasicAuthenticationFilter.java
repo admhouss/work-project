@@ -1,4 +1,4 @@
-package by.premiya.olga.project.util.auth;
+package by.premiya.olga.project.util.auth.basic;
 
 import by.premiya.olga.project.util.Utils;
 import org.springframework.security.authentication.*;
@@ -157,7 +157,9 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
                 if (debug) {
                     logger.debug("Authentication success: " + authResult);
                 }
-
+                Cookie cookie = new Cookie("loc", null);
+                cookie.setMaxAge(0);
+                cookie.setPath(getCookiePath(request));
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
                 rememberMeServices.loginSuccess(request, response, authResult);

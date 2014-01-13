@@ -44,22 +44,19 @@ public final class Utils {
     }
 
     public static boolean hasLogOutCookie(HttpServletRequest req) {
-        for (Cookie cookie : req.getCookies()) {
-            if (cookie.getName().equals("loc")) {
-                return true;
+        if (req.getCookies() != null) {
+            for (Cookie cookie : req.getCookies()) {
+                if (cookie.getName().equals("loc")) {
+                    return true;
+                }
             }
         }
         return false;
     }
 
-    public static void sendBasicAuthentication(HttpServletRequest request, HttpServletResponse response) {
-        response.addHeader("Access-Control-Allow-Origin", "null");
-        response.addHeader("WWW-Authenticate", "Basic realm=\"Olga Project\"");
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        for (Cookie cookie : request.getCookies()) {
-            if (cookie.getName().equals("loc")) {
-                cookie.setMaxAge(0);
-            }
-        }
+    public static void setLogoutCookie(HttpServletRequest request, HttpServletResponse response) {
+//        if ("logout".equals(request.getParameter("act"))) {
+            response.addCookie(new Cookie("loc",null));
+//        }
     }
 }

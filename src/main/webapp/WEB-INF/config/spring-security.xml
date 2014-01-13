@@ -17,19 +17,21 @@
         <property name="userPropertyToUse" value="username"/>
     </bean>
 
-    <security:http create-session="stateless" auto-config="true">
+    <security:http create-session="stateless" auto-config="true" entry-point-ref="basicEntryPoint">
         <security:intercept-url pattern="/auth/administration/users**" access="ROLE_SUPERVISOR" />
-        <security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
-        <security:form-login login-page="/auth/login"
-                             default-target-url="/auth/administration/editor"
-                             always-use-default-target="true"/>
+        <!--<security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />-->
+        <!--<security:intercept-url pattern="/auth/administration**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />-->
+        <security:intercept-url pattern="/auth**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
+        <!--<security:form-login login-page="/auth/login"-->
+                             <!--default-target-url="/auth/administration/editor"-->
+                             <!--always-use-default-target="true"/>-->
         <security:logout invalidate-session="true"
-                         logout-success-url="/" delete-cookies="JSESSIONID"/>
+                         logout-success-url="/?act=logout" delete-cookies="JSESSIONID"/>
         <security:remember-me key="olgaProjectAppKey"
                               token-validity-seconds="864000"
                               user-service-ref="customUserDetailsService" use-secure-cookie="true"/>
         <!--<security:http-basic/>-->
-        <!--<security:custom-filter ref="basicFilter" after="BASIC_AUTH_FILTER" />-->
+        <security:custom-filter ref="basicFilter" after="BASIC_AUTH_FILTER" />
     </security:http>
 
     <!--<bean id="digestFilter"-->
@@ -43,15 +45,15 @@
         <!--<property name="key" value="olgaProjectAppKey" />-->
     <!--</bean>-->
 
-    <!--<bean id="basicFilter"-->
-                <!--class="by.premiya.olga.project.util.auth.CustomBasicAuthenticationFilter">-->
-        <!--<constructor-arg name="authenticationManager" ref="authenticationManager" />-->
-        <!--<constructor-arg name="authenticationEntryPoint" ref="basicEntryPoint" />-->
-    <!--</bean>-->
-    <!--<bean id="basicEntryPoint"-->
-                <!--class="by.premiya.olga.project.util.auth.PlainTextBasicAuthenticationEntryPoint">-->
-        <!--<property name="realmName" value="Olga Project" />-->
-    <!--</bean>-->
+    <bean id="basicFilter"
+                class="by.premiya.olga.project.util.auth.basic.CustomBasicAuthenticationFilter">
+        <constructor-arg name="authenticationManager" ref="authenticationManager" />
+        <constructor-arg name="authenticationEntryPoint" ref="basicEntryPoint" />
+    </bean>
+    <bean id="basicEntryPoint"
+                class="by.premiya.olga.project.util.auth.basic.CustomBasicAuthenticationEntryPoint">
+        <property name="realmName" value="Olga Project" />
+    </bean>
 
     <bean id="customUserDetailsService" class="by.premiya.olga.project.util.auth.CustomUserDetailsService"/>
 

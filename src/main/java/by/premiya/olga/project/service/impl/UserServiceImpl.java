@@ -3,7 +3,9 @@ package by.premiya.olga.project.service.impl;
 import by.premiya.olga.project.dao.UserDao;
 import by.premiya.olga.project.entity.User;
 import by.premiya.olga.project.service.UserService;
+import by.premiya.olga.project.util.EditUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User getById(int id) {
@@ -47,6 +52,29 @@ public class UserServiceImpl implements UserService {
     @Transactional(propagation = Propagation.REQUIRED)
     public void delete(User user) {
         userDao.removeUser(user);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean updateUser(EditUser editUser) {
+        User user = userDao.getUserByLogin(editUser.getLogin());
+        if (!editUser.getLogin().equals(editUser.getNewLogin())) {
+            if (userDao.getUserByLogin(editUser.getNewLogin()) == null) {
+                user.setLogin(editUser.getNewLogin());
+                editUser.setLoginIsFree(true);
+            } else {
+                editUser.setLoginIsFree(false);
+                return false;
+            }
+        }
+        user.setLastName(editUser.getNewLastName());
+        user.setFirstName(editUser.getNewFirstName());
+        if (!editUser.getNewPassword().equals("")) {
+            user.setPasswordHash(passwordEncoder.encodePassword(editUser.getNewPassword(), user.getLogin()));
+        }
+        userDao.updateUser(user);
+        editUser.setSuccess(true);
+        return true;
     }
 
 }
