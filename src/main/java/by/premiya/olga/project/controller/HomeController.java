@@ -22,7 +22,7 @@ public class HomeController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String indexPage(ModelMap model, HttpServletResponse response) {
-        response.addCookie(new Cookie("loc",null));
+//        response.addCookie(new Cookie("loc",null));
         return Pages.HOME_PAGE;
 	}
 
