@@ -7,12 +7,17 @@ import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.annotations.ActiveUser;
 import by.premiya.olga.project.util.auth.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author vabramov
@@ -45,9 +50,14 @@ public class AdminController {
         return Pages.PROFILE_PAGE;
     }
 
-    @RequestMapping(value = "/users/do/edit/", method = RequestMethod.POST)
-    private @ResponseBody EditUser editActionUserPage(@RequestBody EditUser editUser) {
-        userService.updateUser(editUser);
-        return editUser;
+//    @RequestMapping(value = "/users/do/edit/", method = RequestMethod.POST)
+//    private void editActionUserPage(HttpServletRequest request) {
+////        userService.updateUser(editUser);
+////        return Pages.PROFILE_PAGE;
+//    }
+    @RequestMapping(value = "/users/do/edit/", method = RequestMethod.POST, consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
+    private @ResponseBody EditUser editActionUserPage(@RequestBody EditUser editUser, HttpServletResponse response) {
+        return userService.updateUser(editUser);
     }
+
 }

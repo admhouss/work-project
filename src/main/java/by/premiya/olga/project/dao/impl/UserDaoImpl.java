@@ -23,13 +23,13 @@ public class UserDaoImpl implements UserDao {
     @Override
     @Transactional
     public void addUser(User newUser) {
-        getSession().persist(newUser);
+        getSession().save(newUser);
     }
 
     @Override
     @Transactional
     public void updateUser(User updatedUser) {
-        getSession().refresh(updatedUser);
+        getSession().saveOrUpdate(updatedUser);
     }
 
     @Override

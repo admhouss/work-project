@@ -1,11 +1,11 @@
 package by.premiya.olga.project.util;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * @author Vlad Abramov
  */
-public class EditUser implements Serializable {
+public class EditUser implements Externalizable {
     private static final long serialVersionUID = -5837265027542846948L;
     private boolean loginIsFree;
     private boolean success = false;
@@ -87,5 +87,62 @@ public class EditUser implements Serializable {
 
     public void setNewLastName(String newLastName) {
         this.newLastName = newLastName;
+    }
+
+    @Override
+    public String toString() {
+        return "EditUser[" +
+                "loginIsFree=" + loginIsFree +
+                ", success=" + success +
+                ", login='" + login + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", newLogin='" + newLogin + '\'' +
+                ", newPassword='" + newPassword + '\'' +
+                ", newFirstName='" + newFirstName + '\'' +
+                ", newLastName='" + newLastName + '\'' +
+                ']';
+    }
+
+    @Override
+    public EditUser clone() throws CloneNotSupportedException {
+        super.clone();
+        EditUser inst = new EditUser();
+        inst.loginIsFree = loginIsFree;
+        inst.success = success;
+        inst.login = login;
+        inst.firstName = firstName;
+        inst.lastName = lastName;
+        inst.newLogin = newLogin;
+        inst.newPassword = newPassword;
+        inst.newFirstName = newFirstName;
+        inst.newLastName = newLastName;
+        return inst;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeBoolean(loginIsFree);
+        out.writeBoolean(success);
+        out.writeObject(login);
+        out.writeObject(firstName);
+        out.writeObject(lastName);
+        out.writeObject(newLogin);
+        out.writeObject(newPassword);
+        out.writeObject(newFirstName);
+        out.writeObject(newLastName);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        loginIsFree = in.readBoolean();
+        success  = in.readBoolean();
+        login = (String) in.readObject();
+        firstName = (String) in.readObject();
+        lastName = (String) in.readObject();
+        newLogin = (String) in.readObject();
+        newPassword = (String) in.readObject();
+        newFirstName = (String) in.readObject();
+        newLastName = (String) in.readObject();
     }
 }

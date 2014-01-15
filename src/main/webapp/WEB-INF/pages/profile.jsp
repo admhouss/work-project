@@ -29,6 +29,7 @@
             .form-signin input[type="password"] {
                 font-size: 16px;
                 height: auto;
+                width: auto;
                 margin-bottom: 15px;
                 padding: 7px 9px;
             }
@@ -49,44 +50,42 @@
                     doRegistration &= true;
                 }
             }
-            function validate() {
-                doRegistration = true;
-                nameCheck();
-                if (doRegistration) {
-                    var form = $('.form-edit');
-                    var formData = form.serializeArray();
-                    var firstNameStr = $('#inputFirstName').val();
-                    var lastNameStr = $('#inputLastName').val();
-                    var loginStr = $('#inputLogin').val();
-                    formData.push({name: "login", value: "${user.login}"});
-                    formData.push({name: "firstName", value: "${user.firstName}"});
-                    formData.push({name: "lastName", value: "${user.lastName}"});
-                    var dataJSON = JSON.stringify({ login:"${user.login}",
-                                                    firstName:"${user.firstName}",
-                                                    lastName:"${user.lastName}",
-                                                    newFirstName:$('#inputFirstName').val(),
-                                                    newLastName:$('#inputLastName').val(),
-                                                    newPassword:$('#inputPassword3').val()});
-                    $.ajax({
-                        url: form.attr('action'),
-                        type: 'POST',
-                        contentType: 'application/json; charset=utf-8',
-                        data: dataJSON,
-                        'success': function(data) {
-                            if (data.loginIsFree == false) {
-                                $('#loginIsExist').removeClass("hidden");
-                            }
-                            if (data.success == true) {
-                                $('#success').removeClass("hidden");
-                                $('#error').addClass("hidden");
-                                $('#loginIsExist').addClass("hidden");
-                            }
-                        }
-                    });
-                }
-            }
             $(function() {
                 $('[data-toggle="tooltip"]').tooltip({'placement': 'right', trigger: 'focus'});
+                $('#submitBtn').click(function(e) {
+                    e.preventDefault();
+                    doRegistration = true;
+                    nameCheck();
+                    if (doRegistration) {
+                        var dataJSON = JSON.stringify({ login:"${user.login}",
+                            firstName:"${user.firstName}",
+                            lastName:"${user.lastName}",
+                            newFirstName:$('#inputFirstName').val(),
+                            newLastName:$('#inputLastName').val(),
+                            newPassword:$('#inputPassword3').val(),
+                            newLogin:$('#inputLogin').val()});
+                        $.ajax({
+                            url: "${contextPath}/auth/administration/users/do/edit/",
+                            type: 'POST',
+                            contentType: 'application/json',
+                            cashed: false,
+                            data: dataJSON,
+                            'success': function(data) {
+                                if (data.loginIsFree == false && data.success == false) {
+                                    $('#loginIsExist').removeClass("hidden");
+                                }
+                                if (data.success == true) {
+                                    console.log(data);
+                                    alert(data);
+                                    $('#success').removeClass("hidden");
+                                    $('#error').addClass("hidden");
+                                    $('#loginIsExist').addClass("hidden");
+                                    $('#navFullName').html(data.lastName + " " + data.firstName + "&nbsp;<i class='caret'></i>");
+                                }
+                            }
+                        });
+                    }
+                });
             })
         </script>
     </jsp:attribute>
@@ -97,7 +96,7 @@
             <div class="container">
         </c:if>
 
-        <form class="form-edit" role="form" action="${contextPath}/auth/administration/users/do/edit/" method="post">
+        <form class="form-edit">
             <c:set var="loginPH"><spring:message code="edit.login"/></c:set>
             <c:set var="firstNamePH"><spring:message code="edit.firstName"/></c:set>
             <c:set var="lastNamePH"><spring:message code="edit.lastName"/></c:set>
@@ -137,7 +136,7 @@
             </div>
             <div class="control-group">
                 <div class=" controls">
-                    <button type="submit" class="btn btn-default" onclick="validate()"><spring:message code="edit.submit"/></button>
+                    <button id="submitBtn" type="submit" class="btn btn-default"><spring:message code="edit.submit"/></button>
                 </div>
             </div>
             <div class="control-group">

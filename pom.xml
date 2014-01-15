@@ -387,7 +387,7 @@
         <dependency><!-- jackson -->
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.4.2</version>
+            <version>1.9.12</version>
         </dependency>
     </dependencies>
 

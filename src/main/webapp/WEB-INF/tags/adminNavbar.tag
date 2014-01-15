@@ -35,7 +35,7 @@
                     <c:set var="login"><sec:authentication property="principal.user.login"/></c:set>
                     <c:set var="tooltipText"></c:set>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><sec:authentication property="principal.user.fullName"/>&nbsp;<i class="caret"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navFullName"><sec:authentication property="principal.user.fullName"/>&nbsp;<i class="caret"></i></a>
                         <ul class="dropdown-menu">
                             <li class="nav-header">Выберите действие</li>
                             <li><a href="${contextPath}/auth/administration/users/edit/${login}"><i class="icon-pencil"></i>&nbsp;<spring:message code="navbar.edit.profile"/></a></li>

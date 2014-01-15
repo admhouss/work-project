@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean updateUser(EditUser editUser) {
+    public EditUser updateUser(EditUser editUser) {
         User user = userDao.getUserByLogin(editUser.getLogin());
         if (!editUser.getLogin().equals(editUser.getNewLogin())) {
             if (userDao.getUserByLogin(editUser.getNewLogin()) == null) {
@@ -64,7 +64,10 @@ public class UserServiceImpl implements UserService {
                 editUser.setLoginIsFree(true);
             } else {
                 editUser.setLoginIsFree(false);
-                return false;
+                try {
+                    return editUser.clone();
+                } catch (CloneNotSupportedException ignored) {
+                }
             }
         }
         user.setLastName(editUser.getNewLastName());
@@ -74,7 +77,11 @@ public class UserServiceImpl implements UserService {
         }
         userDao.updateUser(user);
         editUser.setSuccess(true);
-        return true;
+        try {
+            return editUser.clone();
+        } catch (CloneNotSupportedException ignored) {
+        }
+        return null;
     }
 
 }
