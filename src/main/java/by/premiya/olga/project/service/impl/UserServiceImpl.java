@@ -3,7 +3,9 @@ package by.premiya.olga.project.service.impl;
 import by.premiya.olga.project.dao.UserDao;
 import by.premiya.olga.project.entity.User;
 import by.premiya.olga.project.service.UserService;
-import by.premiya.olga.project.util.EditUser;
+import by.premiya.olga.project.util.auth.UserRole;
+import by.premiya.olga.project.util.json.EditUser;
+import by.premiya.olga.project.util.json.UserJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserDao userDao;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -64,10 +65,7 @@ public class UserServiceImpl implements UserService {
                 editUser.setLoginIsFree(true);
             } else {
                 editUser.setLoginIsFree(false);
-                try {
-                    return editUser.clone();
-                } catch (CloneNotSupportedException ignored) {
-                }
+                return editUser;
             }
         }
         user.setLastName(editUser.getNewLastName());
@@ -77,11 +75,28 @@ public class UserServiceImpl implements UserService {
         }
         userDao.updateUser(user);
         editUser.setSuccess(true);
-        try {
-            return editUser.clone();
-        } catch (CloneNotSupportedException ignored) {
-        }
-        return null;
+        return editUser;
     }
 
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public String changeRole(String login) {
+        User user = userDao.getUserByLogin(login);
+        String result = "star";
+        if (user.getRole().equals(UserRole.ROLE_ADMINISTRATOR)) {
+            user.setRole(UserRole.ROLE_SUPERVISOR);
+        } else {
+            user.setRole(UserRole.ROLE_ADMINISTRATOR);
+            result = "un-" + result;
+        }
+        userDao.updateUser(user);
+        return result;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EditUser getEditUser(String userLogin) {
+        User user = userDao.getUserByLogin(userLogin);
+        return new EditUser(user);
+    }
 }

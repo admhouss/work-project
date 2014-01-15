@@ -1,7 +1,8 @@
 package by.premiya.olga.project.service;
 
 import by.premiya.olga.project.entity.User;
-import by.premiya.olga.project.util.EditUser;
+import by.premiya.olga.project.util.json.EditUser;
+import by.premiya.olga.project.util.json.UserJSON;
 
 import java.util.List;
 
@@ -20,4 +21,8 @@ public interface UserService {
     void delete(User user);
 
     EditUser updateUser(EditUser editUser);
+
+    String changeRole(String login);
+
+    EditUser getEditUser(String userLogin);
 }

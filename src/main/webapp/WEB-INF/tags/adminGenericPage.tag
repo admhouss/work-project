@@ -18,7 +18,12 @@
     <body>
         <c:if test="${empty param.nonav}">
             <t:adminNavbar/>
+            <div class="container">
+                <h1>Заговок, большыми буквами</h1>
+                <p>Маленькое описание</p>
+            </div>
         </c:if>
+
         <jsp:doBody />
         <t:defaultscripts />
         <jsp:invoke fragment="scripts"/>

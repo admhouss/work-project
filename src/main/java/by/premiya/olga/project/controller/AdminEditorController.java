@@ -20,9 +20,6 @@ import java.io.PrintWriter;
 public class AdminEditorController {
     @RequestMapping(method = RequestMethod.GET)
     private String adminEditor(HttpServletRequest request, HttpServletResponse response) {
-//        if (Utils.hasLogOutCookie(request)) {
-//            Utils.sendBasicAuthentication(request, response);
-//        }
         return Pages.ADMIN_HOME_PAGE;
     }
 

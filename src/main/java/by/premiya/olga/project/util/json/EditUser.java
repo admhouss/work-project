@@ -1,4 +1,6 @@
-package by.premiya.olga.project.util;
+package by.premiya.olga.project.util.json;
+
+import by.premiya.olga.project.entity.User;
 
 import java.io.*;
 
@@ -7,7 +9,7 @@ import java.io.*;
  */
 public class EditUser implements Externalizable {
     private static final long serialVersionUID = -5837265027542846948L;
-    private boolean loginIsFree;
+    private boolean loginIsFree = true;
     private boolean success = false;
     private String login;
     private String firstName;
@@ -16,6 +18,14 @@ public class EditUser implements Externalizable {
     private String newPassword;
     private String newFirstName;
     private String newLastName;
+
+    public EditUser() { }
+
+    public EditUser(User user) {
+        this.login = user.getLogin();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+    }
 
     public boolean isSuccess() {
         return success;

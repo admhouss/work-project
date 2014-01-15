@@ -28,7 +28,7 @@
                     <li id="navAccumulators"><a href="${contextPath}/show?c=accumulators&m=all"><spring:message code="navbar.accumulators"/></a></li>
                     <li id="navRadiators"><a href="${contextPath}/show?c=radiators&m=all"><spring:message code="navbar.radiators"/></a></li>
                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
-                        <li id="navUsers"><a href="${contextPath}/admin/users"><spring:message code="navbar.users"/></a></li>
+                        <li id="navUsers"><a href="${contextPath}/auth/administration/users"><spring:message code="navbar.users"/></a></li>
                     </sec:authorize>
 
                     <sec:authorize access="hasAnyRole({'ROLE_ADMINISTRATOR','ROLE_SUPERVISOR'})">

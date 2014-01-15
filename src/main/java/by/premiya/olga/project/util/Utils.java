@@ -30,7 +30,7 @@ public final class Utils {
             outputStream = res.getOutputStream();
             return ImageIO.write(ImageIO.read(new File(url + from + "/" + content + ".jpg")), "JPEG", outputStream);
         } catch (IOException e) {
-            logger.error("File \'" + url + "\' not send");
+            logger.error("File '" + url + "' not send");
             return sendDefaultImage(url, outputStream);
         }
     }
@@ -38,15 +38,18 @@ public final class Utils {
         try {
             return ImageIO.write(ImageIO.read(new File(url + "errors/image_not_available.jpg")), "JPEG", outputStream);
         } catch (IOException e1) {
-            logger.error("Default image \'" + url + "\' not send");
+            logger.error("Default image '" + url + "' not send");
         }
         return false;
     }
 
-    public static boolean hasLogOutCookie(HttpServletRequest req) {
+    public static boolean hasCookie(HttpServletRequest req, String cookieName) {
         if (req.getCookies() != null) {
             for (Cookie cookie : req.getCookies()) {
-                if (cookie.getName().equals("loc")) {
+                if (cookie.getName().equals(cookieName)) {
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("In request found cookie '" + cookieName + "'");
+                    }
                     return true;
                 }
             }
@@ -54,9 +57,17 @@ public final class Utils {
         return false;
     }
 
-    public static void setLogoutCookie(HttpServletRequest request, HttpServletResponse response) {
-//        if ("logout".equals(request.getParameter("act"))) {
-            response.addCookie(new Cookie("loc",null));
-//        }
+    public static void setLogoutCookie(HttpServletResponse response) {
+        response.addCookie(new Cookie("loc",null));
+        Cookie lic = new Cookie("lic", null);
+        lic.setMaxAge(0);
+        response.addCookie(lic);
+    }
+
+    public static void setLoginCookie(HttpServletResponse response) {
+        response.addCookie(new Cookie("lic",null));
+        Cookie lic = new Cookie("loc", null);
+        lic.setMaxAge(0);
+        response.addCookie(lic);
     }
 }

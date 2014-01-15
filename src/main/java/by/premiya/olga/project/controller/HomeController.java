@@ -24,7 +24,7 @@ public class HomeController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String indexPage(ModelMap model, HttpServletResponse response, HttpServletRequest request) {
-        Utils.setLogoutCookie(request, response);
+        Utils.setLogoutCookie(response);
         return Pages.HOME_PAGE;
 	}
 

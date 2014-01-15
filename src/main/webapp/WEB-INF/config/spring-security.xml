@@ -19,14 +19,14 @@
 
     <security:http create-session="stateless" auto-config="true" entry-point-ref="basicEntryPoint">
         <security:intercept-url pattern="/auth/administration/users**" access="ROLE_SUPERVISOR" />
-        <!--<security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />-->
-        <!--<security:intercept-url pattern="/auth/administration**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />-->
+        <security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
+        <security:intercept-url pattern="/auth/administration**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
         <security:intercept-url pattern="/auth**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
         <!--<security:form-login login-page="/auth/login"-->
                              <!--default-target-url="/auth/administration/editor"-->
                              <!--always-use-default-target="true"/>-->
         <security:logout invalidate-session="true"
-                         logout-success-url="/?act=logout" delete-cookies="JSESSIONID"/>
+                         logout-success-url="/" delete-cookies="JSESSIONID"/>
         <security:remember-me key="olgaProjectAppKey"
                               token-validity-seconds="864000"
                               user-service-ref="customUserDetailsService" use-secure-cookie="true"/>

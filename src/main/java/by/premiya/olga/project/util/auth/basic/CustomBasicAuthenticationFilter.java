@@ -25,13 +25,13 @@ import java.io.IOException;
 /**
  * Processes a HTTP request's BASIC authorization headers, putting the result into the
  * <code>SecurityContextHolder</code>.
- *
- * <p>
+ * <p/>
+ * <p/>
  * For a detailed background on what this filter is designed to process, refer to
  * <a href="http://www.faqs.org/rfcs/rfc1945.html">RFC 1945, Section 11.1</a>. Any realm name presented in
  * the HTTP request is ignored.
- *
- * <p>
+ * <p/>
+ * <p/>
  * In summary, this filter is responsible for processing any request that has a HTTP request header of
  * <code>Authorization</code> with an authentication scheme of <code>Basic</code> and a Base64-encoded
  * <code>username:password</code> token. For example, to authenticate user "Aladdin" with password "open sesame" the
@@ -40,26 +40,26 @@ import java.io.IOException;
  *
  * Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
  * </pre>
- *
- * <p>
+ * <p/>
+ * <p/>
  * This filter can be used to provide BASIC authentication services to both remoting protocol clients (such as
  * Hessian and SOAP) as well as standard user agents (such as Internet Explorer and Netscape).
- * <p>
+ * <p/>
  * If authentication is successful, the resulting {@link Authentication} object will be placed into the
  * <code>SecurityContextHolder</code>.
- *
- * <p>
+ * <p/>
+ * <p/>
  * If authentication fails and <code>ignoreFailure</code> is <code>false</code> (the default), an {@link
  * AuthenticationEntryPoint} implementation is called (unless the <tt>ignoreFailure</tt> property is set to
  * <tt>true</tt>). Usually this should be {@link org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint}, which will prompt the user to
  * authenticate again via BASIC authentication.
- *
- * <p>
+ * <p/>
+ * <p/>
  * Basic authentication is an attractive protocol because it is simple and widely deployed. However, it still
  * transmits a password in clear text and as such is undesirable in many situations. Digest authentication is also
  * provided by Spring Security and should be used instead of Basic authentication wherever possible. See {@link
  * org.springframework.security.web.authentication.www.DigestAuthenticationFilter}.
- * <p>
+ * <p/>
  * Note that if a {@link RememberMeServices} is set, this filter will automatically send back remember-me
  * details to the client. Therefore, subsequent requests will not need to present a BASIC authentication header as
  * they will be authenticated using the remember-me mechanism.
@@ -70,7 +70,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
 
     //~ Instance fields ================================================================================================
 
-    private AuthenticationDetailsSource<HttpServletRequest,?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
+    private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
     private AuthenticationEntryPoint authenticationEntryPoint;
     private AuthenticationManager authenticationManager;
     private RememberMeServices rememberMeServices = new NullRememberMeServices();
@@ -98,12 +98,12 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
      * Creates an instance which will authenticate against the supplied {@code AuthenticationManager} and
      * use the supplied {@code AuthenticationEntryPoint} to handle authentication failures.
      *
-     * @param authenticationManager the bean to submit authentication requests to
+     * @param authenticationManager    the bean to submit authentication requests to
      * @param authenticationEntryPoint will be invoked when authentication fails. Typically an instance of
-     * {@link org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint}.
+     *                                 {@link org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint}.
      */
     public CustomBasicAuthenticationFilter(AuthenticationManager authenticationManager,
-                                     AuthenticationEntryPoint authenticationEntryPoint) {
+                                           AuthenticationEntryPoint authenticationEntryPoint) {
         this.authenticationManager = authenticationManager;
         this.authenticationEntryPoint = authenticationEntryPoint;
     }
@@ -114,7 +114,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
     public void afterPropertiesSet() {
         Assert.notNull(this.authenticationManager, "An AuthenticationManager is required");
 
-        if(!isIgnoreFailure()) {
+        if (!isIgnoreFailure()) {
             Assert.notNull(this.authenticationEntryPoint, "An AuthenticationEntryPoint is required");
         }
     }
@@ -138,9 +138,10 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
 
             String username = tokens[0];
 
-            if (Utils.hasLogOutCookie(request)) {
+            if (Utils.hasCookie(request, "loc") && !Utils.hasCookie(request, "lic")) {
 
-                processAuthenticationException(chain,false,request,response, new AuthenticationException("Must be authorised"){});
+                processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
+                });
                 return;
             }
 
@@ -157,9 +158,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
                 if (debug) {
                     logger.debug("Authentication success: " + authResult);
                 }
-                Cookie cookie = new Cookie("loc", null);
-                cookie.setMaxAge(0);
-                cookie.setPath(getCookiePath(request));
+
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
                 rememberMeServices.loginSuccess(request, response, authResult);
@@ -168,7 +167,21 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
             }
 
         } catch (AuthenticationException failed) {
-            processAuthenticationException(chain, debug, request, response, failed);
+            SecurityContextHolder.clearContext();
+
+            if (debug) {
+                logger.debug("Authentication request for failed: " + failed);
+            }
+
+            rememberMeServices.loginFail(request, response);
+
+            onUnsuccessfulAuthentication(request, response, failed);
+
+            if (ignoreFailure) {
+                chain.doFilter(request, response);
+            } else {
+                authenticationEntryPoint.commence(request, response, failed);
+            }
 
             return;
         }
@@ -176,37 +189,23 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
         chain.doFilter(request, response);
     }
 
-    private void processAuthenticationException(FilterChain chain, boolean debug, HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+    private void processAuthenticationException(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
-        Cookie cookie = new Cookie("loc", null);
-        cookie.setMaxAge(0);
-        cookie.setPath(getCookiePath(request));
 
-        response.addCookie(cookie);
-        if (debug) {
-            logger.debug("Authentication request for failed: " + failed);
+        Utils.setLoginCookie(response);
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("Set logout cookie and send basic authorization");
         }
 
-        rememberMeServices.loginFail(request, response);
-
-        onUnsuccessfulAuthentication(request, response, failed);
-
-//        if (ignoreFailure) {
-//            chain.doFilter(request, response);
-//        } else {
-            authenticationEntryPoint.commence(request, response, failed);
-//        }
-    }
-
-    private String getCookiePath(HttpServletRequest request) {
-        String contextPath = request.getContextPath();
-        return contextPath.length() > 0 ? contextPath : "/";
+        authenticationEntryPoint.commence(request, response, failed);
     }
 
     /**
      * Decodes the header into a username and password.
      *
-     * @throws org.springframework.security.authentication.BadCredentialsException if the Basic header is not present or is not valid Base64
+     * @throws org.springframework.security.authentication.BadCredentialsException
+     *          if the Basic header is not present or is not valid Base64
      */
     private String[] extractAndDecodeHeader(String header, HttpServletRequest request) throws IOException {
 
@@ -225,7 +224,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
         if (delim == -1) {
             throw new BadCredentialsException("Invalid basic authentication token");
         }
-        return new String[] {token.substring(0, delim), token.substring(delim + 1)};
+        return new String[]{token.substring(0, delim), token.substring(delim + 1)};
     }
 
     private boolean authenticationIsRequired(String username) {
@@ -233,7 +232,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
         // (see SEC-53)
         Authentication existingAuth = SecurityContextHolder.getContext().getAuthentication();
 
-        if(existingAuth == null || !existingAuth.isAuthenticated()) {
+        if (existingAuth == null || !existingAuth.isAuthenticated()) {
             return true;
         }
 
@@ -292,7 +291,6 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
     }
 
     /**
-     *
      * @deprecated Use the constructor which takes a single AuthenticationManager parameter
      */
     @Deprecated
@@ -300,7 +298,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
         this.ignoreFailure = ignoreFailure;
     }
 
-    public void setAuthenticationDetailsSource(AuthenticationDetailsSource<HttpServletRequest,?> authenticationDetailsSource) {
+    public void setAuthenticationDetailsSource(AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource) {
         Assert.notNull(authenticationDetailsSource, "AuthenticationDetailsSource required");
         this.authenticationDetailsSource = authenticationDetailsSource;
     }

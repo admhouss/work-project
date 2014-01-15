@@ -12,10 +12,10 @@
 
    <jsp:attribute name="scripts">
         <style type="text/css">
-            .form-edit {
+            .form-signin {
                 max-width: 300px;
-                padding: 19px 29px 29px;
-                margin: 60px auto 20px;
+                padding: 19px 29px 19px;
+                margin: 0px auto 0px;
                 background-color: #fff;
                 border: 1px solid #e5e5e5;
                 -webkit-border-radius: 5px;
@@ -25,14 +25,14 @@
                 -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
                 box-shadow: 0 1px 2px rgba(0,0,0,.05);
             }
-            .form-signin input[type="text"],
-            .form-signin input[type="password"] {
-                font-size: 16px;
-                height: auto;
-                width: auto;
-                margin-bottom: 15px;
-                padding: 7px 9px;
-            }
+            /*.form-signin input[type="text"],*/
+            /*.form-signin input[type="password"] {*/
+                /*font-size: 16px;*/
+                /*height: auto;*/
+                /*width: auto;*/
+                /*margin-bottom: 15px;*/
+                /*padding: 7px 9px;*/
+            /*}*/
         </style>
         <script type="text/javascript">
             var doRegistration = true;
@@ -57,7 +57,8 @@
                     doRegistration = true;
                     nameCheck();
                     if (doRegistration) {
-                        var dataJSON = JSON.stringify({ login:"${user.login}",
+                        var dataJSON = JSON.stringify({
+                            login:"${user.login}",
                             firstName:"${user.firstName}",
                             lastName:"${user.lastName}",
                             newFirstName:$('#inputFirstName').val(),
@@ -80,7 +81,7 @@
                                     $('#success').removeClass("hidden");
                                     $('#error').addClass("hidden");
                                     $('#loginIsExist').addClass("hidden");
-                                    $('#navFullName').html(data.lastName + " " + data.firstName + "&nbsp;<i class='caret'></i>");
+                                    $('#navFullName').html(data.newLastName + " " + data.newFirstName + "&nbsp;<i class='caret'></i>");
                                 }
                             }
                         });
@@ -96,7 +97,7 @@
             <div class="container">
         </c:if>
 
-        <form class="form-edit">
+        <form class="form-signin">
             <c:set var="loginPH"><spring:message code="edit.login"/></c:set>
             <c:set var="firstNamePH"><spring:message code="edit.firstName"/></c:set>
             <c:set var="lastNamePH"><spring:message code="edit.lastName"/></c:set>
@@ -136,7 +137,7 @@
             </div>
             <div class="control-group">
                 <div class=" controls">
-                    <button id="submitBtn" type="submit" class="btn btn-default"><spring:message code="edit.submit"/></button>
+                    <button id="submitBtn" type="submit" class="btn btn-primary"><spring:message code="edit.submit"/></button>
                 </div>
             </div>
             <div class="control-group">

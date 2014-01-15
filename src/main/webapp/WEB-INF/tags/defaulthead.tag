@@ -9,4 +9,5 @@
 <script src="${contextPath}/assets/js/bootstrap.js"></script>
 <script src="${contextPath}/assets/js/bootstrap-tooltip.js"></script>
 <script src="${contextPath}/assets/js/bootstrap-popover.js"></script>
-<script src="${contextPath}/assets/js/bootstrap-carousel.js"></script>
+<%--<script src="${contextPath}/assets/js/bootstrap-carousel.js"></script>--%>
+<script src="${contextPath}/assets/js/bootstrap-modal.js"></script>
