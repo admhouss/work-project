@@ -4,6 +4,7 @@ import by.premiya.olga.project.entity.User;
 import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.Utils;
 import by.premiya.olga.project.util.annotations.ActiveUser;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,6 +17,7 @@ import java.io.PrintWriter;
  * @author vlad
  */
 @Controller
+@PreAuthorize(value = "isAuthenticated()")
 @RequestMapping("/auth/administration/editor")
 public class AdminEditorController {
     @RequestMapping(method = RequestMethod.GET)

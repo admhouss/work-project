@@ -4,6 +4,8 @@ import by.premiya.olga.project.service.UserService;
 import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,25 +18,32 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 
 @Controller
-@RequestMapping("/")
 public class HomeController {
 
     @Autowired
     private UserService userService;
 
-	@RequestMapping(method = RequestMethod.GET)
+	@RequestMapping(value = "/",method = RequestMethod.GET)
 	public String indexPage(ModelMap model, HttpServletResponse response, HttpServletRequest request) {
         Utils.setLogoutCookie(response);
         return Pages.HOME_PAGE;
 	}
 
-    @RequestMapping(value = "search/light", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/search/light", method = {RequestMethod.GET, RequestMethod.POST})
     public String lightSearch(ModelMap model, @RequestParam String text) {
         return Pages.HOME_PAGE;
     }
 
-    @RequestMapping(value = "auth", method = RequestMethod.GET)
+    @PreAuthorize(value = "isAuthenticated()")
+    @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public String login() {
+        return Pages.REDIRECT + Pages.ADMIN_EDITOR;
+    }
+
+//    @Secured(value = {"ROLE_ADMINISTRATOR","ROLE_SUPERVISOR"})
+    @PreAuthorize(value = "isAuthenticated()")
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String admin() {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;
     }
 }

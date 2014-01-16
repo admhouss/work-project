@@ -37,7 +37,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navFullName"><sec:authentication property="principal.user.fullName"/>&nbsp;<i class="caret"></i></a>
                         <ul class="dropdown-menu">
-                            <li class="nav-header">Выберите действие</li>
+                            <%--<li class="nav-header">Выберите действие</li>--%>
                             <li><a href="${contextPath}/auth/administration/users/edit/${login}"><i class="icon-pencil"></i>&nbsp;<spring:message code="navbar.edit.profile"/></a></li>
                             <li><a href="${contextPath}/j_spring_security_logout"><i class="icon-remove"></i>&nbsp;Выход из администрирования</a></li>
                         </ul>
