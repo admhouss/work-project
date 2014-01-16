@@ -34,6 +34,19 @@ public final class Utils {
             return sendDefaultImage(url, outputStream);
         }
     }
+    public static boolean sendGifImage(HttpServletResponse res, String from, String content) {
+        res.setContentType("image/gif");
+        String url = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
+        url = url.substring(5, url.indexOf("WEB-INF")) + "assets/img/";
+        ServletOutputStream outputStream = null;
+        try {
+            outputStream = res.getOutputStream();
+            return ImageIO.write(ImageIO.read(new File(url + from + "/" + content + ".gif")), "GIF", outputStream);
+        } catch (IOException e) {
+            logger.error("File '" + url + "' not send");
+            return sendDefaultImage(url, outputStream);
+        }
+    }
     private static boolean sendDefaultImage(String url, ServletOutputStream outputStream) {
         try {
             return ImageIO.write(ImageIO.read(new File(url + "errors/image_not_available.jpg")), "JPEG", outputStream);

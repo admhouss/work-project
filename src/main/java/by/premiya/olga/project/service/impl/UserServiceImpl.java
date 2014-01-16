@@ -61,6 +61,9 @@ public class UserServiceImpl implements UserService {
         User user = userDao.getUserByLogin(editUser.getLogin());
         if (!editUser.getLogin().equals(editUser.getNewLogin())) {
             if (userDao.getUserByLogin(editUser.getNewLogin()) == null) {
+                if (user == null) {
+                    user = new User();
+                }
                 user.setLogin(editUser.getNewLogin());
                 editUser.setLoginIsFree(true);
             } else {

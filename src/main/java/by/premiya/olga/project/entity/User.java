@@ -27,7 +27,7 @@ public class User implements Serializable {
 
     @Column(name = "USER_ROLE", nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.ROLE_ADMINISTRATOR;
 
     @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;

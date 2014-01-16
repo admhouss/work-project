@@ -18,7 +18,7 @@
     <body>
         <c:if test="${empty param.nonav}">
             <t:navbar/>
-            <div class="container">
+            <div class="container" style="margin-top: 5%;">
                 <h1>Заговок, большыми буквами</h1>
                 <p>Маленькое описание</p>
             </div>

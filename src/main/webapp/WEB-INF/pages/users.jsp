@@ -21,8 +21,11 @@
                     e.preventDefault();
                     var userLogin = $(this).attr("id");
                     userLogin = userLogin.substr(5);
-                    console.log(userLogin);
                     openModal(userLogin);
+                });
+                $('.add-user').click(function(e) {
+                    e.preventDefault();
+                    openModal("add-new-user");
                 });
                 $(".user-repo").click(function(e) {
                     e.preventDefault();
@@ -50,6 +53,7 @@
                             lastNameStr.length == 0 ||
                             loginStr.length == 0) {
                         $('#error').removeClass("hidden");
+                        $('#success').addClass("hidden");
                         doRegistration &= false;
                     } else {
                         $('#error').addClass("hidden");
@@ -58,18 +62,30 @@
                 }
                 function openModal(userLogin) {
                     var userForEdit;
-                    $.ajax({
-                        url: "${contextPath}/auth/administration/users/edit/get/"+userLogin,
-                        type: 'POST',
-                        cashed: false,
-                        'success': function(editUser) {
-                            $('#inputFirstName').val(editUser.firstName);
-                            $('#inputLastName').val(editUser.lastName);
-                            $('#inputLogin').val(editUser.login);
-                            $("#editModal").modal("show");
-                            userForEdit = editUser;
-                        }
-                    });
+                    $('#success').addClass("hidden");
+                    $('#error').addClass("hidden");
+                    $('#loginIsExist').addClass("hidden");
+                    if (userLogin != "add-new-user") {
+                        $.ajax({
+                            url: "${contextPath}/auth/administration/users/edit/get/"+userLogin,
+                            type: 'POST',
+                            cashed: false,
+                            'success': function(editUser) {
+                                $('#inputFirstName').val(editUser.firstName);
+                                $('#inputLastName').val(editUser.lastName);
+                                $('#inputLogin').val(editUser.login);
+                                $('#myModalLabel').html("<spring:message code='users.table.edit'/>");
+                                $('#inputPassword3').tooltip('enable');
+                                $("#editModal").modal("show");
+                                userForEdit = editUser;
+                            }
+                        });
+                    } else {
+                        $('#myModalLabel').html("<spring:message code='users.table.modal.add'/>");
+                        userForEdit = {login:"", firstName:"",lastName: ""}
+                        $('#inputPassword3').tooltip('disable');
+                        $("#editModal").modal("show");
+                    }
 
                     $('.edit-save').click(function(e) {
                         e.preventDefault();
@@ -90,13 +106,18 @@
                                 contentType: 'application/json',
                                 cashed: false,
                                 data: dataJSON,
-                                'success': function(data) {
+                                beforeSend: function() {
+                                    $('#loading').removeClass('hidden');
+                                },
+                                success: function(data) {
+                                    $('#loading').addClass('hidden');
                                     if (data.loginIsFree == false && data.success == false) {
                                         $('#loginIsExist').removeClass("hidden");
+                                        $('#success').addClass("hidden");
                                     }
                                     if (data.success == true) {
                                         console.log(data);
-                                        alert(data);
+//                                        alert(data);
                                         $('#success').removeClass("hidden");
                                         $('#error').addClass("hidden");
                                         $('#loginIsExist').addClass("hidden");
@@ -119,7 +140,7 @@
             <c:set var="firstNamePH"><spring:message code="edit.firstName"/></c:set>
             <c:set var="lastNamePH"><spring:message code="edit.lastName"/></c:set>
             <c:set var="passwordPH"><spring:message code="edit.password"/></c:set>
-            <button class="btn btn-success"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></button>
+            <button class="btn btn-success add-user"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></button>
             <table class="table table-hover" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="${passInfo}">
                 <tr>
                     <th><spring:message code="users.table.number"/></th>
@@ -146,7 +167,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h3 id="myModalLabel"><spring:message code="users.table.edit"/></h3>
+                            <h3 id="myModalLabel"><spring:message code="users.table.edit"/>&nbsp;<img id="loading" class="hidden" src="${contextPath}/image/gif/util/loading"/></h3>
                         </div>
                         <div class="modal-body">
                             <form class="form-horizontal">
@@ -182,18 +203,20 @@
                                                data-toggle="tooltip" data-placement="top" title="${passInfo}">
                                     </div>
                                 </div>
+                                <div style="margin-left: 100px;margin-right: 130px;">
+                                    <div class="alert alert-danger hidden" id="error">
+                                        <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
+                                    </div>
+                                    <div class="alert alert-danger hidden" id="loginIsExist">
+                                        <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>
+                                    </div>
+                                    <div class="alert alert-success hidden" id="success">
+                                        <spring:message code="edit.submit.success"/>
+                                    </div>
+                                </div>
                             </form>
                         </div>
                         <div class="modal-footer">
-                            <div class="alert alert-danger hidden" id="error">
-                                <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
-                            </div>
-                            <div class="alert alert-danger hidden" id="loginIsExist">
-                                <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>
-                            </div>
-                            <div class="alert alert-success hidden" id="success">
-                                <spring:message code="edit.submit.success"/>
-                            </div>
                             <button class="btn btn-primary edit-save"><spring:message code="users.table.modal.save"/></button>
                             <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="users.table.modal.close"/></button>
                         </div>
@@ -206,17 +229,3 @@
     </jsp:body>
 
 </t:adminGenericPage>
-
-<%--<div class="control-group">--%>
-    <%--<div class="controls">--%>
-        <%--<div class="alert alert-danger hidden" id="error">--%>
-            <%--<strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-    <%--<div class="alert alert-danger hidden" id="loginIsExist">--%>
-        <%--<strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>--%>
-    <%--</div>--%>
-<%--</div>--%>
-<%--<div class="alert alert-success hidden" id="success">--%>
-    <%--<spring:message code="edit.submit.success"/>--%>
-<%--</div>--%>

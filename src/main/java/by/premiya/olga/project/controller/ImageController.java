@@ -24,4 +24,9 @@ public class ImageController {
     public void uploadImage(@PathVariable String from, @PathVariable int content, HttpServletResponse res) {
 //        Utils.sendImage(res, from, content);
     }
+
+    @RequestMapping("gif/{from}/{content}")
+    public void utilImage(@PathVariable String from, @PathVariable String content, HttpServletResponse res) {
+        Utils.sendGifImage(res, from, content);
+    }
 }
