@@ -15,121 +15,206 @@
         <script type="text/javascript">
             //            $("#navUsers").addClass("active");
             var doRegistration = true;
+            var userForEdit = {login:"", firstName:"",lastName: ""};
+            var userLogin;
             $(function() {
                 $('#inputPassword3').tooltip({trigger: "focus"});
-                $(".user-edit").click(function(e) {
+                var editClick = function(e,$this) {
                     e.preventDefault();
-                    var userLogin = $(this).attr("id");
+                    userLogin = $this.attr("id");
                     userLogin = userLogin.substr(5);
                     openModal(userLogin);
-                });
-                $('.add-user').click(function(e) {
+                };
+                var repoClick = function(e,$this) {
                     e.preventDefault();
-                    openModal("add-new-user");
-                });
-                $(".user-repo").click(function(e) {
-                    e.preventDefault();
-                    var userLogin = $(this).attr("id");
+                    var $href = $this;
+                    var $i = $($($href.children('i'))[0]);
+                    userLogin = $href.attr("id");
                     userLogin = userLogin.substr(5);
-                    console.log(userLogin);
                     $.ajax({
                         url: "${contextPath}/auth/administration/users/edit/repo/"+userLogin,
                         type: 'POST',
                         cashed: false,
                         'success': function(repo) {
                             if (repo == "star") {
-                                $($(this).children('i')).removeClass('.icon-star-empty').addClass('.icon-star');
+                                $i.removeClass('icon-star-empty')
+                                $i.addClass('icon-star');
                             } else {
-                                $($(this).children('i')).removeClass('.icon-star').addClass('.icon-star-empty');
+                                $i.removeClass('icon-star')
+                                $i.addClass('icon-star-empty');
                             }
                         }
                     });
+                }
+                var removeClick = function(e, $this) {
+                    e.preventDefault();
+                    userLogin = $this.attr("id");
+                    var $row = $this;
+                    userLogin = userLogin.substr(7);
+                    $.ajax({
+                        url: "${contextPath}/auth/administration/users/edit/remove/",
+                        type: 'POST',
+                        cashed: false,
+                        data: {login:userLogin},
+                        'success': function(repo) {
+                            $('#user-row-'+userLogin).hide(1000, function () {
+                                $('#user-row-'+userLogin).remove();
+                            });
+                        }
+                    });
+                }
+                $('.add-user').click(function(e) {
+                    e.preventDefault();
+                    userLogin = "add-new-user";
+                    openModal(userLogin);
                 });
-                function nameCheck() {
+                $(".user-edit").click(function(e) {
+                    editClick(e, $(this));
+                });
+                $(".user-repo").click(function(e) {
+                    repoClick(e, $(this));
+                });
+                $('.user-remove').click(function(e) {
+                    removeClick(e, $(this));
+                });
+                $('.edit-save').click(function(e) {
+                    e.preventDefault();
+                    doRegistration = true;
+                    cleanMessages()
+                    nameCheck(!!((userLogin == "add-new-user")));
+                    if (doRegistration) {
+                        var dataJSON = JSON.stringify({
+                            login: userForEdit.login,
+                            firstName: userForEdit.firstName,
+                            lastName: userForEdit.lastName,
+                            newFirstName:$('#inputFirstName').val(),
+                            newLastName:$('#inputLastName').val(),
+                            newPassword:$('#inputPassword3').val(),
+                            newLogin:$('#inputLogin').val(),
+                            role: "1"});
+                        $.ajax({
+                            url: "${contextPath}/auth/administration/users/do/edit/",
+                            type: 'POST',
+                            contentType: 'application/json',
+                            cashed: false,
+                            data: dataJSON,
+                            beforeSend: function() {
+                                $('#loading').removeClass('hidden');
+                            },
+                            success: function(data) {
+                                $('#loading').addClass('hidden');
+                                if (data.loginIsFree == false && data.success == false) {
+                                    $('#loginIsExist').removeClass("hidden");
+                                    $('#add-success').addClass('hidden');
+                                    $('#success').addClass("hidden");
+                                }
+                                if (data.success == true) {
+                                    console.log(data);
+//                                        alert(data);
+                                    if (userLogin == "add-new-user") {
+                                        $('#add-success').removeClass('hidden');
+                                    } else {
+                                        $('#success').removeClass("hidden");
+                                    }
+                                    refreshRow(userLogin, data);
+                                    $('#error').addClass("hidden");
+                                    $('#loginIsExist').addClass("hidden");
+//                                        $('#navFullName').html(data.newLastName + " " + data.newFirstName + "&nbsp;<i class='caret'></i>");
+                                }
+                            }
+                        });
+                    }
+                });
+                function nameCheck(isNew) {
                     var firstNameStr = $('#inputFirstName').val();
                     var lastNameStr = $('#inputLastName').val();
                     var loginStr = $('#inputLogin').val();
-                    if (firstNameStr.length == 0 ||
-                            lastNameStr.length == 0 ||
-                            loginStr.length == 0) {
-                        $('#error').removeClass("hidden");
-                        $('#success').addClass("hidden");
+                    var passStr = $('#inputPassword3').val();
+                    if (firstNameStr.length == 0 || lastNameStr.length == 0 || loginStr.length == 0 ) {
+                        if (isNew && passStr.length == 0) {
+                            $('#error-add').removeClass("hidden");
+                        } else {
+                            $('#error').removeClass("hidden");
+                        }
                         doRegistration &= false;
                     } else {
-                        $('#error').addClass("hidden");
+                        cleanMessages()
                         doRegistration &= true;
                     }
                 }
-                function openModal(userLogin) {
-                    var userForEdit;
+                function resetModal(obj) {
+                    $('#inputFirstName').val(obj.firstName);
+                    $('#inputLastName').val(obj.lastName);
+                    $('#inputLogin').val(obj.login);
+                    $('#inputPassword3').val("");
+                }
+                function cleanMessages() {
                     $('#success').addClass("hidden");
                     $('#error').addClass("hidden");
+                    $('#error-add').addClass("hidden");
                     $('#loginIsExist').addClass("hidden");
+                    $('#add-success').addClass("hidden");
+                }
+                function openModal(userLogin) {
+                    userForEdit = {login:"", firstName:"",lastName: ""};
+                    cleanMessages();
                     if (userLogin != "add-new-user") {
                         $.ajax({
                             url: "${contextPath}/auth/administration/users/edit/get/"+userLogin,
                             type: 'POST',
                             cashed: false,
                             'success': function(editUser) {
-                                $('#inputFirstName').val(editUser.firstName);
-                                $('#inputLastName').val(editUser.lastName);
-                                $('#inputLogin').val(editUser.login);
+                                resetModal(editUser)
                                 $('#myModalLabel').html("<spring:message code='users.table.edit'/>");
                                 $('#inputPassword3').tooltip('enable');
                                 $("#editModal").modal("show");
-                                userForEdit = editUser;
+                                userForEdit.login = editUser.login;
+                                userForEdit.firstName = editUser.firstName;
+                                userForEdit.lastName = editUser.lastName;
                             }
                         });
                     } else {
                         $('#myModalLabel').html("<spring:message code='users.table.modal.add'/>");
                         userForEdit = {login:"", firstName:"",lastName: ""}
+                        resetModal(userForEdit);
                         $('#inputPassword3').tooltip('disable');
                         $("#editModal").modal("show");
                     }
 
-                    $('.edit-save').click(function(e) {
-                        e.preventDefault();
-                        doRegistration = true;
-                        nameCheck();
-                        if (doRegistration) {
-                            var dataJSON = JSON.stringify({
-                                login: userForEdit.login,
-                                firstName: userForEdit.firstName,
-                                lastName: userForEdit.lastName,
-                                newFirstName:$('#inputFirstName').val(),
-                                newLastName:$('#inputLastName').val(),
-                                newPassword:$('#inputPassword3').val(),
-                                newLogin:$('#inputLogin').val()});
-                            $.ajax({
-                                url: "${contextPath}/auth/administration/users/do/edit/",
-                                type: 'POST',
-                                contentType: 'application/json',
-                                cashed: false,
-                                data: dataJSON,
-                                beforeSend: function() {
-                                    $('#loading').removeClass('hidden');
-                                },
-                                success: function(data) {
-                                    $('#loading').addClass('hidden');
-                                    if (data.loginIsFree == false && data.success == false) {
-                                        $('#loginIsExist').removeClass("hidden");
-                                        $('#success').addClass("hidden");
-                                    }
-                                    if (data.success == true) {
-                                        console.log(data);
-//                                        alert(data);
-                                        $('#success').removeClass("hidden");
-                                        $('#error').addClass("hidden");
-                                        $('#loginIsExist').addClass("hidden");
-//                                        $('#navFullName').html(data.newLastName + " " + data.newFirstName + "&nbsp;<i class='caret'></i>");
-                                    }
-                                }
-                            });
-                        }
-                    });
+
+                };
+                function refreshRow(login, data) {
+                    if (login == "add-new-user") {
+                        var lastRow = $('.table tr:last')
+                        var index = parseInt(lastRow.find('.index').text()) + 1;
+                        var star = "<i class='icon-star-empty'></i>";
+                        lastRow.after("<tr id='"+'user-row-' + data.newLogin+"' class='userInfo'>" +
+                                "<td class='index'>"+index+"</td>" +
+                                "<td>"+data.newLogin+"</td>" +
+                                "<td>"+data.newLastName + " " + data.newFirstName+"</td>" +
+                                "<td><a href='' id='edit-"+data.newLogin+"' class='user-edit'><i class='icon-pencil'></i></a>&nbsp;\n"+
+                                "<a href='' id='repo-"+data.newLogin+"' class='user-repo'>"+star+"</a>&nbsp;\n"+
+                                "<a href='' id='remove-"+data.newLogin+"'><i class='icon-remove'></i></a></td></tr>")
+                        var editHref = $('#edit-'+data.newLogin);
+                        var repoHref = $('#repo-'+data.newLogin);
+                        var removeHref = $('#remove-'+data.newLogin);
+                        editHref.click(function(e) {
+                            editClick(e, editHref);
+                        });
+                        repoHref.click(function(e) {
+                            repoClick(e, repoHref);
+                        });
+                        removeHref.click(function(e) {
+                            removeClick(e,removeHref);
+                        });
+
+                        $('.table tr:last').show(1000);
+                    }
+                    var $row = $('#user-row-'+login);
+                    $row.find('.login').text(data.newLogin);
+                    $row.find('.fullName').text(data.newLastName + " " + data.newFirstName);
                 }
             });
-
         </script>
     </jsp:attribute>
 
@@ -149,15 +234,16 @@
                     <th colspan="3"><spring:message code="users.table.action"/></th>
                 </tr>
                 <c:forEach var="curUser" items="${users}" varStatus="st">
-                    <tr id="${curUser.id}" class="userInfo">
-                        <td>${st.index+1}</td>
-                        <td>${curUser.login}</td>
-                        <td>${curUser.fullName}</td>
-                        <td><a id="edit-${curUser.login}" class="user-edit"><i class="icon-pencil"></i></a>&nbsp;</td>
-                        <c:if test="${curUser.id != principalId}">
-                        <td><a id="repo-${curUser.login}" class="user-repo"><sec:authorize access="hasRole('ROLE_ADMINISTRATOR')"><i class="icon-star-empty"></i></sec:authorize><sec:authorize access="hasRole('ROLE_SUPERVISOR')"><i class="icon-star"></i></sec:authorize></a>&nbsp;</td>
-                        <td><a href="${contextPath}/auth/administration/users/edit/remove/${curUser.login}"><i class="icon-remove"></i></a>&nbsp;</td>
-                        </c:if>
+                    <tr id="user-row-${curUser.login}" class="userInfo">
+                        <td class="index">${st.index+1}</td>
+                        <td class="login">${curUser.login}</td>
+                        <td class="fullName">${curUser.fullName}</td>
+                        <td><a href="" id="edit-${curUser.login}" class="user-edit"><i class="icon-pencil"></i></a>&nbsp;
+                            <c:if test="${curUser.id != principalId}">
+                            <a href="" id="repo-${curUser.login}" class="user-repo"><c:choose><c:when test="${curUser.role == 'ROLE_ADMINISTRATOR'}"><i class="icon-star-empty"></i></c:when><c:when test="${curUser.role == 'ROLE_SUPERVISOR'}"><i class="icon-star"></i></c:when></c:choose></a>&nbsp;
+                            <a href="" id="remove-${curUser.login}" class="user-remove"><i class="icon-remove"></i></a>
+                            </c:if>
+                        </td>
                     </tr>
                 </c:forEach>
             </table>
@@ -167,7 +253,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h3 id="myModalLabel"><spring:message code="users.table.edit"/>&nbsp;<img id="loading" class="hidden" src="${contextPath}/image/gif/util/loading"/></h3>
+                            <h3 id="myModalLabel"><spring:message code="users.table.edit"/>&nbsp;<img id="loading" width="16" height="16" alt="Loading" src="${contextPath}/image/gif/util/loading"/></h3>
                         </div>
                         <div class="modal-body">
                             <form class="form-horizontal">
@@ -207,11 +293,17 @@
                                     <div class="alert alert-danger hidden" id="error">
                                         <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
                                     </div>
+                                    <div class="alert alert-danger hidden" id="error-add">
+                                        <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels.add"/>
+                                    </div>
                                     <div class="alert alert-danger hidden" id="loginIsExist">
                                         <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>
                                     </div>
                                     <div class="alert alert-success hidden" id="success">
                                         <spring:message code="edit.submit.success"/>
+                                    </div>
+                                    <div class="alert alert-success hidden" id="add-success">
+                                        <spring:message code="edit.submit.success.add"/>
                                     </div>
                                 </div>
                             </form>

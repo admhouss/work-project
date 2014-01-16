@@ -1,14 +1,18 @@
 package by.premiya.olga.project.util.json;
 
 import by.premiya.olga.project.entity.User;
+import by.premiya.olga.project.util.auth.UserRole;
 
-import java.io.*;
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 
 /**
  * @author Vlad Abramov
  */
 public class EditUser implements Externalizable {
-    private static final long serialVersionUID = -5837265027542846948L;
+    private static final long serialVersionUID = 8356606643899956949L;
     private boolean loginIsFree = true;
     private boolean success = false;
     private String login;
@@ -18,13 +22,30 @@ public class EditUser implements Externalizable {
     private String newPassword;
     private String newFirstName;
     private String newLastName;
+    private String role;
 
-    public EditUser() { }
+    public EditUser() {
+    }
 
     public EditUser(User user) {
         this.login = user.getLogin();
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setUserRole(UserRole role) {
+        switch (role) {
+            case ROLE_ADMINISTRATOR: this.role = "1"; break;
+            case ROLE_SUPERVISOR: this.role = "2"; break;
+        }
     }
 
     public boolean isSuccess() {
@@ -111,6 +132,7 @@ public class EditUser implements Externalizable {
                 ", newPassword='" + newPassword + '\'' +
                 ", newFirstName='" + newFirstName + '\'' +
                 ", newLastName='" + newLastName + '\'' +
+                ", role='" + role + '\'' +
                 ']';
     }
 
@@ -127,6 +149,7 @@ public class EditUser implements Externalizable {
         inst.newPassword = newPassword;
         inst.newFirstName = newFirstName;
         inst.newLastName = newLastName;
+        inst.role = role;
         return inst;
     }
 
@@ -141,12 +164,13 @@ public class EditUser implements Externalizable {
         out.writeObject(newPassword);
         out.writeObject(newFirstName);
         out.writeObject(newLastName);
+        out.writeObject(role);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
         loginIsFree = in.readBoolean();
-        success  = in.readBoolean();
+        success = in.readBoolean();
         login = (String) in.readObject();
         firstName = (String) in.readObject();
         lastName = (String) in.readObject();
@@ -154,5 +178,6 @@ public class EditUser implements Externalizable {
         newPassword = (String) in.readObject();
         newFirstName = (String) in.readObject();
         newLastName = (String) in.readObject();
+        role = (String) in.readObject();
     }
 }

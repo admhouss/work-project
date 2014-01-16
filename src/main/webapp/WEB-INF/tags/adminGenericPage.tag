@@ -19,7 +19,7 @@
         <c:if test="${empty param.nonav}">
             <t:adminNavbar/>
             <div class="container" style="margin-top: 5%;">
-                <h1>Заговок, большыми буквами</h1>
+                <h1>Заговок</h1>
                 <p>Маленькое описание</p>
             </div>
         </c:if>

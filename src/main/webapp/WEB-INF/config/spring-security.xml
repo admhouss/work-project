@@ -17,7 +17,7 @@
         <property name="userPropertyToUse" value="username"/>
     </bean>
 
-    <security:http create-session="stateless" auto-config="true" entry-point-ref="basicEntryPoint">
+    <security:http create-session="stateless" auto-config="true" >
         <security:intercept-url pattern="/auth/administration/users**" access="ROLE_SUPERVISOR" />
         <security:intercept-url pattern="/auth/administration/editor**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
         <security:intercept-url pattern="/auth/administration**" access="ROLE_ADMINISTRATOR, ROLE_SUPERVISOR" />
@@ -30,8 +30,8 @@
         <security:remember-me key="olgaProjectAppKey"
                               token-validity-seconds="864000"
                               user-service-ref="customUserDetailsService" use-secure-cookie="true"/>
-        <!--<security:http-basic/>-->
-        <security:custom-filter ref="basicFilter" after="BASIC_AUTH_FILTER" />
+        <security:http-basic/>
+        <!--<security:custom-filter ref="basicFilter" after="BASIC_AUTH_FILTER" />-->
     </security:http>
 
     <!--<bean id="digestFilter"-->

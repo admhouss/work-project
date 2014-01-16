@@ -6,7 +6,6 @@ import by.premiya.olga.project.util.json.EditUser;
 import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.annotations.ActiveUser;
 import by.premiya.olga.project.util.auth.UserRole;
-import by.premiya.olga.project.util.json.UserJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -47,6 +46,12 @@ public class AdminController {
     @RequestMapping(value = "users/do/edit/", method = RequestMethod.POST, consumes = "application/json", produces = MediaType.APPLICATION_JSON_VALUE)
     private @ResponseBody EditUser editActionUserPage(@RequestBody EditUser editUser) {
         return userService.updateUser(editUser);
+    }
+
+    @RequestMapping(value = "users/edit/remove", method = RequestMethod.POST)
+    private @ResponseBody boolean removeActionUserPage(@RequestParam String login) {
+        userService.deleteByLogin(login);
+        return true;
     }
 
     @RequestMapping(value = "users/edit/repo/{userLogin}", method = RequestMethod.POST)

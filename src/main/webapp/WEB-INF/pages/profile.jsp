@@ -142,17 +142,14 @@
             </div>
             <div class="control-group">
                 <div class="controls">
-                        <div class="alert alert-danger hidden" id="error">
-                            <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
-                        </div>
+                    <div class="alert alert-danger hidden" id="error">
+                        <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.labels"/>
                     </div>
-                        <div class="alert alert-danger hidden" id="loginIsExist">
-                            <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>
-                        </div>
+                    <div class="alert alert-danger hidden" id="loginIsExist">
+                        <strong><spring:message code="edit.submit.fail.title"/></strong> <spring:message code="edit.error.login.exist"/>
                     </div>
-                        <div class="alert alert-success hidden" id="success">
-                            <spring:message code="edit.submit.success"/>
-                        </div>
+                    <div class="alert alert-success hidden" id="success">
+                        <spring:message code="edit.submit.success"/>
                     </div>
                 </div>
             </div>

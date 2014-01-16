@@ -5,7 +5,6 @@ import by.premiya.olga.project.entity.User;
 import by.premiya.olga.project.service.UserService;
 import by.premiya.olga.project.util.auth.UserRole;
 import by.premiya.olga.project.util.json.EditUser;
-import by.premiya.olga.project.util.json.UserJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -73,6 +72,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setLastName(editUser.getNewLastName());
         user.setFirstName(editUser.getNewFirstName());
+        editUser.setUserRole(user.getRole());
         if (!editUser.getNewPassword().equals("")) {
             user.setPasswordHash(passwordEncoder.encodePassword(editUser.getNewPassword(), user.getLogin()));
         }
