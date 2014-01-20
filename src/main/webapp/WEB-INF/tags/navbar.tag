@@ -5,9 +5,6 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <script type="text/javascript">
-    $(function() {
-//        $('#editProfile').popover({placement: "bottom"});
-    });
 </script>
 
 <div id="myNav" class="navbar navbar-fixed-top">

@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.*;
  * @author vabramov
  */
 @Controller
-@PreAuthorize(value = "isAuthenticated()")
 @RequestMapping("/auth/administration")
 public class AdminController {
 
     @Autowired
     private UserService userService;
 
+    @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET)
     private String defaultAdmin() {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;

@@ -6,6 +6,7 @@
 
 <%@attribute name="scripts" fragment="true"%>
 <%@attribute name="head" fragment="true"%>
+<%@attribute name="content" fragment="true"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="application"/>
 
@@ -18,19 +19,17 @@
     <body>
         <c:if test="${empty param.nonav}">
             <t:navbar/>
-            <div class="container" style="margin-top: 5%;">
-                <h1>Заговок</h1>
-                <p>Маленькое описание</p>
-            </div>
+            <t:header/>
         </c:if>
-
-        <%--<div class="jumbotron subhead">--%>
-            <%--<div class="container">--%>
-                <%--<h1>Шины, Аккумуляторы и Радиаторы</h1>--%>
-                <%--<p>Шины, Аккумуляторы и Радиаторы</p>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-        <jsp:doBody />
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <t:fluidNav/>
+                </div>
+                <div class="span10">
+                    <jsp:invoke fragment="content"/>
+                </div>
+            </div>
         <t:defaultscripts />
         <jsp:invoke fragment="scripts"/>
     </body>

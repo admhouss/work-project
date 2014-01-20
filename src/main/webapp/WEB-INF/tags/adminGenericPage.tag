@@ -6,6 +6,7 @@
 
 <%@attribute name="scripts" fragment="true"%>
 <%@attribute name="head" fragment="true"%>
+<%@attribute name="content" fragment="true"%>
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}" scope="application"/>
 
@@ -18,13 +19,18 @@
     <body>
         <c:if test="${empty param.nonav}">
             <t:adminNavbar/>
-            <div class="container" style="margin-top: 5%;">
-                <h1>Заговок</h1>
-                <p>Маленькое описание</p>
-            </div>
+            <t:header/>
         </c:if>
-
-        <jsp:doBody />
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span2">
+                    <t:fluidNav/>
+                </div>
+                <div class="span10">
+                    <jsp:invoke fragment="content"/>
+                </div>
+            </div>
+        </div>
         <t:defaultscripts />
         <jsp:invoke fragment="scripts"/>
     </body>

@@ -1,265 +1,214 @@
-!function($) {
-
-    "use strict"; // jshint ;_;
-
-
-    /* TOOLTIP PUBLIC CLASS DEFINITION
-     * =============================== */
-
-    var Users = function (element, options) {
-        this.init('tooltip', element, options)
-    }
-
-    Users.prototype = {
-
-        constructor: Users
-
-        , init: function (type, element, options) {
-            var eventIn
-                , eventOut
-
-            this.type = type
-            this.$element = $(element)
-            this.options = this.getOptions(options)
-            this.enabled = true
-
-            if (this.options.trigger == 'click') {
-                this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
-            } else if (this.options.trigger != 'manual') {
-                eventIn = this.options.trigger == 'hover' ? 'mouseenter' : 'focus'
-                eventOut = this.options.trigger == 'hover' ? 'mouseleave' : 'blur'
-                this.$element.on(eventIn + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
-                this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
-            }
-
-            this.options.selector ?
-                (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
-                this.fixTitle()
-        }
-
-        , getOptions: function (options) {
-            options = $.extend({}, $.fn[this.type].defaults, options, this.$element.data())
-
-            if (options.delay && typeof options.delay == 'number') {
-                options.delay = {
-                    show: options.delay
-                    , hide: options.delay
+function usersControls (contextPath) {
+    var userForEdit = {login: "", firstName: "", lastName: ""};
+    var userLogin;
+    $('#inputPassword3').tooltip({trigger: "focus"});
+    var editClick = function (e, $this) {
+        e.preventDefault();
+        userLogin = $this.attr("id");
+        userLogin = userLogin.substr(5);
+        openModal(userLogin);
+    };
+    var repoClick = function (e, $this) {
+        e.preventDefault();
+        var $i = $($($this.children('i'))[0]);
+        userLogin = $this.attr("id");
+        userLogin = userLogin.substr(5);
+        $.ajax({
+            url: contextPath+"/auth/administration/users/edit/repo/" + userLogin,
+            type: 'POST',
+            cashed: false,
+            'success': function (repo) {
+                if (repo == "star") {
+                    $i.removeClass('icon-star-empty');
+                    $i.addClass('icon-star');
+                } else {
+                    $i.removeClass('icon-star');
+                    $i.addClass('icon-star-empty');
                 }
             }
+        });
+    };
+    var removeClick = function (e, $this) {
+        e.preventDefault();
+        userLogin = $this.attr("id");
+        userLogin = userLogin.substr(7);
+        $.ajax({
+            url: contextPath+"/auth/administration/users/edit/remove/",
+            type: 'POST',
+            cashed: false,
+            data: {login: userLogin},
+            'success': function () {
+                $('#user-row-' + userLogin).hide(1000, function () {
+                    $('#user-row-' + userLogin).remove();
+                });
+            }
+        });
+    };
+    $('.add-user').click(function (e) {
+        e.preventDefault();
+        userLogin = "add-new-user";
+        openModal(userLogin);
+    });
+    $(".user-edit").click(function (e) {
+        editClick(e, $(this));
+    });
+    $(".user-repo").click(function (e) {
+        repoClick(e, $(this));
+    });
+    $('.user-remove').click(function (e) {
+        removeClick(e, $(this));
+    });
+    $('.edit-save').click(function (e) {
+        e.preventDefault();
+        sendRequest();
+    });
 
-            return options
+    $('input').on('keypress', function (e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            sendRequest();
+        } else {
+            cleanMessages();
         }
+    });
 
-        , enter: function (e) {
-            var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-
-            if (!self.options.delay || !self.options.delay.show) return self.show()
-
-            clearTimeout(this.timeout)
-            self.hoverState = 'in'
-            this.timeout = setTimeout(function() {
-                if (self.hoverState == 'in') self.show()
-            }, self.options.delay.show)
-        }
-
-        , leave: function (e) {
-            var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-
-            if (this.timeout) clearTimeout(this.timeout)
-            if (!self.options.delay || !self.options.delay.hide) return self.hide()
-
-            self.hoverState = 'out'
-            this.timeout = setTimeout(function() {
-                if (self.hoverState == 'out') self.hide()
-            }, self.options.delay.hide)
-        }
-
-        , show: function () {
-            var $tip
-                , inside
-                , pos
-                , actualWidth
-                , actualHeight
-                , placement
-                , tp
-
-            if (this.hasContent() && this.enabled) {
-                $tip = this.tip()
-                this.setContent()
-
-                if (this.options.animation) {
-                    $tip.addClass('fade')
+    function sendRequest() {
+        cleanMessages();
+        if (nameCheck(!!((userLogin == "add-new-user")))) {
+            var dataJSON = JSON.stringify({
+                login: userForEdit.login,
+                firstName: userForEdit.firstName,
+                lastName: userForEdit.lastName,
+                newFirstName: $('#inputFirstName').val(),
+                newLastName: $('#inputLastName').val(),
+                newPassword: $('#inputPassword3').val(),
+                newLogin: $('#inputLogin').val(),
+                role: "1"});
+            $.ajax({
+                url: contextPath+"/auth/administration/users/do/edit/",
+                type: 'POST',
+                contentType: 'application/json',
+                cashed: false,
+                data: dataJSON,
+                beforeSend: function () {
+                    $('#loading').removeClass('hidden');
+                },
+                success: function (data) {
+                    $('#loading').addClass('hidden');
+                    if (data.loginIsFree == false && data.success == false) {
+                        $('#loginIsExist').removeClass("hidden");
+                        $('#add-success').addClass('hidden');
+                        $('#success').addClass("hidden");
+                    }
+                    if (data.success == true) {
+                        if (userLogin == "add-new-user") {
+                            $('#add-success').removeClass('hidden');
+                        } else {
+                            $('#success').removeClass("hidden");
+                        }
+                        refreshRow(userLogin, data);
+                        $('#error').addClass("hidden");
+                        $('#loginIsExist').addClass("hidden");
+                    }
                 }
+            });
+        }
+    }
 
-                placement = typeof this.options.placement == 'function' ?
-                    this.options.placement.call(this, $tip[0], this.$element[0]) :
-                    this.options.placement
+    function nameCheck(isNew) {
+        var firstNameStr = $('#inputFirstName').val();
+        var lastNameStr = $('#inputLastName').val();
+        var loginStr = $('#inputLogin').val();
+        var passStr = $('#inputPassword3').val();
+        if (firstNameStr.length == 0 || lastNameStr.length == 0 || loginStr.length == 0 || (isNew && passStr.length == 0)) {
+            if (isNew) {
+                $('#error-add').removeClass("hidden");
+            } else {
+                $('#error').removeClass("hidden");
+            }
+            return false;
+        } else {
+            cleanMessages();
+            return true;
+        }
+    }
 
-                inside = /in/.test(placement)
+    function resetModal(obj) {
+        $('#inputFirstName').val(obj.firstName);
+        $('#inputLastName').val(obj.lastName);
+        $('#inputLogin').val(obj.login);
+        $('#inputPassword3').val("");
+    }
 
-                $tip
-                    .detach()
-                    .css({ top: 0, left: 0, display: 'block' })
-                    .insertAfter(this.$element)
+    function cleanMessages() {
+        $('#success').addClass("hidden");
+        $('#error').addClass("hidden");
+        $('#error-add').addClass("hidden");
+        $('#loginIsExist').addClass("hidden");
+        $('#add-success').addClass("hidden");
+    }
 
-                pos = this.getPosition(inside)
-
-                actualWidth = $tip[0].offsetWidth
-                actualHeight = $tip[0].offsetHeight
-
-                switch (inside ? placement.split(' ')[1] : placement) {
-                    case 'bottom':
-                        tp = {top: pos.top + pos.height, left: pos.left + pos.width / 2 - actualWidth / 2}
-                        break
-                    case 'top':
-                        tp = {top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2}
-                        break
-                    case 'left':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth}
-                        break
-                    case 'right':
-                        tp = {top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width}
-                        break
+    function openModal(userLogin) {
+        userForEdit = {login: "", firstName: "", lastName: ""};
+        cleanMessages();
+        if (userLogin != "add-new-user") {
+            $.ajax({
+                url: contextPath+"/auth/administration/users/edit/get/" + userLogin,
+                type: 'POST',
+                cashed: false,
+                'success': function (editUser) {
+                    resetModal(editUser);
+                    $('#myModalLabel').html("Редактирование");
+                    $('#inputPassword3').tooltip('enable');
+                    $("#editModal").modal("show");
+                    userForEdit.login = editUser.login;
+                    userForEdit.firstName = editUser.firstName;
+                    userForEdit.lastName = editUser.lastName;
                 }
-
-                $tip
-                    .offset(tp)
-                    .addClass(placement)
-                    .addClass('in')
-            }
+            });
+        } else {
+            $('#myModalLabel').html("Добавление");
+            userForEdit = {login: "", firstName: "", lastName: ""};
+            resetModal(userForEdit);
+            $('#inputPassword3').tooltip('disable');
+            $("#editModal").modal("show");
         }
 
-        , setContent: function () {
-            var $tip = this.tip()
-                , title = this.getTitle()
-
-            $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
-            $tip.removeClass('fade in top bottom left right')
-        }
-
-        , hide: function () {
-            var that = this
-                , $tip = this.tip()
-
-            $tip.removeClass('in')
-
-            function removeWithAnimation() {
-                var timeout = setTimeout(function () {
-                    $tip.off($.support.transition.end).detach()
-                }, 500)
-
-                $tip.one($.support.transition.end, function () {
-                    clearTimeout(timeout)
-                    $tip.detach()
-                })
-            }
-
-            $.support.transition && this.$tip.hasClass('fade') ?
-                removeWithAnimation() :
-                $tip.detach()
-
-            return this
-        }
-
-        , fixTitle: function () {
-            var $e = this.$element
-            if ($e.attr('title') || typeof($e.attr('data-original-title')) != 'string') {
-                $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
-            }
-        }
-
-        , hasContent: function () {
-            return this.getTitle()
-        }
-
-        , getPosition: function (inside) {
-            return $.extend({}, (inside ? {top: 0, left: 0} : this.$element.offset()), {
-                width: this.$element[0].offsetWidth
-                , height: this.$element[0].offsetHeight
-            })
-        }
-
-        , getTitle: function () {
-            var title
-                , $e = this.$element
-                , o = this.options
-
-            title = $e.attr('data-original-title')
-                || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
-
-            return title
-        }
-
-        , tip: function () {
-            return this.$tip = this.$tip || $(this.options.template)
-        }
-
-        , validate: function () {
-            if (!this.$element[0].parentNode) {
-                this.hide()
-                this.$element = null
-                this.options = null
-            }
-        }
-
-        , enable: function () {
-            this.enabled = true
-        }
-
-        , disable: function () {
-            this.enabled = false
-        }
-
-        , toggleEnabled: function () {
-            this.enabled = !this.enabled
-        }
-
-        , toggle: function (e) {
-            var self = $(e.currentTarget)[this.type](this._options).data(this.type)
-            self[self.tip().hasClass('in') ? 'hide' : 'show']()
-        }
-
-        , destroy: function () {
-            this.hide().$element.off('.' + this.type).removeData(this.type)
-        }
 
     }
+    function refreshRow(login, data) {
+        if (login == "add-new-user") {
+            var lastRow = $('.table tr:last');
+            var index = parseInt(lastRow.find('.index').text()) + 1;
+            var star = "<i class='icon-star-empty'></i>";
+            lastRow.after("<tr id='" + 'user-row-' + data.newLogin + "' class='userInfo'>" +
+                "<td class='index'>" + index + "</td>" +
+                "<td>" + data.newLogin + "</td>" +
+                "<td>" + data.newLastName + " " + data.newFirstName + "</td>" +
+                "<td><a href='' id='edit-" + data.newLogin + "' class='user-edit'><i class='icon-pencil'></i></a>&nbsp;\n" +
+                "<a href='' id='repo-" + data.newLogin + "' class='user-repo'>" + star + "</a>&nbsp;\n" +
+                "<a href='' id='remove-" + data.newLogin + "'><i class='icon-remove'></i></a></td></tr>");
+            var editHref = $('#edit-' + data.newLogin);
+            var repoHref = $('#repo-' + data.newLogin);
+            var removeHref = $('#remove-' + data.newLogin);
+            editHref.click(function (e) {
+                editClick(e, editHref);
+            });
+            repoHref.click(function (e) {
+                repoClick(e, repoHref);
+            });
+            removeHref.click(function (e) {
+                removeClick(e, removeHref);
+            });
 
-
-    /* TOOLTIP PLUGIN DEFINITION
-     * ========================= */
-
-    var old = $.fn.users
-
-    $.fn.users = function ( option ) {
-        return this.each(function () {
-            var $this = $(this)
-                , data = $this.data('tooltip')
-                , options = typeof option == 'object' && option
-            if (!data) $this.data('tooltip', (data = new Tooltip(this, options)))
-            if (typeof option == 'string') data[option]()
-        })
+            $('.table tr:last').show(1000);
+        }
+        var $row = $('#user-row-' + login);
+        $row.attr('id', 'user-row-' + data.newLogin);
+        $row.find('.login').text(data.newLogin);
+        $row.find('.fullName').text(data.newLastName + " " + data.newFirstName);
+        $row.find('.user-edit').attr('id','edit-' + data.newLogin);
+        $row.find('.user-repo').attr('id','repo-' + data.newLogin);
+        $row.find('.user-remove').attr('id','remove-' + data.newLogin);
     }
-
-    $.fn.users.Constructor = Users
-
-    $.fn.users.defaults = {
-        animation: true
-        , placement: 'top'
-        , selector: false
-        , template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
-        , trigger: 'hover'
-        , title: ''
-        , delay: 0
-        , html: false
-    }
-
-
-    /* USERS NO CONFLICT
-     * =================== */
-
-    $.fn.users.noConflict = function () {
-        $.fn.users = old
-        return this
-    }
-}(window.jQuery)
+}

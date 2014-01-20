@@ -17,14 +17,16 @@ import java.io.PrintWriter;
  * @author vlad
  */
 @Controller
-@PreAuthorize(value = "isAuthenticated()")
 @RequestMapping("/auth/administration/editor")
 public class AdminEditorController {
+
+    @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET)
     private String adminEditor(HttpServletRequest request, HttpServletResponse response) {
         return Pages.ADMIN_HOME_PAGE;
     }
 
+    @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "new/wheel", method = RequestMethod.GET)
     private String newWheel(@ActiveUser User user) {
         return "";

@@ -119,7 +119,7 @@ public class User implements Serializable {
         } else if (userObj instanceof User) {
             User user = (User) userObj;
 
-            return id == user.id;
+            return id.equals(user.id);
         }
 
         return false;
