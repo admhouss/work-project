@@ -9,12 +9,16 @@
     <div class="accordion-group">
         <div class="accordion-heading">
             <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-                Collapsible Group Item #1
+                <spring:message code="navbar.production"/>
             </a>
         </div>
         <div id="collapseOne" class="accordion-body collapse">
             <div class="accordion-inner">
-                Anim pariatur cliche...
+                <ul class="nav nav-list">
+                    <li><a href="${contextPath}/show/wheels"><spring:message code="navbar.wheels"/></a></li>
+                    <li><a href="${contextPath}/show/accumulators"><spring:message code="navbar.accumulators"/></a></li>
+                    <li><a href="${contextPath}/show/radiators"><spring:message code="navbar.radiators"/></a></li>
+                </ul>
             </div>
         </div>
     </div>

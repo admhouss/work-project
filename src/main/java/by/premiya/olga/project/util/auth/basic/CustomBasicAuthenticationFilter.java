@@ -17,7 +17,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -138,18 +137,25 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
 
             String username = tokens[0];
 
-            if (Utils.hasCookie(request, "loc") && !Utils.hasCookie(request, "lic")) {
+//            if (Utils.hasCookie(request, "loc") && !Utils.hasCookie(request, "lic")) {
+//
+//                processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
+//                });
+//                return;
+//            }
 
-                processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
-                });
-                return;
-            }
-
-            if (debug) {
-                logger.debug("Basic Authentication Authorization header found for user '" + username + "'");
-            }
+//            if (debug) {
+//                logger.debug("Basic Authentication Authorization header found for user '" + username + "'");
+//            }
 
             if (authenticationIsRequired(username)) {
+                if (Utils.hasCookie(request, "loc")) {
+                    Utils.removeLogoutCookie(response);
+                    processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
+                        private static final long serialVersionUID = 5930005044218950413L;
+                    });
+                }
+
                 UsernamePasswordAuthenticationToken authRequest =
                         new UsernamePasswordAuthenticationToken(username, tokens[1]);
                 authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
@@ -192,7 +198,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
     private void processAuthenticationException(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
 
-        Utils.setLoginCookie(response);
+        Utils.removeLogoutCookie(response);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Set logout cookie and send basic authorization");

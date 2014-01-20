@@ -12,6 +12,8 @@ public final class Pages {
     public static final String ERROR_PAGE = "errorPage";
     public static final String ADMIN_HOME_PAGE = "indexAdmin";
     public static final String LOGIN_PAGE = "loginPage";
+    public static final String SHOW_PAGE = "show";
+    public static final String NEW_WHEEL_PAGE = "newWheel";
 
     private Pages() {
 

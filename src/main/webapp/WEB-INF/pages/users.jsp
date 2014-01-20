@@ -26,7 +26,7 @@
         <c:set var="firstNamePH"><spring:message code="edit.firstName"/></c:set>
         <c:set var="lastNamePH"><spring:message code="edit.lastName"/></c:set>
         <c:set var="passwordPH"><spring:message code="edit.password"/></c:set>
-        <button class="btn btn-success add-user"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></button>
+        <button class="btn btn-success add-new"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></button>
         <table class="table table-hover" data-toggle="tooltip" data-toggle="tooltip" data-placement="top" title="" data-original-title="${passInfo}">
             <tr>
                 <th><spring:message code="users.table.number"/></th>

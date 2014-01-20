@@ -1,3 +1,12 @@
-.add-user {
+.add-new {
     margin: 10px auto 10px;
 }
+
+/*ul.nav li.dropdown:hover ul.dropdown-menu{*/
+    /*display: block;*/
+/*}*/
+
+/* if you want to hide the arrow */
+/*a.menu:after, .dropdown-toggle:after {*/
+    /*content: none;*/
+/*}*/

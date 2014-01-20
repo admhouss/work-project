@@ -1,5 +1,6 @@
 package by.premiya.olga.project.util;
 
+import by.premiya.olga.project.util.json.PropertiesJSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,12 @@ import java.io.PrintWriter;
  */
 public final class Utils {
     private static Logger logger = LoggerFactory.getLogger(Utils.class);
+
+    public static PropertiesJSON wheels;
+
+    static {
+        initWheelProp();
+    }
 
     private Utils() {
     }
@@ -72,15 +79,21 @@ public final class Utils {
 
     public static void setLogoutCookie(HttpServletResponse response) {
         response.addCookie(new Cookie("loc",null));
-        Cookie lic = new Cookie("lic", null);
-        lic.setMaxAge(0);
-        response.addCookie(lic);
+//        Cookie lic = new Cookie("lic", null);
+//        lic.setMaxAge(0);
+//        response.addCookie(lic);
     }
 
-    public static void setLoginCookie(HttpServletResponse response) {
-        response.addCookie(new Cookie("lic",null));
-        Cookie lic = new Cookie("loc", null);
-        lic.setMaxAge(0);
-        response.addCookie(lic);
+    public static void removeLogoutCookie(HttpServletResponse response) {
+//        response.addCookie(new Cookie("lic",null));
+        Cookie cookie = new Cookie("loc", null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+    }
+
+    private static void initWheelProp() {
+        wheels = new PropertiesJSON();
+//        wheels.putProperty("label", "Имя");
+//        wheels.putProperty("label", "Имя");
     }
 }

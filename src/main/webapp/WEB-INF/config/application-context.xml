@@ -50,7 +50,13 @@
         </property>
     </bean>
 
+    <bean id="utils" class="by.premiya.olga.project.util.Utils"/>
+
     <bean id="userDao" class="by.premiya.olga.project.dao.impl.UserDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="productionDao" class="by.premiya.olga.project.dao.impl.ProductionDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

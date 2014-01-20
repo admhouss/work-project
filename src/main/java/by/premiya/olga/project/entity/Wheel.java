@@ -1,11 +1,14 @@
 package by.premiya.olga.project.entity;
 
-import by.premiya.olga.project.entity.constants.wheel.*;
+import by.premiya.olga.project.entity.constants.wheel.CarcassAndBeltConstruction;
+import by.premiya.olga.project.entity.constants.wheel.SpeedIndex;
+import by.premiya.olga.project.entity.constants.wheel.TypeOfConstruction;
 import by.premiya.olga.project.entity.constants.wheel.Version;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Vlad Abramov
@@ -13,52 +16,60 @@ import java.util.Set;
 @Entity
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
-    private static final long serialVersionUID = 7875398513229774698L;
 
+    private static final long serialVersionUID = -3893106271768517384L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-
+    @Column(name = "NAME")
+    private String name;
+    @Column(name = "PRICE")
+    private Integer price;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeedIndex speedIndex;
-
     @Column(name = "LOAD_INDEXES")
     private String loadIndexes; //TODO: parse it   (142/234)
-
     @Column(name = "PLY_RATING")
     private int plyRating;
-
     @Column(name = "TYPE_OF_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
     private TypeOfConstruction typeOfConstruction;
-
     @Column(name = "CARCASS_AND_BELT_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
     private CarcassAndBeltConstruction carcassAndBeltConstruction;
-
     @Column(name = "VERSION")
     @Enumerated(EnumType.STRING)
     private Version version;
-
     @Column(name = "OUTER_DIAMETER")
     private Integer outerDiameter;
-
     @Column(name = "SECTION_WIDTH")
     private Integer sectionWidth;
-
     @Column(name = "MAX_LOAD")
     private String maxLoad;     //TODO parse it 3255/5656
-
     @Column(name = "MAX_PRESSURE")
     private Float maxPressure;
-
     @Column(name = "WEIGHT")
     private Integer weight;
-
     @Column(name = "GATE_TYPE")
     private String gateType;
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getId() {
         return id;
@@ -164,6 +175,13 @@ public class Wheel implements Serializable {
         this.gateType = gateType;
     }
 
+    public Map<String,String> getStandardInfo() {
+        Map<String, String> info = new HashMap<>();
+        info.put("maxSpeed",speedIndex.getMaxSpeedString());
+        info.put("price", price.toString());
+        return info;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -179,6 +197,7 @@ public class Wheel implements Serializable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (speedIndex != null ? speedIndex.hashCode() : 0);
         result = 31 * result + (loadIndexes != null ? loadIndexes.hashCode() : 0);
         result = 31 * result + plyRating;
@@ -198,6 +217,7 @@ public class Wheel implements Serializable {
     public String toString() {
         return "Wheel{" +
                 "id=" + id +
+                ", name=" + name +
                 ", speedIndex=" + speedIndex +
                 ", loadIndexes='" + loadIndexes + '\'' +
                 ", plyRating=" + plyRating +

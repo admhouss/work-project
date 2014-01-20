@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * @author vabramov
  */
+@SuppressWarnings("unchecked")
 public class UserDaoImpl implements UserDao {
 
     private SessionFactory sessionFactory;
@@ -60,7 +61,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
     @Transactional(readOnly = true)
     public List<User> getUsers() {
