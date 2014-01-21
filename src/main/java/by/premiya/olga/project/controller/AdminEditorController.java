@@ -1,10 +1,18 @@
 package by.premiya.olga.project.controller;
 
+import by.premiya.olga.project.dao.ProductionDao;
+import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.Pages;
+import by.premiya.olga.project.util.json.EntityPropertiesLoader;
+import by.premiya.olga.project.util.json.PropertiesJSON;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author vlad
@@ -12,6 +20,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 @RequestMapping("/auth/administration/editor")
 public class AdminEditorController {
+
+    @Autowired
+    private ProductService productService;
+
+    @Autowired
+    private EntityPropertiesLoader propertiesLoader;
 
     @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(method = RequestMethod.GET)
@@ -23,5 +37,19 @@ public class AdminEditorController {
     @RequestMapping(value = "new/wheel", method = RequestMethod.GET)
     private String newWheel() {
         return Pages.NEW_WHEEL_PAGE;
+    }
+
+    @RequestMapping(value = "/show/{product}", method = RequestMethod.GET)
+    public String getProduct(ModelMap model, @PathVariable String product) {
+        model.put("products", productService.getProducts(product));
+        model.put("productName", product);
+        return Pages.ADMIN_SHOW_PAGE;
+    }
+
+    @RequestMapping(value = "/get/full/properties/{product}", method = RequestMethod.POST)
+    public @ResponseBody
+    PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
+        model.put("productName", product);
+        return propertiesLoader.getProperties(product);
     }
 }

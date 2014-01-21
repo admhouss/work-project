@@ -177,7 +177,7 @@ public class Wheel implements Serializable {
 
     public Map<String,String> getStandardInfo() {
         Map<String, String> info = new HashMap<>();
-        info.put("maxSpeed",speedIndex.getMaxSpeedString());
+        info.put("maxSpeed",speedIndex.toString());
         info.put("price", price.toString());
         return info;
     }

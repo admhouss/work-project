@@ -44,7 +44,7 @@ function usersControls (contextPath) {
             }
         });
     };
-    $('.add-user').click(function (e) {
+    $('.add-new').click(function (e) {
         e.preventDefault();
         userLogin = "add-new-user";
         openModal(userLogin);

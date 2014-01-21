@@ -4,7 +4,7 @@
 <%--<%@taglib prefix="joda" uri="http://www.joda.org/joda/time/tags" %>--%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<t:genericpage>
+<t:adminGenericPage>
 
     <jsp:attribute name="head">
         <title><spring:message code="title.default"/>&nbsp;<spring:message code="title.separator"/>&nbsp;<spring:message code="title.index"/></title>
@@ -38,4 +38,4 @@
         </ul>
     </jsp:attribute>
 
-</t:genericpage>
+</t:adminGenericPage>

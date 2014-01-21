@@ -1,9 +1,11 @@
 package by.premiya.olga.project.entity.constants.wheel;
 
+import by.premiya.olga.project.entity.constants.BasicConstant;
+
 /**
  * @author Vlad Abramov
  */
-public enum TypeOfConstruction {
+public enum TypeOfConstruction implements BasicConstant {
     NAN {
         {
             type = "--";
@@ -23,6 +25,11 @@ public enum TypeOfConstruction {
     String type;
 
     public String getType() {
+        return type;
+    }
+
+    @Override
+    public String getString() {
         return type;
     }
 }

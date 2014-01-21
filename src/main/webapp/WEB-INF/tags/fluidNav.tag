@@ -15,9 +15,9 @@
         <div id="collapseOne" class="accordion-body collapse">
             <div class="accordion-inner">
                 <ul class="nav nav-list">
-                    <li><a href="${contextPath}/show/wheels"><spring:message code="navbar.wheels"/></a></li>
-                    <li><a href="${contextPath}/show/accumulators"><spring:message code="navbar.accumulators"/></a></li>
-                    <li><a href="${contextPath}/show/radiators"><spring:message code="navbar.radiators"/></a></li>
+                    <li><a href="${contextPath}/auth/administration/editor/show/wheels"><spring:message code="navbar.wheels"/></a></li>
+                    <li><a href="${contextPath}/auth/administration/editor/show/accumulators"><spring:message code="navbar.accumulators"/></a></li>
+                    <li><a href="${contextPath}/auth/administration/editor/show/radiators"><spring:message code="navbar.radiators"/></a></li>
                 </ul>
             </div>
         </div>

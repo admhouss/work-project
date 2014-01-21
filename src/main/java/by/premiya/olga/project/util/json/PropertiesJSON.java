@@ -4,7 +4,7 @@ import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,28 +13,35 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class PropertiesJSON implements Externalizable {
 
-    private static final long serialVersionUID = -4618841375750618605L;      //todo new fields for labels and enums
-    private Map<String, Object> properties = new HashMap<>();
+    private static final long serialVersionUID = 2511421981399985911L;
+    private List<String> labels;
+    private Map<String, List<String>> enums;
 
-    public Map<String, Object> getProperties() {
-        return properties;
+    public List<String> getLabels() {
+        return labels;
     }
 
-    public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
     }
 
-    public void putProperty(String name, Object value) {
-        properties.put(name, value);
+    public Map<String, List<String>> getEnums() {
+        return enums;
+    }
+
+    public void setEnums(Map<String, List<String>> enums) {
+        this.enums = enums;
     }
 
     @Override
     public void writeExternal(ObjectOutput out) throws IOException {
-        out.writeObject(properties);
+        out.writeObject(labels);
+        out.writeObject(enums);
     }
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        properties = (Map<String, Object>) in.readObject();
+        labels = (List<String>) in.readObject();
+        enums = (Map<String, List<String>>) in.readObject();
     }
 }

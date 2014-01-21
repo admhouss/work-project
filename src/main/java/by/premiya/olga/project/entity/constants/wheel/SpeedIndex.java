@@ -1,9 +1,11 @@
 package by.premiya.olga.project.entity.constants.wheel;
 
+import by.premiya.olga.project.entity.constants.BasicConstant;
+
 /**
  * @author Vlad Abramov
  */
-public enum SpeedIndex {
+public enum SpeedIndex implements BasicConstant {
     NAN {
         {
             maxSpeed = 0;
@@ -176,10 +178,13 @@ public enum SpeedIndex {
         return maxSpeed;
     }
 
-    public String getMaxSpeedString() {
+    @Override
+    public String getString() {
         String str = String.valueOf(maxSpeed);
         if (this.name().compareTo("Z") == 0 || this.name().compareTo("WO") == 0 || this.name().compareTo("YO") == 0) {
             str = "> " + str;
+        } else if (str.equals("0")) {
+            return "--";
         }
         return str;
     }
