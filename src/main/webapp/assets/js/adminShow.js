@@ -1,6 +1,7 @@
 function init(contextPath, productName) {
-    var fullProperties = {labels: {}, enums:{}};
-    var showItemsHtml;
+    var fullProperties = {labels: {}, enums:{}}
+      , showItemsHtml
+      , isPropRendered = false;
     $.ajax({
         url: contextPath+"/auth/administration/editor/get/full/properties/" + productName,
         type: 'POST',
@@ -8,40 +9,67 @@ function init(contextPath, productName) {
         'success': function (properties) {
             console.log(properties);
             fullProperties = properties;
+            isPropRendered = true;
+            renderProperties();
         }
     });
     $('.add-new').click(function(e) {
         e.preventDefault();
-        showItemsHtml = $('.thumbnails').html();
-        addNewItem($(this));
+        if (isPropRendered == true) {
+            $('.thumbnails').addClass('hidden');
+            $('.add-new').addClass('hidden');
+            $('.form-horizontal').removeClass('hidden');
+        }
     });
 
-    function addNewItem(addButton) {
-        var addHtml = "<form class='form-horizontal'>";
-        for(var key in fullProperties.labels) {
+
+    function renderProperties() {
+        var addHtml = "<div class='form-horizontal offset3 hidden'>"
+            , key
+            , enumeration
+            , label;
+        for(key in fullProperties.labels) {
             if (fullProperties.labels.hasOwnProperty(key)) {
-                var value = fullProperties.labels[key];
-                addHtml += "<div class='control-group'><label for='inputLabel"+key+"' class='control-label'>";
-                addHtml += value + "</label>";
-                addHtml += "<div class='controls'><input type='text' class='form-control' id='inputLabel"+key+"'></div></div>"
+                label = fullProperties.labels[key];
+                addHtml += "<div class='control-group'><label for='inputLabel"+label.first+"' class='control-label'>";
+                addHtml += label.second + "</label>";
+                addHtml += "<div class='controls'><input type='text' class='form-control' id='inputLabel"+label.first+"' name='"+label.first+"'></div></div>"
             }
         }
         for(key in fullProperties.enums) {
             if (fullProperties.enums.hasOwnProperty(key)) {
-                value = fullProperties.enums[key];
+                enumeration = fullProperties.enums[key];
                 addHtml += "<div class='control-group'><label for='inputLabel"+key+"' class='control-label'>";
-                addHtml += key + "</label>";
-                addHtml += "<div class='controls'><select name='inputEnum"+key+"' class='form-control' id='inputEnum"+key+"'>";
-                for (key in value) {
-                    if (value.hasOwnProperty(key)) {
-                        addHtml += "<option>"+value[key]+"</option>"
+                addHtml += enumeration.first + "</label>";
+                addHtml += "<div class='controls'><select name='"+key+"' class='form-control' id='inputEnum"+key+"'>";
+                for (key in enumeration.second) {
+                    if (enumeration.second.hasOwnProperty(key)) {
+                        addHtml += "<option value='"+enumeration.second[key].first+"'>"+enumeration.second[key].second+"</option>"
                     }
                 }
                 addHtml += "</select></div></div>"
             }
         }
-        addHtml += "</form>";
-        addButton.after(addHtml);
+        addHtml += "<div class='control-group'>"+
+            "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button><button class='btn add-cancel'>Отмена</button></div></div>"+
+            "</div>";
+        isPropRendered = true;
+
+        $('.add-new').after(addHtml);
+        $('.add-cancel').click(function(e) {
+            e.preventDefault();
+            $('.form-horizontal').addClass('hidden');
+            $('.add-new').removeClass('hidden');
+            $('.thumbnails').removeClass('hidden');
+        });
+        $('.add-save').click(function(e) {
+            e.preventDefault();
+            sendNewItem();
+        });
+    }
+    function sendNewItem() {
+       //$('[name="typeOfConstruction"] option:selected').text();
+//        $('select[name="typeOfConstruction"]').val();
     }
 }  /*<select name="carlist" form="carform">
  <option value="volvo">Volvo</option>
@@ -101,3 +129,6 @@ function init(contextPath, productName) {
  </div>
  </div>
  </form>*/
+/*
+ <button class="btn btn-primary edit-save"><spring:message code="users.table.modal.save"/></button>
+ <button class="btn" data-dismiss="modal" aria-hidden="true"><spring:message code="users.table.modal.close"/></button>*/

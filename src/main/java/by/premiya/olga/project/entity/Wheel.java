@@ -17,14 +17,14 @@ import java.util.Map;
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
 
-    private static final long serialVersionUID = -3893106271768517384L;
+    private static final long serialVersionUID = 3314030410068703074L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "NAME")
+    @Column(name = "NAME", nullable = false)
     private String name;
-    @Column(name = "PRICE")
+    @Column(name = "PRICE", nullable = false)
     private Integer price;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -177,6 +177,7 @@ public class Wheel implements Serializable {
 
     public Map<String,String> getStandardInfo() {
         Map<String, String> info = new HashMap<>();
+        info.put("name", name);
         info.put("maxSpeed",speedIndex.toString());
         info.put("price", price.toString());
         return info;
@@ -198,6 +199,7 @@ public class Wheel implements Serializable {
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (speedIndex != null ? speedIndex.hashCode() : 0);
         result = 31 * result + (loadIndexes != null ? loadIndexes.hashCode() : 0);
         result = 31 * result + plyRating;
@@ -218,6 +220,7 @@ public class Wheel implements Serializable {
         return "Wheel{" +
                 "id=" + id +
                 ", name=" + name +
+                ", price=" + price +
                 ", speedIndex=" + speedIndex +
                 ", loadIndexes='" + loadIndexes + '\'' +
                 ", plyRating=" + plyRating +

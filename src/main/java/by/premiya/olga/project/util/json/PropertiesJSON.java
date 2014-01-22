@@ -14,22 +14,22 @@ import java.util.Map;
 public class PropertiesJSON implements Externalizable {
 
     private static final long serialVersionUID = 2511421981399985911L;
-    private List<String> labels;
-    private Map<String, List<String>> enums;
+    private List<PairJSON<String,String>> labels;
+    private Map<String, PairJSON<String, List<PairJSON<String, String>>>> enums;
 
-    public List<String> getLabels() {
+    public List<PairJSON<String, String>> getLabels() {
         return labels;
     }
 
-    public void setLabels(List<String> labels) {
+    public void setLabels(List<PairJSON<String, String>> labels) {
         this.labels = labels;
     }
 
-    public Map<String, List<String>> getEnums() {
+    public Map<String, PairJSON<String, List<PairJSON<String, String>>>> getEnums() {
         return enums;
     }
 
-    public void setEnums(Map<String, List<String>> enums) {
+    public void setEnums(Map<String, PairJSON<String, List<PairJSON<String, String>>>> enums) {
         this.enums = enums;
     }
 
@@ -41,7 +41,7 @@ public class PropertiesJSON implements Externalizable {
 
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        labels = (List<String>) in.readObject();
-        enums = (Map<String, List<String>>) in.readObject();
+        labels = (List<PairJSON<String, String>>) in.readObject();
+        enums = (Map<String, PairJSON<String, List<PairJSON<String, String>>>>) in.readObject();
     }
 }

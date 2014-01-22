@@ -24,28 +24,28 @@ public class EntityPropertiesLoader implements InitializingBean {
     }
 
     private void initWheels() {
-        wheelsProperties.setLabels(Arrays.asList("Название",
-                "Цена",
-                "Индекс загрузки",
-                "Слойность",
-                "Внешний диаметр",
-                "Ширина профиля",
-                "Макс. нагрузка",
-                "Макс. давление",
-                "Gate type"));
-        Map<String, List<String>> enums = new HashMap<>();
+        wheelsProperties.setLabels(Arrays.<PairJSON<String, String>>asList(new PairJSON<>("name","Название"),
+                new PairJSON<>("price","Цена"),
+                new PairJSON<>("loadIndexes","Индекс загрузки"),
+                new PairJSON<>("plyRating","Слойность"),
+                new PairJSON<>("outerDiameter","Внешний диаметр"),
+                new PairJSON<>("sectionWidth","Ширина профиля"),
+                new PairJSON<>("maxLoad","Макс. нагрузка"),
+                new PairJSON<>("maxPressure","Макс. давление"),
+                new PairJSON<>("gateType","Gate type")));
+        Map<String, PairJSON<String,List<PairJSON<String,String>>>> enums = new HashMap<>();
 
-        enums.put("Макс. скорость", getEnumValuesToString(SpeedIndex.values()));
-        enums.put("Тип конструкции", getEnumValuesToString(TypeOfConstruction.values()));
-        enums.put("CarcassAndBeltConstruction", getEnumValuesToString(CarcassAndBeltConstruction.values()));
-        enums.put("Исполнение", getEnumValuesToString(Version.values()));
+        enums.put("speedIndex",new PairJSON<>("Макс. скорость", getEnumValuesToString(SpeedIndex.values())));
+        enums.put("typeOfConstruction",new PairJSON<>("Тип конструкции", getEnumValuesToString(TypeOfConstruction.values())));
+        enums.put("carcassAndBeltConstruction",new PairJSON<>("CarcassAndBeltConstruction", getEnumValuesToString(CarcassAndBeltConstruction.values())));
+        enums.put("version",new PairJSON<>("Исполнение", getEnumValuesToString(Version.values())));
         wheelsProperties.setEnums(enums);
     }
 
-    private List<String> getEnumValuesToString(Enum[] values) {
-        List<String> strings = new LinkedList<>();
+    private List<PairJSON<String,String>> getEnumValuesToString(Enum[] values) {
+        List<PairJSON<String,String>> strings = new LinkedList<>();
         for (Enum val : values) {
-            strings.add(((BasicConstant)val).getString());
+            strings.add(new PairJSON<>(val.toString(),((BasicConstant)val).getString()));
         }
         return strings;
     }
