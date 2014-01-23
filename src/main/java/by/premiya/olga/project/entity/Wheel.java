@@ -28,20 +28,20 @@ public class Wheel implements Serializable {
     private Integer price;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
-    private SpeedIndex speedIndex;
+    private SpeedIndex speedIndex = SpeedIndex.NAN;
     @Column(name = "LOAD_INDEXES")
     private String loadIndexes; //TODO: parse it   (142/234)
     @Column(name = "PLY_RATING")
     private int plyRating;
     @Column(name = "TYPE_OF_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
-    private TypeOfConstruction typeOfConstruction;
+    private TypeOfConstruction typeOfConstruction = TypeOfConstruction.NAN;
     @Column(name = "CARCASS_AND_BELT_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
-    private CarcassAndBeltConstruction carcassAndBeltConstruction;
+    private CarcassAndBeltConstruction carcassAndBeltConstruction = CarcassAndBeltConstruction.NAN;
     @Column(name = "VERSION")
     @Enumerated(EnumType.STRING)
-    private Version version;
+    private Version version = Version.NAN;
     @Column(name = "OUTER_DIAMETER")
     private Integer outerDiameter;
     @Column(name = "SECTION_WIDTH")

@@ -24,7 +24,7 @@ function init(contextPath, productName) {
 
 
     function renderProperties() {
-        var addHtml = "<div class='form-horizontal offset3 hidden'>"
+        var addHtml = "<div class='form-horizontal offset2 hidden'>"
             , key
             , enumeration
             , label;
@@ -33,7 +33,7 @@ function init(contextPath, productName) {
                 label = fullProperties.labels[key];
                 addHtml += "<div class='control-group'><label for='inputLabel"+label.first+"' class='control-label'>";
                 addHtml += label.second + "</label>";
-                addHtml += "<div class='controls'><input type='text' class='form-control' id='inputLabel"+label.first+"' name='"+label.first+"'></div></div>"
+                addHtml += "<div class='controls'><input type='text' class='form-control input-label'  name='"+label.first+"'></div></div>"
             }
         }
         for(key in fullProperties.enums) {
@@ -41,7 +41,7 @@ function init(contextPath, productName) {
                 enumeration = fullProperties.enums[key];
                 addHtml += "<div class='control-group'><label for='inputLabel"+key+"' class='control-label'>";
                 addHtml += enumeration.first + "</label>";
-                addHtml += "<div class='controls'><select name='"+key+"' class='form-control' id='inputEnum"+key+"'>";
+                addHtml += "<div class='controls'><select name='"+key+"' class='form-control input-enum' id='inputEnum"+key+"'>";
                 for (key in enumeration.second) {
                     if (enumeration.second.hasOwnProperty(key)) {
                         addHtml += "<option value='"+enumeration.second[key].first+"'>"+enumeration.second[key].second+"</option>"
@@ -68,8 +68,32 @@ function init(contextPath, productName) {
         });
     }
     function sendNewItem() {
-       //$('[name="typeOfConstruction"] option:selected').text();
-//        $('select[name="typeOfConstruction"]').val();
+        var inputs = $('.input-label')
+            , enums = $('.input-enum')
+            , data = {properties: []}
+            , property = {first:{}, second: {}}
+            , name;
+        for (var i = 0; i < inputs.length; ++i) {
+            data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
+        }
+        for (var j = 0; j < enums.length; ++j, ++i) {
+//            data[name] = $(enums[i]).find('option:selected').text();
+            data.properties.push({first: "enum", second: {first: $(enums[j]).attr('name'), second: $(enums[j]).val()}});
+        }
+        data = JSON.stringify(data);
+        $.ajax({
+            url: contextPath+"/auth/administration/editor/" + productName + "/new",
+            data: data,
+            contentType: 'application/json',
+            type: 'POST',
+            cashed: false,
+            'success': function (properties) {
+                console.log(properties);
+                fullProperties = properties;
+                isPropRendered = true;
+                renderProperties();
+            }
+        });
     }
 }  /*<select name="carlist" form="carform">
  <option value="volvo">Volvo</option>

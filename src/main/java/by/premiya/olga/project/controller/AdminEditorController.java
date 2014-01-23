@@ -4,15 +4,15 @@ import by.premiya.olga.project.dao.ProductionDao;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.json.EntityPropertiesLoader;
+import by.premiya.olga.project.util.json.NewItemJSON;
 import by.premiya.olga.project.util.json.PropertiesJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author vlad
@@ -34,8 +34,8 @@ public class AdminEditorController {
     }
 
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "new/wheel", method = RequestMethod.GET)
-    private String newWheel() {
+    @RequestMapping(value = "{productName}/new", method = RequestMethod.POST)
+    private @ResponseBody String newWheel(@RequestBody NewItemJSON json, @PathVariable String productName) {
         return Pages.NEW_WHEEL_PAGE;
     }
 
