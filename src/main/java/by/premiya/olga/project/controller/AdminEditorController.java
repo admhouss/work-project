@@ -36,6 +36,7 @@ public class AdminEditorController {
     @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "{productName}/new", method = RequestMethod.POST)
     private @ResponseBody String newWheel(@RequestBody NewItemJSON json, @PathVariable String productName) {
+        productService.addNewProduct(productName, json);
         return Pages.NEW_WHEEL_PAGE;
     }
 
