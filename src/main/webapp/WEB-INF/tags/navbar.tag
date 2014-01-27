@@ -28,7 +28,6 @@
                             <li id="navRadiators"><a href="${contextPath}/show?c=radiators&m=all"><spring:message code="navbar.radiators"/></a></li>
                         </ul>
                     </li>
-                    <li id="navAll"><a href="${contextPath}/show?c=all"><spring:message code="navbar.all"/></a></li>
                 </ul>
             </div>
         </div>

@@ -23,17 +23,20 @@
             </form>
             <div class="nav-collapse collapse">
                 <ul class="nav">
-                    <li id="navAll"><a href="${contextPath}/show?c=all"><spring:message code="navbar.all"/></a></li>
-                    <li id="navWheels"><a href="${contextPath}/show?c=wheels&m=all"><spring:message code="navbar.wheels"/></a></li>
-                    <li id="navAccumulators"><a href="${contextPath}/show?c=accumulators&m=all"><spring:message code="navbar.accumulators"/></a></li>
-                    <li id="navRadiators"><a href="${contextPath}/show?c=radiators&m=all"><spring:message code="navbar.radiators"/></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navFullName"><spring:message code="navbar.production"/>&nbsp;<i class="caret"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="${contextPath}/auth/administration/editor/show/wheels"><spring:message code="navbar.wheels"/></a></li>
+                            <li><a href="${contextPath}/auth/administration/editor/show/accumulators"><spring:message code="navbar.accumulators"/></a></li>
+                            <li><a href="${contextPath}/auth/administration/editor/show/radiators"><spring:message code="navbar.radiators"/></a></li>
+                        </ul>
+                    </li>
                     <sec:authorize access="hasRole('ROLE_SUPERVISOR')">
                         <li id="navUsers"><a href="${contextPath}/auth/administration/users"><spring:message code="navbar.users"/></a></li>
                     </sec:authorize>
 
                     <sec:authorize access="hasAnyRole({'ROLE_ADMINISTRATOR','ROLE_SUPERVISOR'})">
                     <c:set var="login"><sec:authentication property="principal.user.login"/></c:set>
-                    <c:set var="tooltipText"></c:set>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navFullName"><sec:authentication property="principal.user.fullName"/>&nbsp;<i class="caret"></i></a>
                         <ul class="dropdown-menu">

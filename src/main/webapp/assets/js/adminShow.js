@@ -31,17 +31,17 @@ function init(contextPath, productName) {
         for(key in fullProperties.labels) {
             if (fullProperties.labels.hasOwnProperty(key)) {
                 label = fullProperties.labels[key];
-                addHtml += "<div class='control-group'><label for='inputLabel"+label.first+"' class='control-label'>";
+                addHtml += "<div class='control-group'><label for='input"+label.first+"' class='control-label'>";
                 addHtml += label.second + "</label>";
-                addHtml += "<div class='controls'><input type='text' class='form-control input-label'  name='"+label.first+"'></div></div>"
+                addHtml += "<div class='controls'><input type='text' class='form-control input-label' name='"+label.first+"' id='input"+label.first+"'></div></div>"
             }
         }
         for(key in fullProperties.enums) {
             if (fullProperties.enums.hasOwnProperty(key)) {
                 enumeration = fullProperties.enums[key];
-                addHtml += "<div class='control-group'><label for='inputLabel"+key+"' class='control-label'>";
+                addHtml += "<div class='control-group'><label for='input"+key+"' class='control-label'>";
                 addHtml += enumeration.first + "</label>";
-                addHtml += "<div class='controls'><select name='"+key+"' class='form-control input-enum' id='inputEnum"+key+"'>";
+                addHtml += "<div class='controls'><select name='"+key+"' class='form-control input-enum' id='input"+key+"'>";
                 for (key in enumeration.second) {
                     if (enumeration.second.hasOwnProperty(key)) {
                         addHtml += "<option value='"+enumeration.second[key].first+"'>"+enumeration.second[key].second+"</option>"
@@ -89,9 +89,19 @@ function init(contextPath, productName) {
             cashed: false,
             'success': function (properties) {
                 console.log(properties);
-                fullProperties = properties;
-                isPropRendered = true;
-                renderProperties();
+                if (properties.success) {
+
+                } else {
+                    var i = 0;
+                    for (i; i < properties.notSetFields.length; ++i) {
+                        $('#input'+properties.notSetFields[i]).popover({content:"Поле должно быть заполнено", trigger: 'manual'});
+                        $('#input'+properties.notSetFields[i]).popover("show");
+                    }
+                    for (i = 0; i < properties.failedFields.length; ++i) {
+                        $('#input'+properties.failedFields[i]).popover({content:"Данные не верные", trigger: 'manual'});
+                        $('#input'+properties.failedFields[i]).popover("show");
+                    }
+                }
             }
         });
     }

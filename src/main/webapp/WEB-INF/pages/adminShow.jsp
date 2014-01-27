@@ -20,12 +20,12 @@
     </jsp:attribute>
 
     <jsp:attribute name="content">
-         <a href="${contextPath}/auth/administration/editor/new/wheel" class="btn btn-success add-new"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></a>
+        <a class="btn btn-success add-new"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></a>
         <ul class="thumbnails">
         <c:forEach var="product" items="${products}">
             <li class="span3">
                 <div class="thumbnail">
-                    <img data-src="holder.js/230x230" alt="230x230" style="width: 300px; height: 200px;" src="${contextPath}/image/${productName}/33311">
+                    <img data-src="holder.js/230x230" alt="230x230" style="width: 230px; height: 230px;" src="${contextPath}/image/${productName}/33311">
                     <div class="caption">
                         <h1>Thumbnail label</h1>
                         <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>

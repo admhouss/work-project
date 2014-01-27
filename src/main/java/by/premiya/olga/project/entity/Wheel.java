@@ -7,6 +7,7 @@ import by.premiya.olga.project.entity.constants.wheel.Version;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,16 +24,16 @@ public class Wheel implements Serializable {
     @Column(name = "ID")
     private Integer id;
     @Column(name = "NAME", nullable = false)
-    private String name;
+    private String name = "";
     @Column(name = "PRICE", nullable = false)
-    private Integer price;
+    private Integer price = 0;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeedIndex speedIndex = SpeedIndex.NAN;
     @Column(name = "LOAD_INDEXES")
     private String loadIndexes; //TODO: parse it   (142/234)
     @Column(name = "PLY_RATING")
-    private int plyRating;
+    private Integer plyRating;
     @Column(name = "TYPE_OF_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
     private TypeOfConstruction typeOfConstruction = TypeOfConstruction.NAN;
@@ -91,7 +92,12 @@ public class Wheel implements Serializable {
         return loadIndexes;
     }
 
-    public void setLoadIndexes(String loadIndexes) {
+    public void setLoadIndexes(String loadIndexes) throws NumberFormatException {
+        String[] numbers = loadIndexes.split("/");
+        for (String number : numbers) {
+            Integer.parseInt(number);
+//            throw new ParseException("Cannot parse");
+        }
         this.loadIndexes = loadIndexes;
     }
 

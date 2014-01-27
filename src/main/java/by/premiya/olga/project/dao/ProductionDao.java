@@ -10,6 +10,8 @@ import java.util.Map;
  */
 public interface ProductionDao {
 
+    void save(Object product);
+
     List getProducts(String name);
 
     List<Wheel> getWheels(Map<String, String> searchParams);
