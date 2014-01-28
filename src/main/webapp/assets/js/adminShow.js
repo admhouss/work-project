@@ -76,9 +76,12 @@ function init(contextPath, productName) {
         for (var i = 0; i < inputs.length; ++i) {
             data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
         }
-        for (var j = 0; j < enums.length; ++j, ++i) {
+        for (i = 0; i < enums.length; ++i) {
 //            data[name] = $(enums[i]).find('option:selected').text();
-            data.properties.push({first: "enum", second: {first: $(enums[j]).attr('name'), second: $(enums[j]).val()}});
+            data.properties.push({first: "enum", second: {first: $(enums[i]).attr('name'), second: $(enums[i]).val()}});
+        }
+        for (i = 0; i  < data.properties.length; ++i) {
+            $('#input'+data.properties[i].second.first).popover('destroy');
         }
         data = JSON.stringify(data);
         $.ajax({
@@ -92,14 +95,17 @@ function init(contextPath, productName) {
                 if (properties.success) {
 
                 } else {
-                    var i = 0;
+                    var i = 0
+                        , $input;
                     for (i; i < properties.notSetFields.length; ++i) {
-                        $('#input'+properties.notSetFields[i]).popover({content:"Поле должно быть заполнено", trigger: 'manual'});
-                        $('#input'+properties.notSetFields[i]).popover("show");
+                        $input = $('#input'+properties.notSetFields[i]);
+                        $input.popover({content:"Поле должно быть заполнено", trigger: 'manual'});
+                        $input.popover("show");
                     }
                     for (i = 0; i < properties.failedFields.length; ++i) {
-                        $('#input'+properties.failedFields[i]).popover({content:"Данные не верные", trigger: 'manual'});
-                        $('#input'+properties.failedFields[i]).popover("show");
+                        $input = $('#input'+properties.failedFields[i]);
+                        $input.popover({content:"Данные не верные", trigger: 'manual'});
+                        $input.popover("show");
                     }
                 }
             }

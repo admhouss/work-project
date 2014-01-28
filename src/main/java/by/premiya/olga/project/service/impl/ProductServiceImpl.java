@@ -56,7 +56,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private Object getInsertObject(Class clazz, NewItemJSON properties) {
         if (logger.isTraceEnabled()) {
             logger.trace("Start parse JSON for new product");
@@ -64,38 +63,20 @@ public class ProductServiceImpl implements ProductService {
         Object insert = null;
         try {
             insert = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException ignored) {
-        }
-        try {
             for (PairJSON<String, PairJSON<String, String>> pair : properties.getProperties()) {
                 Field field = clazz.getDeclaredField(pair.getSecond().getFirst());
-                if (!field.getAnnotation(Column.class).nullable()) {
-                    if ("".equals(pair.getSecond().getSecond())) {
+                if ("".equals(pair.getSecond().getSecond()) || "NAN".equals(pair.getSecond().getSecond())) {
+                    if (!field.getAnnotation(Column.class).nullable()) {
                         properties.addNotSetField(pair.getSecond().getFirst());
-                        continue;
                     }
-                }
-                if (pair.getSecond().getSecond() != null) {
-                    try {
-                        field.setAccessible(true);
-                        String methodName = getMethodName(pair.getSecond().getFirst());
-                        Method method = clazz.getMethod("set"+methodName, field.getType());
-                        Object insertParam = null;
-                        if (pair.getFirst().equals("label")) {
-                            if (field.getType().equals(Integer.class)) {
-                                insertParam = Integer.parseInt(pair.getSecond().getSecond());
-                            } else if (field.getType().equals(Float.class)) {
-                                insertParam = Float.parseFloat(pair.getSecond().getSecond());
-                            } else if (field.getType().equals(String.class)) {
-                                insertParam = pair.getSecond().getSecond();
-                            }
-                        } else {
-                            insertParam = getEnumValue(field.getType(), pair.getSecond().getSecond());
+                } else {
+                    if (pair.getSecond().getSecond() != null) {
+                        try {
+                            setField(clazz, insert, pair, field);
+                        } catch (IllegalAccessException ignored) {
+                        } catch (NoSuchMethodException | InvocationTargetException | NumberFormatException e) {
+                            properties.addFailedField(pair.getSecond().getFirst());
                         }
-                        method.invoke(insert, insertParam);
-                    } catch (IllegalAccessException ignored) {
-                    } catch (NoSuchMethodException | InvocationTargetException | NumberFormatException e) {
-                        properties.addFailedField(pair.getSecond().getFirst());
                     }
                 }
             }
@@ -105,10 +86,36 @@ public class ProductServiceImpl implements ProductService {
                 }
                 return null;
             }
+        } catch (InstantiationException | IllegalAccessException ignored) {
         } catch (NoSuchFieldException e) {
             logger.error("No such field in product class; " + e.getMessage());
         }
         return insert;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void setField(Class clazz, Object insert, PairJSON<String, PairJSON<String, String>> pair, Field field)
+            throws NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
+            NumberFormatException {
+
+        field.setAccessible(true);
+        String methodName = getMethodName(pair.getSecond().getFirst());
+        Method method = clazz.getMethod("set"+methodName, field.getType());
+        Object insertParam = null;
+        if (pair.getFirst().equals("label")) {
+            if (field.getType().equals(Integer.class)) {
+                insertParam = Integer.parseInt(pair.getSecond().getSecond());
+            } else if (field.getType().equals(Float.class)) {
+                insertParam = Float.parseFloat(pair.getSecond().getSecond());
+            } else if (field.getType().equals(String.class)) {
+                insertParam = pair.getSecond().getSecond();
+            }
+        } else {
+            insertParam = getEnumValue(field.getType(), pair.getSecond().getSecond());
+        }
+        method.invoke(insert, insertParam);
     }
 
     private String getMethodName(String name) {

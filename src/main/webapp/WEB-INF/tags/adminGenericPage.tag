@@ -26,8 +26,11 @@
                 <div class="span2">
                     <t:fluidNav/>
                 </div>
-                <div class="span10">
+                <div class="span8">
                     <jsp:invoke fragment="content"/>
+                </div>
+                <div class="span2">
+
                 </div>
             </div>
         </div>
