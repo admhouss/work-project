@@ -4,9 +4,13 @@ import by.premiya.olga.project.entity.constants.wheel.CarcassAndBeltConstruction
 import by.premiya.olga.project.entity.constants.wheel.SpeedIndex;
 import by.premiya.olga.project.entity.constants.wheel.TypeOfConstruction;
 import by.premiya.olga.project.entity.constants.wheel.Version;
+import by.premiya.olga.project.util.json.PairJSON;
+import javafx.util.Pair;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,22 +21,22 @@ import java.util.Map;
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
 
-    private static final long serialVersionUID = 3314030410068703074L;
+    private static final long serialVersionUID = -1840175220466183495L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
     @Column(name = "NAME", nullable = false)
-    private String name;
+    private String name = "";
     @Column(name = "PRICE", nullable = false)
-    private Integer price;
+    private Integer price = 0;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
     private SpeedIndex speedIndex = SpeedIndex.NAN;
     @Column(name = "LOAD_INDEXES")
-    private String loadIndexes; //TODO: parse it   (142/234)
+    private String loadIndexes = ""; //TODO: parse it   (142/234)
     @Column(name = "PLY_RATING")
-    private int plyRating;
+    private Integer plyRating = 0;
     @Column(name = "TYPE_OF_CONSTRUCTION")
     @Enumerated(EnumType.STRING)
     private TypeOfConstruction typeOfConstruction = TypeOfConstruction.NAN;
@@ -43,17 +47,17 @@ public class Wheel implements Serializable {
     @Enumerated(EnumType.STRING)
     private Version version = Version.NAN;
     @Column(name = "OUTER_DIAMETER")
-    private Integer outerDiameter;
+    private Integer outerDiameter = 0;
     @Column(name = "SECTION_WIDTH")
-    private Integer sectionWidth;
+    private Integer sectionWidth = 0;
     @Column(name = "MAX_LOAD")
-    private String maxLoad;     //TODO parse it 3255/5656
+    private String maxLoad = "";     //TODO parse it 3255/5656
     @Column(name = "MAX_PRESSURE")
-    private Float maxPressure;
+    private Float maxPressure = 0.0f;
     @Column(name = "WEIGHT")
-    private Integer weight;
+    private Integer weight = 0;
     @Column(name = "GATE_TYPE")
-    private String gateType;
+    private String gateType = "";
 
     public Integer getPrice() {
         return price;
@@ -91,8 +95,12 @@ public class Wheel implements Serializable {
         return loadIndexes;
     }
 
-    public void setLoadIndexes(String loadIndexes) {
-        this.loadIndexes = loadIndexes;
+    public void setLoadIndexes(String loadIndexes) throws NumberFormatException {
+        String[] numbers = loadIndexes.split("/");
+        for (String number : numbers) {
+            Integer.parseInt(number);
+            this.loadIndexes = loadIndexes;
+        }
     }
 
     public int getPlyRating() {
@@ -100,6 +108,10 @@ public class Wheel implements Serializable {
     }
 
     public void setPlyRating(int plyRating) {
+        this.plyRating = plyRating;
+    }
+
+    public void setPlyRating(Integer plyRating) {
         this.plyRating = plyRating;
     }
 
@@ -147,8 +159,12 @@ public class Wheel implements Serializable {
         return maxLoad;
     }
 
-    public void setMaxLoad(String maxLoad) {
-        this.maxLoad = maxLoad;
+    public void setMaxLoad(String maxLoad) throws NumberFormatException {
+        String[] numbers = loadIndexes.split("/");
+        for (String number : numbers) {
+            Integer.parseInt(number);
+            this.maxLoad = maxLoad;
+        }
     }
 
     public Float getMaxPressure() {
@@ -175,11 +191,12 @@ public class Wheel implements Serializable {
         this.gateType = gateType;
     }
 
-    public Map<String,String> getStandardInfo() {
-        Map<String, String> info = new HashMap<>();
+    public Map<String,Object> getStandardInfo() {
+        Map<String, Object> info = new HashMap<>();
         info.put("name", name);
-        info.put("maxSpeed",speedIndex.toString());
-        info.put("price", price.toString());
+        info.put("list", Arrays.asList(
+                new PairJSON<String, String>("Макс. скорость",this.speedIndex.getString()),
+                new PairJSON<String, String>("Цена", String.valueOf(this.price))));
         return info;
     }
 

@@ -30,6 +30,7 @@ public class EntityPropertiesLoader implements InitializingBean {
                 new PairJSON<>("plyRating","Слойность"),
                 new PairJSON<>("outerDiameter","Внешний диаметр"),
                 new PairJSON<>("sectionWidth","Ширина профиля"),
+                new PairJSON<>("weight","Масса"),
                 new PairJSON<>("maxLoad","Макс. нагрузка"),
                 new PairJSON<>("maxPressure","Макс. давление"),
                 new PairJSON<>("gateType","Gate type")));

@@ -26,6 +26,11 @@ public class ProductionDaoImpl implements ProductionDao {
     }
 
     @Override
+    public void save(Object product) {
+        getSession().save(product);
+    }
+
+    @Override
     public List getProducts(String name) {
         List products = new LinkedList<>();
         switch (name) {

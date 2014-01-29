@@ -91,7 +91,7 @@
         </script>
     </jsp:attribute>
 
-    <jsp:body>
+    <jsp:attribute name="content">
         <c:if test="${empty param.nonav}">
             <%--<div class="offset3 span6">--%>
             <div class="container">
@@ -157,6 +157,6 @@
         <c:if test="${empty param.nonav}">
             </div>
         </c:if>
-    </jsp:body>
+    </jsp:attribute>
 
 </t:adminGenericPage>

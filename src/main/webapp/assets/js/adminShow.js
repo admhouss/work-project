@@ -19,29 +19,38 @@ function init(contextPath, productName) {
             $('.thumbnails').addClass('hidden');
             $('.add-new').addClass('hidden');
             $('.form-horizontal').removeClass('hidden');
+            $('#propTitle').text("Добавление");
         }
+    });
+    $('.btn-edit').click(function(e) {
+        e.preventDefault();
+        var id = $(this).attr('id');
+            $('.thumbnails').addClass('hidden');
+            $('.add-new').addClass('hidden');
+            $('.form-horizontal').removeClass('hidden');
+            $('#propTitle').text("Добавление");
     });
 
 
     function renderProperties() {
-        var addHtml = "<div class='form-horizontal offset2 hidden'>"
+        var addHtml = "<div class='form-horizontal offset2 hidden'><h3 id='propTitle'></h3>"
             , key
             , enumeration
             , label;
         for(key in fullProperties.labels) {
             if (fullProperties.labels.hasOwnProperty(key)) {
                 label = fullProperties.labels[key];
-                addHtml += "<div class='control-group'><label for='inputLabel"+label.first+"' class='control-label'>";
+                addHtml += "<div class='control-group'><label for='input"+label.first+"' class='control-label'>";
                 addHtml += label.second + "</label>";
-                addHtml += "<div class='controls'><input type='text' class='form-control input-label'  name='"+label.first+"'></div></div>"
+                addHtml += "<div class='controls'><input type='text' class='form-control input-label' name='"+label.first+"' id='input"+label.first+"'></div></div>"
             }
         }
         for(key in fullProperties.enums) {
             if (fullProperties.enums.hasOwnProperty(key)) {
                 enumeration = fullProperties.enums[key];
-                addHtml += "<div class='control-group'><label for='inputLabel"+key+"' class='control-label'>";
+                addHtml += "<div class='control-group'><label for='input"+key+"' class='control-label'>";
                 addHtml += enumeration.first + "</label>";
-                addHtml += "<div class='controls'><select name='"+key+"' class='form-control input-enum' id='inputEnum"+key+"'>";
+                addHtml += "<div class='controls'><select name='"+key+"' class='form-control input-enum' id='input"+key+"'>";
                 for (key in enumeration.second) {
                     if (enumeration.second.hasOwnProperty(key)) {
                         addHtml += "<option value='"+enumeration.second[key].first+"'>"+enumeration.second[key].second+"</option>"
@@ -76,9 +85,12 @@ function init(contextPath, productName) {
         for (var i = 0; i < inputs.length; ++i) {
             data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
         }
-        for (var j = 0; j < enums.length; ++j, ++i) {
+        for (i = 0; i < enums.length; ++i) {
 //            data[name] = $(enums[i]).find('option:selected').text();
-            data.properties.push({first: "enum", second: {first: $(enums[j]).attr('name'), second: $(enums[j]).val()}});
+            data.properties.push({first: "enum", second: {first: $(enums[i]).attr('name'), second: $(enums[i]).val()}});
+        }
+        for (i = 0; i  < data.properties.length; ++i) {
+            $('#input'+data.properties[i].second.first).popover('destroy');
         }
         data = JSON.stringify(data);
         $.ajax({
@@ -89,9 +101,22 @@ function init(contextPath, productName) {
             cashed: false,
             'success': function (properties) {
                 console.log(properties);
-                fullProperties = properties;
-                isPropRendered = true;
-                renderProperties();
+                if (properties.success) {
+
+                } else {
+                    var i = 0
+                        , $input;
+                    for (i; i < properties.notSetFields.length; ++i) {
+                        $input = $('#input'+properties.notSetFields[i]);
+                        $input.popover({content:"Поле должно быть заполнено", trigger: 'manual'});
+                        $input.popover("show");
+                    }
+                    for (i = 0; i < properties.failedFields.length; ++i) {
+                        $input = $('#input'+properties.failedFields[i]);
+                        $input.popover({content:"Данные не верные", trigger: 'manual'});
+                        $input.popover("show");
+                    }
+                }
             }
         });
     }

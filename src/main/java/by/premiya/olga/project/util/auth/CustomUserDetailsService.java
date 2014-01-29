@@ -48,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private void addSuperAdmin() {
         String login = "vabramov";
         if (userDao.getUserByLogin(login) == null) {
-            userDao.addUser(new User(login, passwordEncoder.encodePassword("123272", login), UserRole.ROLE_SUPERVISOR, "Владислав", "Абрамов"));
+            userDao.addUser(new User(login, passwordEncoder.encodePassword("1123272", login), UserRole.ROLE_SUPERVISOR, "Владислав", "Абрамов"));
         }
         superAdminSet = true;
     }

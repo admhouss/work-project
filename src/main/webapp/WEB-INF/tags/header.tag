@@ -4,7 +4,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
-<div class="container" style="margin-top: 5%;">
+<div class="container" style="margin-top: 5%;margin-bottom: 10px;">
     <h1>Заговок</h1>
     <p>Маленькое описание</p>
 </div>

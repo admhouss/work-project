@@ -35,9 +35,10 @@ public class AdminEditorController {
 
     @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "{productName}/new", method = RequestMethod.POST)
-    private @ResponseBody String newWheel(@RequestBody NewItemJSON json, @PathVariable String productName) {
+    private @ResponseBody NewItemJSON newWheel(@RequestBody NewItemJSON json, @PathVariable String productName) {
+        json.clearErrors();
         productService.addNewProduct(productName, json);
-        return Pages.NEW_WHEEL_PAGE;
+        return json;
     }
 
     @RequestMapping(value = "/show/{product}", method = RequestMethod.GET)
@@ -48,8 +49,7 @@ public class AdminEditorController {
     }
 
     @RequestMapping(value = "/get/full/properties/{product}", method = RequestMethod.POST)
-    public @ResponseBody
-    PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
+    public @ResponseBody PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
         model.put("productName", product);
         return propertiesLoader.getProperties(product);
     }

@@ -1,6 +1,5 @@
 package by.premiya.olga.project.util;
 
-import by.premiya.olga.project.util.json.PropertiesJSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,19 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @author vabramov
  */
 public final class Utils {
+
     private static Logger logger = LoggerFactory.getLogger(Utils.class);
-
-    public static PropertiesJSON wheels;
-
-    static {
-        initWheelProp();
-    }
 
     private Utils() {
     }
@@ -41,6 +34,7 @@ public final class Utils {
             return sendDefaultImage(url, outputStream);
         }
     }
+
     public static boolean sendGifImage(HttpServletResponse res, String from, String content) {
         res.setContentType("image/gif");
         String url = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
@@ -54,6 +48,7 @@ public final class Utils {
             return sendDefaultImage(url, outputStream);
         }
     }
+
     private static boolean sendDefaultImage(String url, ServletOutputStream outputStream) {
         try {
             return ImageIO.write(ImageIO.read(new File(url + "errors/image_not_available.jpg")), "JPEG", outputStream);
@@ -61,6 +56,10 @@ public final class Utils {
             logger.error("Default image '" + url + "' not send");
         }
         return false;
+    }
+
+    public static void uploadImage(HttpServletResponse res, String from, int content) {
+        //todo write this method
     }
 
     public static boolean hasCookie(HttpServletRequest req, String cookieName) {
@@ -78,7 +77,7 @@ public final class Utils {
     }
 
     public static void setLogoutCookie(HttpServletResponse response) {
-        response.addCookie(new Cookie("loc",null));
+        response.addCookie(new Cookie("loc", null));
 //        Cookie lic = new Cookie("lic", null);
 //        lic.setMaxAge(0);
 //        response.addCookie(lic);
@@ -89,11 +88,5 @@ public final class Utils {
         Cookie cookie = new Cookie("loc", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-    }
-
-    private static void initWheelProp() {
-        wheels = new PropertiesJSON();
-//        wheels.putProperty("label", "Имя");
-//        wheels.putProperty("label", "Имя");
     }
 }
