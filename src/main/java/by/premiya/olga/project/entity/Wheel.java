@@ -26,7 +26,7 @@ public class Wheel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME", nullable = false) //TODO:model and producer
     private String name = "";
     @Column(name = "PRICE", nullable = false)
     private Integer price = 0;
