@@ -21,7 +21,6 @@
 
     <jsp:attribute name="content">
         <a class="btn btn-success add-new"><i class="icon-user icon-white"></i>&nbsp;<spring:message code="users.add"/></a>
-
         <c:forEach var="product" items="${products}" varStatus="st" step="4">
             <c:set var="info1" value="${products[st.index].standardInfo}"/>
             <c:set var="info2" value="${products[st.index+1].standardInfo}"/>
