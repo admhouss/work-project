@@ -10,3 +10,5 @@ target/
 # IDEA
 *.iml
 .idea/
+
+src/main/webapp/WEB-INF/config/jdbc.properties
