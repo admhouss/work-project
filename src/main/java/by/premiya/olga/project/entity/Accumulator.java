@@ -18,7 +18,7 @@ public class Accumulator implements Serializable{
     @Column(name = "ID")
     private Integer id;
 
-    @Column(name = "PRODUСER")
+    @Column(name = "PRODUCER")
     private String producer = "";
 
     @Column(name = "MODEL")

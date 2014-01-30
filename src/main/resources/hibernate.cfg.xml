@@ -7,5 +7,6 @@
     <session-factory>
 		<mapping class="by.premiya.olga.project.entity.User" />
 		<mapping class="by.premiya.olga.project.entity.Wheel" />
+		<mapping class="by.premiya.olga.project.entity.Accumulator" />
     </session-factory>
 </hibernate-configuration>

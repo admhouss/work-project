@@ -7,12 +7,16 @@ import by.premiya.olga.project.util.json.NewItemJSON;
 import by.premiya.olga.project.util.json.PairJSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.persistence.Column;
+import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,16 +27,20 @@ import java.util.Map;
  * @author Vlad Abramov
  */
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImpl implements ProductService, InitializingBean {
 
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Autowired
     private ProductionDao productionDao;
 
-    public ProductServiceImpl() throws Exception {
-//        throw new Exception();
+    public ProductServiceImpl() {
+        logger.info("***********************************************************************************************");
     }
+
+//    public void setProductionDao(ProductionDao productionDao) {
+//        this.productionDao = productionDao;
+//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -128,5 +136,10 @@ public class ProductServiceImpl implements ProductService {
 
     private Enum getEnumValue(Class clazz, String value) {
         return Enum.valueOf(clazz, value);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        Assert.notNull(this.productionDao, "productionDao must be set");
     }
 }

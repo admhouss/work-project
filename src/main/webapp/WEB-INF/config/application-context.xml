@@ -11,11 +11,11 @@
 
 
     <context:annotation-config/>
-    <!--<context:component-scan base-package="by.premiya.olga.project"/>-->
+    <!--<context:component-scan base-package="by.premiya.olga.project" scoped-proxy="targetClass"/>-->
 
     <!--<context:property-placeholder properties-ref="propertyConfigurer"/>-->
 
-    <task:annotation-driven/>
+    <task:annotation-driven proxy-target-class="true"/>
 
     <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
@@ -59,6 +59,10 @@
     <bean id="productionDao" class="by.premiya.olga.project.dao.impl.ProductionDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
+
+    <!--<bean id="productionService" class="by.premiya.olga.project.service.impl.ProductServiceImpl" autowire="byType">-->
+        <!--<property name="productionDao" ref="productionDao"/>-->
+    <!--</bean>-->
     <!-- Transaction Manager -->
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
@@ -66,8 +70,6 @@
 
     <!-- enable the configuration of transactional behavior based on annotations -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
-
-    <!--<bean id="userDao" class="by.premiyaa.olga.project.dao.impl.UserDaoImpl"/>-->
 
 
 </beans>

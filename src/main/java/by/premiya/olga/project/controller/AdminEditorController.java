@@ -1,6 +1,5 @@
 package by.premiya.olga.project.controller;
 
-import by.premiya.olga.project.dao.ProductionDao;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.Pages;
 import by.premiya.olga.project.util.json.EntityPropertiesLoader;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.inject.Inject;
 
 /**
  * @author vlad
@@ -21,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/auth/administration/editor")
 public class AdminEditorController {
 
-    @Autowired
+    @Inject
     private ProductService productService;
 
     @Autowired
@@ -36,12 +35,12 @@ public class AdminEditorController {
     @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "{productName}/new", method = RequestMethod.POST)
     private @ResponseBody NewItemJSON newWheel(@RequestBody NewItemJSON json, @PathVariable String productName) {
-        json.clearErrors();
         productService.addNewProduct(productName, json);
         return json;
     }
 
-    @RequestMapping(value = "/show/{product}", method = RequestMethod.GET)
+    @PreAuthorize(value = "isAuthenticated()")
+    @RequestMapping(value = "show/{product}", method = RequestMethod.GET)
     public String getProduct(ModelMap model, @PathVariable String product) {
         model.put("products", productService.getProducts(product));
         model.put("productName", product);
@@ -49,7 +48,7 @@ public class AdminEditorController {
     }
 
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "/get/full/properties/{product}", method = RequestMethod.POST)
+    @RequestMapping(value = "get/full/properties/{product}", method = RequestMethod.POST)
     public @ResponseBody PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
         model.put("productName", product);
         return propertiesLoader.getProperties(product);
