@@ -37,7 +37,8 @@
                                 </div>
                                 <img data-src="holder.js/160x160" alt="160x160" style="width: 160px; height: 160px;" src="${contextPath}/image/${productName}/33311">
                                 <div class="caption">
-                                    <h4>${product1.standardInfo['name']}</h4>
+                                    <h4>${product1.standardInfo['model']}</h4>
+                                    <h6 class="muted">${product1.standardInfo['prodocer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product1.standardInfo['list']}" var="pair" >
                                             <tr>

@@ -16,33 +16,50 @@ function init(contextPath, productName) {
     $('.add-new').click(function(e) {
         e.preventDefault();
         if (isPropRendered == true) {
-            $('.thumbnails').addClass('hidden');
-            $('.add-new').addClass('hidden');
-            $('.form-horizontal').removeClass('hidden');
-            $('#propTitle').text("Добавление");
+            $('.thumbnails').addClass('hide');
+            $('.add-new').addClass('hide');
+            $('#props-area').removeClass('hide');
+//            $('#propTitle').text("Добавление");
         }
     });
     $('.btn-edit').click(function(e) {
         e.preventDefault();
         var id = $(this).attr('id');
-            $('.thumbnails').addClass('hidden');
-            $('.add-new').addClass('hidden');
-            $('.form-horizontal').removeClass('hidden');
-            $('#propTitle').text("Добавление");
+            $('.thumbnails').addClass('hide');
+            $('.add-new').addClass('hide');
+            $('.form-horizontal').removeClass('hide');
+//            $('#propTitle').text("Добавление");
     });
 
 
     function renderProperties() {
-        var addHtml = "<div class='form-horizontal offset2 hidden'><h3 id='propTitle'></h3>"
+        var totalProps = fullProperties.labels.length + count(fullProperties.enums);
+        var firstCol;
+        if (totalProps%2==0) {
+            firstCol = totalProps/2;
+        } else {
+           firstCol = totalProps/2-totalProps%2 + 1;
+        }
+        var addHtml = "<div id='props-area' class='hide'><div class='control-group'>"+
+                "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button>" +
+                "<button class='btn add-cancel'>Отмена</button></div></div>" +
+                "<div class='row-fluid'>" +
+                "<div class='form-horizontal span6'>"
             , key
             , enumeration
-            , label;
+            , label
+            , i = 0;
+
         for(key in fullProperties.labels) {
             if (fullProperties.labels.hasOwnProperty(key)) {
                 label = fullProperties.labels[key];
                 addHtml += "<div class='control-group'><label for='input"+label.first+"' class='control-label'>";
                 addHtml += label.second + "</label>";
                 addHtml += "<div class='controls'><input type='text' class='form-control input-label' name='"+label.first+"' id='input"+label.first+"'></div></div>"
+                ++i;
+                if (i == firstCol) {
+                    addHtml += "</div><div class='form-horizontal span6'>"
+                }
             }
         }
         for(key in fullProperties.enums) {
@@ -57,25 +74,54 @@ function init(contextPath, productName) {
                     }
                 }
                 addHtml += "</select></div></div>"
+                ++i;
+                if (i == firstCol) {
+                    addHtml += "</div><div class='form-horizontal span6'>"
+                }
             }
         }
-        addHtml += "<div class='control-group'>"+
-            "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button><button class='btn add-cancel'>Отмена</button></div></div>"+
-            "</div>";
+        addHtml += "</div>";
         isPropRendered = true;
 
         $('.add-new').after(addHtml);
         $('.add-cancel').click(function(e) {
             e.preventDefault();
-            $('.form-horizontal').addClass('hidden');
-            $('.add-new').removeClass('hidden');
-            $('.thumbnails').removeClass('hidden');
+            for(key in fullProperties.labels) {
+                if (fullProperties.labels.hasOwnProperty(key)) {
+                    $('input'+label.first).popover('destroy');
+                }
+            }
+            for(key in fullProperties.enums) {
+                if (fullProperties.enums.hasOwnProperty(key)) {
+                    $('input'+key).popover('destroy');
+                }
+            }
+            $('#props-area').addClass('hide');
+            $('.add-new').removeClass('hide');
+            $('.thumbnails').removeClass('hide');
         });
         $('.add-save').click(function(e) {
             e.preventDefault();
             sendNewItem();
         });
     }
+    function count(obj) {
+        if (obj.__count__ !== undefined) { // Old FF
+            return obj.__count__;
+        }
+        if (Object.keys) { // ES5
+            return Object.keys(obj).length;
+        }
+        // Everything else:
+        var c = 0, p;
+        for (p in obj) {
+            if (obj.hasOwnProperty(p)) {
+                c += 1;
+            }
+        }
+        return c;
+    }
+
     function sendNewItem() {
         var inputs = $('.input-label')
             , enums = $('.input-enum')
@@ -92,6 +138,7 @@ function init(contextPath, productName) {
         for (i = 0; i  < data.properties.length; ++i) {
             $('#input'+data.properties[i].second.first).popover('destroy');
         }
+        var temp = data;
         data = JSON.stringify(data);
         $.ajax({
             url: contextPath+"/auth/administration/editor/" + productName + "/new",

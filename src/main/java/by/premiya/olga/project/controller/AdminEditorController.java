@@ -48,6 +48,7 @@ public class AdminEditorController {
         return Pages.ADMIN_SHOW_PAGE;
     }
 
+    @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "/get/full/properties/{product}", method = RequestMethod.POST)
     public @ResponseBody PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
         model.put("productName", product);

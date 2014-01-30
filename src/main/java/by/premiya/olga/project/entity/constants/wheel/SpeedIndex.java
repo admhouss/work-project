@@ -6,173 +6,45 @@ import by.premiya.olga.project.entity.constants.BasicConstant;
  * @author Vlad Abramov
  */
 public enum SpeedIndex implements BasicConstant {
-    NAN {
-        {
-            maxSpeed = 0;
-        }
-    },
-    A1 {
-        {
-            maxSpeed = 5;
-        }
-    },
-    A2 {
-        {
-            maxSpeed = 10;
-        }
-    },
-    A3 {
-        {
-            maxSpeed = 15;
-        }
-    },
-    A4 {
-        {
-            maxSpeed = 20;
-        }
-    },
-    A5 {
-        {
-            maxSpeed = 25;
-        }
-    },
-    A6 {
-        {
-            maxSpeed = 30;
-        }
-    },
-    A7 {
-        {
-            maxSpeed = 35;
-        }
-    },
-    A8 {
-        {
-            maxSpeed = 40;
-        }
-    },
-    B {
-        {
-            maxSpeed = 50;
-        }
-    },
-    C {
-        {
-            maxSpeed = 60;
-        }
-    },
-    D {
-        {
-            maxSpeed = 65;
-        }
-    },
-    E {
-        {
-            maxSpeed = 70;
-        }
-    },
-    F {
-        {
-            maxSpeed = 80;
-        }
-    },
-    G {
-        {
-            maxSpeed = 90;
-        }
-    },
-    J {
-        {
-            maxSpeed = 100;
-        }
-    },
-    K {
-        {
-            maxSpeed = 110;
-        }
-    },
-    L {
-        {
-            maxSpeed = 120;
-        }
-    },
-    M {
-        {
-            maxSpeed = 130;
-        }
-    },
-    N {
-        {
-            maxSpeed = 140;
-        }
-    },
-    P {
-        {
-            maxSpeed = 150;
-        }
-    },
-    Q {
-        {
-            maxSpeed = 160;
-        }
-    },
-    R {
-        {
-            maxSpeed = 170;
-        }
-    },
-    S {
-        {
-            maxSpeed = 180;
-        }
-    },
-    T {
-        {
-            maxSpeed = 190;
-        }
-    },
-    U {
-        {
-            maxSpeed = 200;
-        }
-    },
-    H {
-        {
-            maxSpeed = 210;
-        }
-    },
-    V {
-        {
-            maxSpeed = 240;
-        }
-    },
-    Z {
-        {
-            maxSpeed = 240;
-        }
-    },
-    W {
-        {
-            maxSpeed = 270;
-        }
-    },
-    WO {
-        {
-            maxSpeed = 270;
-        }
-    },
-    Y {
-        {
-            maxSpeed = 300;
-        }
-    },
-    YO {
-        {
-            maxSpeed = 300;
-        }
-    };
+    NAN(0),
+    A1(5),
+    A2(10),
+    A3(15),
+    A4(20),
+    A5(25),
+    A6(30),
+    A7(35),
+    A8(40),
+    B(50),
+    C(60),
+    D(65),
+    E(70),
+    F(80),
+    G(90),
+    J(100),
+    K(110),
+    L(120),
+    M(130),
+    N(140),
+    P(150),
+    Q(160),
+    R(170),
+    S(180),
+    T(190),
+    U(200),
+    H(210),
+    V(240),
+    Z(240),
+    W(270),
+    WO(270),
+    Y(300),
+    YO(300);
 
-    int maxSpeed;
+    private final int maxSpeed;
+
+    SpeedIndex(int type) {
+        this.maxSpeed = type;
+    }
 
     public int getMaxSpeed() {
         return maxSpeed;

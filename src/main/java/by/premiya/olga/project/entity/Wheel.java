@@ -1,15 +1,12 @@
 package by.premiya.olga.project.entity;
 
-import by.premiya.olga.project.entity.constants.wheel.CarcassAndBeltConstruction;
-import by.premiya.olga.project.entity.constants.wheel.SpeedIndex;
-import by.premiya.olga.project.entity.constants.wheel.TypeOfConstruction;
+import by.premiya.olga.project.entity.constants.producers.WheelsProducer;
+import by.premiya.olga.project.entity.constants.wheel.*;
 import by.premiya.olga.project.entity.constants.wheel.Version;
 import by.premiya.olga.project.util.json.PairJSON;
-import javafx.util.Pair;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,20 +18,25 @@ import java.util.Map;
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
 
-    private static final long serialVersionUID = -1840175220466183495L;
+    private static final long serialVersionUID = 6206484295108530723L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "NAME", nullable = false) //TODO:model and producer
-    private String name = "";
+    @Column(name = "PRODUCER", nullable = false)
+    private WheelsProducer producer;
+    @Column(name = "MODEL", nullable = false)
+    private String model;
     @Column(name = "PRICE", nullable = false)
-    private Integer price = 0;
+    private Integer price;
     @Column(name = "SPEED_INDEX", nullable = false)
     @Enumerated(EnumType.STRING)
-    private SpeedIndex speedIndex = SpeedIndex.NAN;
+    private SpeedIndex speedIndex;
     @Column(name = "LOAD_INDEXES")
-    private String loadIndexes = ""; //TODO: parse it   (142/234)
+    private String loadIndexes = "";
+    @Column(name = "TREAD_PATTERN")
+    @Enumerated(EnumType.STRING)
+    private TreadPattern treadPattern = TreadPattern.NAN;
     @Column(name = "PLY_RATING")
     private Integer plyRating = 0;
     @Column(name = "TYPE_OF_CONSTRUCTION")
@@ -51,7 +53,7 @@ public class Wheel implements Serializable {
     @Column(name = "SECTION_WIDTH")
     private Integer sectionWidth = 0;
     @Column(name = "MAX_LOAD")
-    private String maxLoad = "";     //TODO parse it 3255/5656
+    private String maxLoad = "";
     @Column(name = "MAX_PRESSURE")
     private Float maxPressure = 0.0f;
     @Column(name = "WEIGHT")
@@ -67,12 +69,28 @@ public class Wheel implements Serializable {
         this.price = price;
     }
 
-    public String getName() {
-        return name;
+    public String getModel() {
+        return model;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setModel(String name) {
+        this.model = name;
+    }
+
+    public TreadPattern getTreadPattern() {
+        return treadPattern;
+    }
+
+    public void setTreadPattern(TreadPattern treadPattern) {
+        this.treadPattern = treadPattern;
+    }
+
+    public WheelsProducer getProducer() {
+        return producer;
+    }
+
+    public void setProducer(WheelsProducer producer) {
+        this.producer = producer;
     }
 
     public Integer getId() {
@@ -107,11 +125,11 @@ public class Wheel implements Serializable {
         return plyRating;
     }
 
-    public void setPlyRating(int plyRating) {
+    public void setPlyRating(Integer plyRating) {
         this.plyRating = plyRating;
     }
 
-    public void setPlyRating(Integer plyRating) {
+    public void setPlyRating(int plyRating) {
         this.plyRating = plyRating;
     }
 
@@ -191,12 +209,13 @@ public class Wheel implements Serializable {
         this.gateType = gateType;
     }
 
-    public Map<String,Object> getStandardInfo() {
+    public Map<String, Object> getStandardInfo() {
         Map<String, Object> info = new HashMap<>();
-        info.put("name", name);
+        info.put("model", model);
+        info.put("producer", producer.getString());
         info.put("list", Arrays.asList(
-                new PairJSON<String, String>("Макс. скорость",this.speedIndex.getString()),
-                new PairJSON<String, String>("Цена", String.valueOf(this.price))));
+                new PairJSON<>("Макс. скорость", this.speedIndex.getString()),
+                new PairJSON<>("Цена", String.valueOf(this.price))));
         return info;
     }
 
@@ -215,10 +234,12 @@ public class Wheel implements Serializable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (producer != null ? producer.hashCode() : 0);
+        result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (speedIndex != null ? speedIndex.hashCode() : 0);
         result = 31 * result + (loadIndexes != null ? loadIndexes.hashCode() : 0);
+        result = 31 * result + (treadPattern != null ? treadPattern.hashCode() : 0);
         result = 31 * result + plyRating;
         result = 31 * result + (typeOfConstruction != null ? typeOfConstruction.hashCode() : 0);
         result = 31 * result + (carcassAndBeltConstruction != null ? carcassAndBeltConstruction.hashCode() : 0);
@@ -236,10 +257,12 @@ public class Wheel implements Serializable {
     public String toString() {
         return "Wheel{" +
                 "id=" + id +
-                ", name=" + name +
+                ", producer=" + producer +
+                ", model=" + model +
                 ", price=" + price +
                 ", speedIndex=" + speedIndex +
                 ", loadIndexes='" + loadIndexes + '\'' +
+                ", treadPattern='" + treadPattern + '\'' +
                 ", plyRating=" + plyRating +
                 ", typeOfConstruction=" + typeOfConstruction +
                 ", carcassAndBeltConstruction=" + carcassAndBeltConstruction +

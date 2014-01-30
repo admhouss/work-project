@@ -11,7 +11,7 @@
 
 
     <context:annotation-config/>
-    <context:component-scan base-package="by.premiya.olga.project"/>
+    <!--<context:component-scan base-package="by.premiya.olga.project"/>-->
 
     <!--<context:property-placeholder properties-ref="propertyConfigurer"/>-->
 
@@ -59,7 +59,6 @@
     <bean id="productionDao" class="by.premiya.olga.project.dao.impl.ProductionDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
-
     <!-- Transaction Manager -->
     <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>

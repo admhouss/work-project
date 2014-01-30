@@ -6,23 +6,15 @@ import by.premiya.olga.project.entity.constants.BasicConstant;
  * @author Vlad Abramov
  */
 public enum TypeOfConstruction implements BasicConstant {
-    NAN {
-        {
-            type = "--";
-        }
-    },
-    RADIAL {
-        {
-            type = "Радиальная";
-        }
-    },
-    DIAGONAL {
-        {
-            type = "Диагональная";
-        }
-    };
+    NAN("--"),
+    RADIAL("Радиальная"),
+    DIAGONAL("Диагональная");
 
-    String type;
+    private final String type;
+
+    TypeOfConstruction(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;

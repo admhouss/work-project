@@ -6,27 +6,16 @@ import by.premiya.olga.project.entity.constants.BasicConstant;
  * @author Vlad Abramov
  */
 public enum CarcassAndBeltConstruction implements BasicConstant {
-    NAN {
-        {
-            type = "--";
-        }
-    },
-    COMBINED {
-        {
-            type = "Комбинированная";
-        }
-    },
-    TEXTILE {
-        {
-            type = "Текстильная";
-        }
-    },
-    ALLSTEEL {
-        {
-            type = "ЦМК";
-        }
-    };
-    String type;
+    NAN("--"),
+    COMBINED("Комбинированная"),
+    TEXTILE("Текстильная"),
+    ALLSTEEL("ЦМК");
+
+    private final String type;
+
+    CarcassAndBeltConstruction(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;

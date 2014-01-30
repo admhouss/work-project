@@ -11,7 +11,7 @@ public final class WheelsCompare {
     public static final Comparator<Wheel> BY_NAME = new Comparator<Wheel>() {
         @Override
         public int compare(Wheel w1, Wheel w2) {
-            int cmp = w1.getName().compareToIgnoreCase(w2.getName());
+            int cmp = w1.getModel().compareToIgnoreCase(w2.getModel());
             if (cmp == 0) {
                 cmp = w2.getPrice().compareTo(w2.getPrice());
             }

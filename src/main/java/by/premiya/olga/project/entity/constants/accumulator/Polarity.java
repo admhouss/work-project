@@ -6,20 +6,15 @@ import by.premiya.olga.project.entity.constants.BasicConstant;
  * @author vlad
  */
 public enum Polarity implements BasicConstant{
-    NAN {
-        {
-            type = "--";
-        }
-    },
-    REVERSE {
-        {
-            type = "Обратная";
-        }
-    },
-    //direct
-    ;
+    NAN("--"),
+    REVERSE("Обратная"),
+    DIRECT("Прямая");
 
-    String type;
+    private final String type;
+
+    Polarity(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;
@@ -27,6 +22,6 @@ public enum Polarity implements BasicConstant{
 
     @Override
     public String getString() {
-        return null;
+        return type;
     }
 }

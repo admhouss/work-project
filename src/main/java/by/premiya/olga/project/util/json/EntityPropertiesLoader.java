@@ -1,10 +1,8 @@
 package by.premiya.olga.project.util.json;
 
 import by.premiya.olga.project.entity.constants.BasicConstant;
-import by.premiya.olga.project.entity.constants.wheel.CarcassAndBeltConstruction;
-import by.premiya.olga.project.entity.constants.wheel.SpeedIndex;
-import by.premiya.olga.project.entity.constants.wheel.TypeOfConstruction;
-import by.premiya.olga.project.entity.constants.wheel.Version;
+import by.premiya.olga.project.entity.constants.producers.WheelsProducer;
+import by.premiya.olga.project.entity.constants.wheel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,7 +22,7 @@ public class EntityPropertiesLoader implements InitializingBean {
     }
 
     private void initWheels() {
-        wheelsProperties.setLabels(Arrays.<PairJSON<String, String>>asList(new PairJSON<>("name","Название"),
+        wheelsProperties.setLabels(Arrays.<PairJSON<String, String>>asList(new PairJSON<>("model","Модель"),
                 new PairJSON<>("price","Цена"),
                 new PairJSON<>("loadIndexes","Индекс загрузки"),
                 new PairJSON<>("plyRating","Слойность"),
@@ -33,12 +31,14 @@ public class EntityPropertiesLoader implements InitializingBean {
                 new PairJSON<>("weight","Масса"),
                 new PairJSON<>("maxLoad","Макс. нагрузка"),
                 new PairJSON<>("maxPressure","Макс. давление"),
-                new PairJSON<>("gateType","Gate type")));
+                new PairJSON<>("gateType","Тип вентиля")));
         Map<String, PairJSON<String,List<PairJSON<String,String>>>> enums = new HashMap<>();
 
+        enums.put("producer",new PairJSON<>("Производитель", getEnumValuesToString(WheelsProducer.values())));
+        enums.put("treadPattern",new PairJSON<>("Рисунок протектора", getEnumValuesToString(TreadPattern.values())));
         enums.put("speedIndex",new PairJSON<>("Макс. скорость", getEnumValuesToString(SpeedIndex.values())));
         enums.put("typeOfConstruction",new PairJSON<>("Тип конструкции", getEnumValuesToString(TypeOfConstruction.values())));
-        enums.put("carcassAndBeltConstruction",new PairJSON<>("CarcassAndBeltConstruction", getEnumValuesToString(CarcassAndBeltConstruction.values())));
+        enums.put("carcassAndBeltConstruction",new PairJSON<>("Констр. каркаса и брекера", getEnumValuesToString(CarcassAndBeltConstruction.values())));
         enums.put("version",new PairJSON<>("Исполнение", getEnumValuesToString(Version.values())));
         wheelsProperties.setEnums(enums);
     }

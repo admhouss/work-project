@@ -6,23 +6,15 @@ import by.premiya.olga.project.entity.constants.BasicConstant;
  * @author Vlad Abramov
  */
 public enum Version implements BasicConstant {
-    NAN {
-        {
-            type = "--";
-        }
-    },
-    TUBELESS {
-        {
-            type = "Безкамерная";
-        }
-    },
-    WITHTUBE {
-        {
-            type = "С камерой";
-        }
-    };
+    NAN("--"),
+    TUBELESS("Безкамерная"),
+    WITHTUBE("С камерой");
 
-    String type;
+    private final String type;
+
+    Version(String type) {
+        this.type = type;
+    }
 
     public String getType() {
         return type;

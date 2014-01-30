@@ -1,68 +1,34 @@
 package by.premiya.olga.project.entity.constants.wheel;
 
+import by.premiya.olga.project.entity.constants.BasicConstant;
+
 /**
  * @author Vlad Abramov
  */
-public enum TreadPattern {
-    NAN {
-        {
-            type = "--";
-        }
-    },
-    ONROAD {
-        {
-            type = "Дорожная";
-        }
-    },
-    OFFROAD {
-        {
-            type = "Внедорожная";
-        }
-    },
-    ALLSEASON {
-        {
-            type = "Всесезонная";
-        }
-    },
-    WINTER {
-        {
-            type = "Зимняя";
-        }
-    },
-    SUMMER {
-        {
-            type = "Летняя";
-        }
-    },
-    UNIVERSAL {
-        {
-            type = "Универсальная";
-        }
-    },
-    RAISEDPASSABLENESS {
-        {
-            type = "Повышенной проходимости";
-        }
-    },
-    CAREER {
-        {
-            type = "Карьерная";
-        }
-    },
-    PERFORMANCE {
-        {
-            type = "Скоростная";
-        }
-    },
-    ALLSEASONPERFORMANCE {
-        {
-            type = "Всесезонная скоростная";
-        }
-    };
+public enum TreadPattern implements BasicConstant {
+    NAN("--"),
+    ONROAD("Дорожный"),
+    OFFROAD("Внедорожный"),
+    ALLSEASON("Всесезонный"),
+    WINTER("Зимний"),
+    SUMMER("Летний"),
+    UNIVERSAL("Универсальный"),
+    RAISEDPASSABLENESS("Повышенной проходимости"),
+    CAREER("Карьерный"),
+    PERFORMANCE("Скоростной"),
+    ALLSEASONPERFORMANCE("Всесезонный скоростной");
 
-    String type;
+    private final String type;
+
+    TreadPattern(String type) {
+        this.type = type;
+    }
 
     public String getType() {
+        return type;
+    }
+    @Override
+    public String getString() {
         return type;
     }
 }

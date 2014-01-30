@@ -23,12 +23,16 @@ import java.util.Map;
  * @author Vlad Abramov
  */
 @Service
-@Transactional
 public class ProductServiceImpl implements ProductService {
 
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
+
     @Autowired
     private ProductionDao productionDao;
+
+    public ProductServiceImpl() throws Exception {
+//        throw new Exception();
+    }
 
     @Override
     @Transactional(readOnly = true)

@@ -66,9 +66,11 @@
         <!--</beans:property>-->
 	<!--</beans:bean>-->
 
-    <context:component-scan base-package="by.premiya.olga.project">
-        <context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />
-    </context:component-scan>
+    <context:component-scan base-package="by.premiya.olga.project"/>
+
+    <!--<context:component-scan base-package="by.premiya.olga.project.controller">-->
+        <!--<context:include-filter expression="org.springframework.stereotype.Controller" type="annotation" />-->
+    <!--</context:component-scan>-->
 
 
 </beans:beans>
