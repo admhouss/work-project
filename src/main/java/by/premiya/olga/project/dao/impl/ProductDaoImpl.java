@@ -1,7 +1,6 @@
 package by.premiya.olga.project.dao.impl;
 
-import by.premiya.olga.project.dao.ProductionDao;
-import by.premiya.olga.project.entity.User;
+import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.entity.constants.comparators.wheels.WheelsCompare;
 import org.hibernate.Query;
@@ -16,9 +15,11 @@ import java.util.Map;
 /**
  * @author Vlad Abramov
  */
+//@Repository
 @SuppressWarnings("unchecked")
-public class ProductionDaoImpl implements ProductionDao {
+public class ProductDaoImpl implements ProductDao {
 
+    //    @Inject
     private SessionFactory sessionFactory;
 
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -34,7 +35,9 @@ public class ProductionDaoImpl implements ProductionDao {
     public List getProducts(String name) {
         List products = new LinkedList<>();
         switch (name) {
-            case "wheels": products = getWheels(null); break;
+            case "wheels":
+                products = getWheels(null);
+                break;
         }
         return products;
     }

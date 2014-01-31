@@ -2,6 +2,8 @@ package by.premiya.olga.project.util.auth;
 
 import by.premiya.olga.project.entity.User;
 import by.premiya.olga.project.util.annotations.ActiveUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,8 @@ import java.security.Principal;
  */
 @Component
 public class CustomUserDetailsMethodArgumentResolver implements HandlerMethodArgumentResolver {
+
+    private Logger logger = LoggerFactory.getLogger(CustomUserDetailsMethodArgumentResolver.class);
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {

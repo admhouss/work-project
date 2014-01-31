@@ -1,6 +1,6 @@
 package by.premiya.olga.project.service.impl;
 
-import by.premiya.olga.project.dao.ProductionDao;
+import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.json.NewItemJSON;
@@ -9,14 +9,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.persistence.Column;
-import javax.swing.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -27,31 +26,32 @@ import java.util.Map;
  * @author Vlad Abramov
  */
 @Service
-public class ProductServiceImpl implements ProductService, InitializingBean {
+public class ProductServiceImpl implements ProductService {
 
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
-
     @Autowired
-    private ProductionDao productionDao;
+    @Qualifier("productDao")
+    private ProductDao productDao;
 
-    public ProductServiceImpl() {
-        logger.info("***********************************************************************************************");
-    }
+//    public void setProductDao(ProductDao productDao) {
+//        this.productDao = productDao;
+//    }
 
-//    public void setProductionDao(ProductionDao productionDao) {
-//        this.productionDao = productionDao;
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        Assert.notNull(this.productDao, "productDao must be set");
 //    }
 
     @Override
     @Transactional(readOnly = true)
     public List getProducts(String name) {
-        return productionDao.getProducts(name);
+        return productDao.getProducts(name);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Wheel> getWheels(Map<String, String> searchParams) {
-        return productionDao.getWheels(searchParams);
+        return productDao.getWheels(searchParams);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ProductServiceImpl implements ProductService, InitializingBean {
                 break;
         }
         if (insert != null) {
-            productionDao.save(insert);
+            productDao.save(insert);
         }
     }
 
@@ -136,10 +136,5 @@ public class ProductServiceImpl implements ProductService, InitializingBean {
 
     private Enum getEnumValue(Class clazz, String value) {
         return Enum.valueOf(clazz, value);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Assert.notNull(this.productionDao, "productionDao must be set");
     }
 }

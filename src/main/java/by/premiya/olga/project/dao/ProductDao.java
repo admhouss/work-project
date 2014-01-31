@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author Vlad Abramov
  */
-public interface ProductionDao {
+public interface ProductDao {
 
     void save(Object product);
 

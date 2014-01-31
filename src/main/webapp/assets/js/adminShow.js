@@ -141,11 +141,14 @@ function init(contextPath, productName) {
         var temp = data;
         data = JSON.stringify(data);
         $.ajax({
-            url: contextPath+"/auth/administration/editor/" + productName + "/new",
+            url: contextPath+"/auth/administration/editor/new/" + productName,
             data: data,
             contentType: 'application/json',
             type: 'POST',
             cashed: false,
+            'fail': function (data) {
+                alert(data);
+            },
             'success': function (properties) {
                 console.log(properties);
                 if (properties.success) {
