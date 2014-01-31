@@ -12,3 +12,4 @@
 <script src="${contextPath}/assets/js/bootstrap-popover.js"></script>
 <%--<script src="${contextPath}/assets/js/bootstrap-carousel.js"></script>--%>
 <script src="${contextPath}/assets/js/bootstrap-modal.js"></script>
+<script src="${contextPath}/assets/js/models.js"></script>

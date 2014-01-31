@@ -50,9 +50,6 @@
     </bean>
 
     <bean id="entityPropertiesLoader" class="by.premiya.olga.project.util.json.EntityPropertiesLoader"/>
-
-
-
     <bean id="userDao" class="by.premiya.olga.project.dao.impl.UserDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
@@ -62,7 +59,7 @@
     </bean>
 
     <!--<bean id="productService" class="by.premiya.olga.project.service.impl.ProductServiceImpl">-->
-        <!--<property name="productDao" ref="productDao"/>-->
+        <!--<property beanName="productDao" ref="productDao"/>-->
         <!--&lt;!&ndash;<aop:scoped-proxy/>&ndash;&gt;-->
     <!--</bean>-->
 

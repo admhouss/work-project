@@ -21,6 +21,11 @@ public class UserDaoImpl implements UserDao {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Insert new {@code User} to DB. There is no checking for ensures that {@code newUser} is exactly stored in DB.
+     *
+     * @param newUser user that you want ot store in DB.
+     */
     @Override
     @Transactional
     public void addUser(User newUser) {
@@ -51,6 +56,10 @@ public class UserDaoImpl implements UserDao {
         return (resultList.isEmpty()) ? null : (User) resultList.get(0);
     }
 
+    /**
+     * Removes {@code User} from DB by identifier.
+     * @param id user identifier.
+     * */
     @Override
     @Transactional
     public void removeUserById(Integer id) {
@@ -87,7 +96,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    private Session getSession(){
+    private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 }

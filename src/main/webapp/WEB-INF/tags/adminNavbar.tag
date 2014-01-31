@@ -19,7 +19,7 @@
                 <span class="icon-bar"></span>
             </button>
             <form class="navbar-search" action="${contextPath}/search/light" method="get">
-                <input type="text" class="search-query collapsed" name="searchText" placeholder="Поиск по продукции" tabindex="1">
+                <input id="typeahead-models" type="text" class="search-query collapsed" name="searchText" placeholder="Поиск по продукции" tabindex="1">
             </form>
             <div class="nav-collapse collapse">
                 <ul class="nav">

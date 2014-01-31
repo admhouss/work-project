@@ -40,23 +40,23 @@
 
     <!--<bean id="digestFilter"-->
                 <!--class="org.springframework.security.web.authentication.www.DigestAuthenticationFilter">-->
-        <!--<property name="userDetailsService" ref="customUserDetailsService" />-->
-        <!--<property name="authenticationEntryPoint" ref="digestEntryPoint" />-->
+        <!--<property beanName="userDetailsService" ref="customUserDetailsService" />-->
+        <!--<property beanName="authenticationEntryPoint" ref="digestEntryPoint" />-->
     <!--</bean>-->
     <!--<bean id="digestEntryPoint"-->
                 <!--class="org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint">-->
-        <!--<property name="realmName" value="Olga Project" />-->
-        <!--<property name="key" value="olgaProjectAppKey" />-->
+        <!--<property beanName="realmName" value="Olga Project" />-->
+        <!--<property beanName="key" value="olgaProjectAppKey" />-->
     <!--</bean>-->
 
     <!--<bean id="basicFilter"-->
                 <!--class="by.premiya.olga.project.util.auth.basic.CustomBasicAuthenticationFilter">-->
-        <!--<constructor-arg name="authenticationManager" ref="authenticationManager" />-->
-        <!--<constructor-arg name="authenticationEntryPoint" ref="basicEntryPoint" />-->
+        <!--<constructor-arg beanName="authenticationManager" ref="authenticationManager" />-->
+        <!--<constructor-arg beanName="authenticationEntryPoint" ref="basicEntryPoint" />-->
     <!--</bean>-->
     <!--<bean id="basicEntryPoint"-->
                 <!--class="by.premiya.olga.project.util.auth.basic.CustomBasicAuthenticationEntryPoint">-->
-        <!--<property name="realmName" value="Olga Project" />-->
+        <!--<property beanName="realmName" value="Olga Project" />-->
     <!--</bean>-->
 
     <bean id="customUserDetailsService" class="by.premiya.olga.project.util.auth.CustomUserDetailsService"/>

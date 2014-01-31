@@ -15,6 +15,9 @@
     <head>
         <t:defaulthead />
         <jsp:invoke fragment="head"/>
+        <script type="text/javascript">
+            $(document).ready(getModels("${contextPath}"));
+        </script>
     </head>
     <body>
         <c:if test="${empty param.nonav}">

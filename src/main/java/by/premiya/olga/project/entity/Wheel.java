@@ -18,12 +18,15 @@ import java.util.Map;
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
 
-    private static final long serialVersionUID = 6206484295108530723L;
+    private static final long serialVersionUID = 2191853262571204271L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
+    @Column(name = "PIC_NAME")
+    private String picName;
     @Column(name = "PRODUCER", nullable = false)
+    @Enumerated(EnumType.STRING)
     private WheelsProducer producer;
     @Column(name = "MODEL", nullable = false)
     private String model;
@@ -85,6 +88,14 @@ public class Wheel implements Serializable {
         this.treadPattern = treadPattern;
     }
 
+    public String getPicName() {
+        return picName;
+    }
+
+    public void setPicName(String picName) {
+        this.picName = picName;
+    }
+
     public WheelsProducer getProducer() {
         return producer;
     }
@@ -125,11 +136,11 @@ public class Wheel implements Serializable {
         return plyRating;
     }
 
-    public void setPlyRating(Integer plyRating) {
+    public void setPlyRating(int plyRating) {
         this.plyRating = plyRating;
     }
 
-    public void setPlyRating(int plyRating) {
+    public void setPlyRating(Integer plyRating) {
         this.plyRating = plyRating;
     }
 
@@ -226,14 +237,14 @@ public class Wheel implements Serializable {
 
         Wheel wheel = (Wheel) o;
 
-        if (id != null ? !id.equals(wheel.id) : wheel.id != null) return false;
+        return !(id != null ? !id.equals(wheel.id) : wheel.id != null);
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (picName != null ? picName.hashCode() : 0);
         result = 31 * result + (producer != null ? producer.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
@@ -257,6 +268,7 @@ public class Wheel implements Serializable {
     public String toString() {
         return "Wheel{" +
                 "id=" + id +
+                ", picName=" + picName +
                 ", producer=" + producer +
                 ", model=" + model +
                 ", price=" + price +

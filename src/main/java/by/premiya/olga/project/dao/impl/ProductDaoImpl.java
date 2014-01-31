@@ -3,9 +3,12 @@ package by.premiya.olga.project.dao.impl;
 import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.entity.constants.comparators.wheels.WheelsCompare;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
+import org.hibernate.transform.Transformers;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -53,6 +56,29 @@ public class ProductDaoImpl implements ProductDao {
 
         }
         return wheels;
+    }
+
+    @Override
+    public List<String> getWheelModels() {
+        List<String> models = new LinkedList<>();
+        Criteria cr = getSession().createCriteria(Wheel.class)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("model"), "model"))
+                .setResultTransformer(Transformers.aliasToBean(Wheel.class));
+        for (Object wheel : cr.list()) {
+            models.add(((Wheel)wheel).getModel());
+        }
+        return models;
+    }
+
+    @Override
+    public List<String> getAccumulatorModels() {
+        return null;
+    }
+
+    @Override
+    public List<String> getRadiatorModels() {
+        return null;
     }
 
     private Session getSession() {

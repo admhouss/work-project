@@ -24,8 +24,6 @@ import java.security.Principal;
 @Component
 public class CustomUserDetailsMethodArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private Logger logger = LoggerFactory.getLogger(CustomUserDetailsMethodArgumentResolver.class);
-
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
         return supportsAnnotation(methodParameter, ActiveUser.class);

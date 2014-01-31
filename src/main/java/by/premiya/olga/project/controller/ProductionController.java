@@ -9,6 +9,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * @author Vlad Abramov
@@ -24,5 +27,11 @@ public class ProductionController {
         model.put("products", productService.getProducts(product));
         model.put("productName", product);
         return Pages.SHOW_PAGE;
+    }
+
+    @RequestMapping(value = "/get/all/models", method = RequestMethod.POST)
+    public @ResponseBody List<String> getModels() {
+        List<String> list = productService.getAllModels();
+        return list;
     }
 }

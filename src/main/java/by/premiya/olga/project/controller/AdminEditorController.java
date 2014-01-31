@@ -3,7 +3,6 @@ package by.premiya.olga.project.controller;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.ApplicationContextHolder;
 import by.premiya.olga.project.util.Pages;
-import by.premiya.olga.project.util.annotations.InjectBean;
 import by.premiya.olga.project.util.json.EntityPropertiesLoader;
 import by.premiya.olga.project.util.json.NewItemJSON;
 import by.premiya.olga.project.util.json.PropertiesJSON;

@@ -15,4 +15,10 @@ public interface ProductDao {
     List getProducts(String name);
 
     List<Wheel> getWheels(Map<String, String> searchParams);
+
+    List<String> getWheelModels();
+
+    List<String> getAccumulatorModels();
+
+    List<String> getRadiatorModels();
 }

@@ -1,6 +1,5 @@
 function init(contextPath, productName) {
     var fullProperties = {labels: {}, enums:{}}
-      , showItemsHtml
       , isPropRendered = false;
     $.ajax({
         url: contextPath+"/auth/administration/editor/get/full/properties/" + productName,
@@ -19,18 +18,15 @@ function init(contextPath, productName) {
             $('.thumbnails').addClass('hide');
             $('.add-new').addClass('hide');
             $('#props-area').removeClass('hide');
-//            $('#propTitle').text("Добавление");
+            $('#area-title').text("Добавление");
         }
     });
-    $('.btn-edit').click(function(e) {
-        e.preventDefault();
-        var id = $(this).attr('id');
-            $('.thumbnails').addClass('hide');
-            $('.add-new').addClass('hide');
-            $('.form-horizontal').removeClass('hide');
-//            $('#propTitle').text("Добавление");
+    $('.thumbnail').mouseover(function(e) {
+        $(this).find('.offset9').css('visibility','visible');
     });
-
+    $('.thumbnail').mouseout(function(e) {
+        $(this).find('.offset9').css('visibility','hidden');
+    });
 
     function renderProperties() {
         var totalProps = fullProperties.labels.length + count(fullProperties.enums);
@@ -42,7 +38,7 @@ function init(contextPath, productName) {
         }
         var addHtml = "<div id='props-area' class='hide'><div class='control-group'>"+
                 "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button>" +
-                "<button class='btn add-cancel'>Отмена</button></div></div>" +
+                "<button class='btn add-cancel'>Отмена</button></div></div><h3 id='area-title'></h3>" +
                 "<div class='row-fluid'>" +
                 "<div class='form-horizontal span6'>"
             , key
@@ -73,7 +69,7 @@ function init(contextPath, productName) {
                         addHtml += "<option value='"+enumeration.second[key].first+"'>"+enumeration.second[key].second+"</option>"
                     }
                 }
-                addHtml += "</select></div></div>"
+                addHtml += "</select></div></div>";
                 ++i;
                 if (i == firstCol) {
                     addHtml += "</div><div class='form-horizontal span6'>"
@@ -84,16 +80,35 @@ function init(contextPath, productName) {
         isPropRendered = true;
 
         $('.add-new').after(addHtml);
+
+        $('.input-label').on('keypress', function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                sendNewItem();
+            }
+        });
+        $('.input-enum').on('keypress', function (e) {
+            if (e.keyCode == 13) {
+                e.preventDefault();
+                sendNewItem();
+            }
+        });
+
         $('.add-cancel').click(function(e) {
             e.preventDefault();
+            var input;
             for(key in fullProperties.labels) {
                 if (fullProperties.labels.hasOwnProperty(key)) {
-                    $('input'+label.first).popover('destroy');
+                    input = $('#input'+fullProperties.labels[key].first);
+                    input.popover('destroy');
+                    input.val("");
                 }
             }
             for(key in fullProperties.enums) {
                 if (fullProperties.enums.hasOwnProperty(key)) {
-                    $('input'+key).popover('destroy');
+                    input = $('#input'+key);
+                    input.popover('destroy');
+                    input.val('NAN');
                 }
             }
             $('#props-area').addClass('hide');
@@ -126,7 +141,6 @@ function init(contextPath, productName) {
         var inputs = $('.input-label')
             , enums = $('.input-enum')
             , data = {properties: []}
-            , property = {first:{}, second: {}}
             , name;
         for (var i = 0; i < inputs.length; ++i) {
             data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
@@ -152,7 +166,7 @@ function init(contextPath, productName) {
             'success': function (properties) {
                 console.log(properties);
                 if (properties.success) {
-
+                    $('#image-upload').attr('ac')
                 } else {
                     var i = 0
                         , $input;

@@ -30,17 +30,7 @@ public class ProductServiceImpl implements ProductService {
 
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
-    @Qualifier("productDao")
     private ProductDao productDao;
-
-//    public void setProductDao(ProductDao productDao) {
-//        this.productDao = productDao;
-//    }
-
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        Assert.notNull(this.productDao, "productDao must be set");
-//    }
 
     @Override
     @Transactional(readOnly = true)
@@ -65,7 +55,15 @@ public class ProductServiceImpl implements ProductService {
         }
         if (insert != null) {
             productDao.save(insert);
+            properties.setSuccess(true);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<String> getAllModels() {
+        List<String> models = productDao.getWheelModels();
+        return models;
     }
 
     private Object getInsertObject(Class clazz, NewItemJSON properties) {
