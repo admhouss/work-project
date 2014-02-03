@@ -1,6 +1,7 @@
 package by.premiya.olga.project.dao.impl;
 
 import by.premiya.olga.project.dao.ProductDao;
+import by.premiya.olga.project.entity.Accumulator;
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.entity.constants.comparators.wheels.WheelsCompare;
 import org.hibernate.Criteria;
@@ -10,10 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Projections;
 import org.hibernate.transform.Transformers;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Vlad Abramov
@@ -35,8 +33,23 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public void delete(Object product) {
+        getSession().delete(product);
+    }
+
+    @Override
     public void update(Object product) {
         getSession().saveOrUpdate(product);
+    }
+
+    @Override
+    public Wheel getWheelById(Integer id) {
+        return (Wheel) getSession().get(Wheel.class, id);
+    }
+
+    @Override
+    public Accumulator getAccumulatorById(Integer id) {
+        return (Accumulator) getSession().get(Accumulator.class, id);
     }
 
     @Override
@@ -81,10 +94,12 @@ public class ProductDaoImpl implements ProductDao {
         List<String> models = new LinkedList<>();
         Criteria cr = getSession().createCriteria(Wheel.class)
                 .setProjection(Projections.projectionList()
+                        .add(Projections.property("producer"), "producer")
                         .add(Projections.property("model"), "model"))
                 .setResultTransformer(Transformers.aliasToBean(Wheel.class));
         for (Object wheel : cr.list()) {
-            models.add(((Wheel)wheel).getModel());
+            Wheel cur = (Wheel)wheel;
+            models.add(cur.getProducer().getString() + " " + cur.getModel());
         }
         return models;
     }

@@ -74,7 +74,7 @@ function usersControls (contextPath) {
 
     function sendRequest() {
         cleanMessages();
-        if (nameCheck(!!((userLogin == "add-new-user")))) {
+        if (nameCheck(((userLogin == "add-new-user")))) {
             var dataJSON = JSON.stringify({
                 login: userForEdit.login,
                 firstName: userForEdit.firstName,

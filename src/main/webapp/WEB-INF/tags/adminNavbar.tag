@@ -18,13 +18,10 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <form class="navbar-search" action="${contextPath}/search/light" method="get">
-                <input id="typeahead-models" type="text" class="search-query collapsed" name="searchText" placeholder="Поиск по продукции" tabindex="1">
-            </form>
             <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navFullName"><spring:message code="navbar.production"/>&nbsp;<i class="caret"></i></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="navProduction"><spring:message code="navbar.production"/>&nbsp;<i class="caret"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="${contextPath}/auth/administration/editor/show/wheels"><spring:message code="navbar.wheels"/></a></li>
                             <li><a href="${contextPath}/auth/administration/editor/show/accumulators"><spring:message code="navbar.accumulators"/></a></li>

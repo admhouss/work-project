@@ -1,7 +1,8 @@
 function init(contextPath, productName) {
     var fullProperties = {labels: {}, enums:{}}
       , isPropRendered = false
-      , insertObjectMetadata = {model: "", producer: "",productName: ""};
+      , insertObjectMetadata = {model: "", producer: "",productName: ""}
+      , isEdit = false;
     $.ajax({
         url: contextPath+"/auth/administration/editor/get/full/properties/" + productName,
         type: 'POST',
@@ -22,21 +23,45 @@ function init(contextPath, productName) {
             $('#area-title').text("Добавление");
         }
     });
-    $('.pic-upload').click(function(e) {
+
+    $('.product-edit').click(function(e) {
         e.preventDefault();
-        var data = new FormData();
-        jQuery.each($('#inputFile')[0].files, function(i, file) {
-            data.append('file-'+i, file);
-        });
+        var properties;
+        var productId = $(this).attr('id').substr(5);
+        isEdit = true;
         $.ajax({
-            url: contextPath+"/image/upload/" + insertObjectMetadata.productName + "/" + insertObjectMetadata.producer + "/" + insertObjectMetadata.model,
+            url: contextPath + "/auth/administration/editor/get/edit/item/" + productId + "/" + productName,
             type: 'POST',
-            data: data,
-            processData: false,
-            contentType: false,
             cashed: false,
-            'success': function (data) {
-                console.log(data);
+            'success': function (result) {
+                properties = result;
+                var props = result.properties;
+                insertObjectMetadata = {model: result.objectModel, producer: result.objectProducer,productName: result.objectProduct };
+                var i;
+                for (i = 0; i < props.length; ++i) {
+                    var input = $('#input'+props[i].second.first);
+                    input.val(props[i].second.second);
+                }
+                $('.thumbnails').addClass('hide');
+                $('.add-new').addClass('hide');
+                $('#image-upload-edit').removeClass('hide');
+                $('#props-area').removeClass('hide');
+                $('#area-title').text("Редактирование");
+            }
+        });
+    });
+    $('.product-remove').click(function(e) {
+        e.preventDefault();
+        var properties;
+        var productId = $(this).attr('id').substr(7);
+        $.ajax({
+            url: contextPath + "/auth/administration/editor/remove/item/" + productId,
+            type: 'POST',
+            cashed: false,
+            'success': function (result) {
+               if (result == true) {
+                   window.location.href = contextPath + "/auth/administration/editor/show/" + productName
+               }
             }
         });
     });
@@ -56,9 +81,24 @@ function init(contextPath, productName) {
         } else {
            firstCol = totalProps/2-totalProps%2 + 1;
         }
-        var addHtml = "<div id='props-area' class='hide'><div class='control-group'>"+
+        var addHtml = "<div class='image-alert'><div class='alert alert-success hide' id='success'>Изображение успешно загружено.</div>" +
+                "<div class='alert alert-danger hide image-alert' id='error'>Произошла ошибка при загрузке.\nПопробуйте отправить заного.</div><button id='btn-redirect' class='btn hide'>Назад</button></div>" +
+                "<form id='image-upload' class='form-inline hide' action='' enctype='multipart/form-data'><label>Выберите&nbsp;изображение</label>"+
+                "<input id='inputFile' type='file' name='file' size='50' style='position:absolute; top:-200px;'/>" +
+                "<button class='btn form-control open-file'>Открыть</button>" +
+                "<button class='btn btn-primary pic-upload' disabled='disabled'>Загрузить</button>" +
+                "<img id='loading' width='16' height='16' alt='Loading' class='hidden' src='"+contextPath+"/assets/img/util/loading.gif'/></form>" +
+
+                "<div id='props-area' class='hide'><div class='control-group'>"+
                 "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button>" +
                 "<button class='btn add-cancel'>Отмена</button></div></div><h3 id='area-title'></h3>" +
+
+                "<form id='image-upload-edit' class='form-inline hide' action='' enctype='multipart/form-data'><label>Выберите&nbsp;изображение</label>"+
+                "<input id='inputFile' type='file' name='file' size='50' style='position:absolute; top:-200px;'/>" +
+                "<button class='btn form-control open-file'>Открыть</button>" +
+                "<button class='btn btn-primary pic-upload' disabled='disabled'>Загрузить</button>" +
+                "<img id='loading' width='16' height='16' alt='Loading' class='hidden' src='"+contextPath+"/assets/img/util/loading.gif'/></form>"+
+
                 "<div class='row-fluid'>" +
                 "<div class='form-horizontal span6'>"
             , key
@@ -132,14 +172,58 @@ function init(contextPath, productName) {
                 }
             }
             $('#props-area').addClass('hide');
+            $('#image-upload-edit').addClass('hide');
             $('.add-new').removeClass('hide');
             $('.thumbnails').removeClass('hide');
+
         });
         $('.add-save').click(function(e) {
             e.preventDefault();
             sendNewItem();
         });
+        $('.open-file').click(function(e) {
+            e.preventDefault();
+            $('#inputFile').click();
+        });
+        $('input:file').change(function (){
+            var fileName = $(this).val();
+            $(".filename").html(fileName);
+            if (fileName !== "") $('.pic-upload').removeAttr('disabled');
+        });
+        $('#btn-redirect').click(function(e) {
+            e.preventDefault();
+            window.location.href = contextPath + "/auth/administration/editor/show/" + productName
+        });
+        $('.pic-upload').click(function(e) {
+            e.preventDefault();
+            $("#loading").removeClass('hide');
+            $('#success').addClass('hide');
+            $('#error').addClass('hide');
+            var data = new FormData();
+            jQuery.each($('#inputFile')[0].files, function(i, file) {
+                data.append('file-'+i, file);
+            });
+            $.ajax({
+                url: contextPath+"/image/upload/" + insertObjectMetadata.productName + "/" + insertObjectMetadata.producer + "/" + insertObjectMetadata.model,
+                type: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+                cashed: false,
+                'success': function (result) {
+                    $("#loading").addClass('hide');
+                    if (result == true) {
+                        $('#image-upload').addClass('hide');
+                        $('#success').removeClass('hide');
+                        $('#btn-redirect').removeClass('hide')
+                    } else {
+                        $('#error').removeClass('hide');
+                    }
+                }
+            });
+        });
     }
+
     function count(obj) {
         if (obj.__count__ !== undefined) { // Old FF
             return obj.__count__;
@@ -184,7 +268,8 @@ function init(contextPath, productName) {
                 console.log(properties);
                 if (properties.success) {
                     insertObjectMetadata = {model: properties.objectModel, producer: properties.objectProducer,productName: properties.objectProduct };
-                    $('#imageloadModal').modal('show');
+                    $('#image-upload').removeClass('hide');
+                    $('#props-area').addClass('hide');
                 } else {
                     var i = 0
                         , $input;

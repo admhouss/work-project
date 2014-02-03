@@ -1,21 +1,23 @@
 package by.premiya.olga.project.service.impl;
 
+import by.premiya.olga.project.dao.ImageDao;
 import by.premiya.olga.project.dao.ProductDao;
+import by.premiya.olga.project.entity.Accumulator;
+import by.premiya.olga.project.entity.Image;
 import by.premiya.olga.project.entity.Wheel;
+import by.premiya.olga.project.entity.constants.BasicConstant;
 import by.premiya.olga.project.service.ProductService;
-import by.premiya.olga.project.util.json.NewItemJSON;
+import by.premiya.olga.project.util.json.ItemJSON;
 import by.premiya.olga.project.util.json.PairJSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
 import javax.persistence.Column;
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -26,11 +28,14 @@ import java.util.Map;
  * @author Vlad Abramov
  */
 @Service
+@SuppressWarnings("unchecked")
 public class ProductServiceImpl implements ProductService {
 
     private Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
     @Autowired
     private ProductDao productDao;
+    @Autowired
+    private ImageDao imageDao;
 
     @Override
     @Transactional(readOnly = true)
@@ -41,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Object getProductByModel(String productName, String model) {
-        return productDao.getProductByModel(productName,model);
+        return productDao.getProductByModel(productName, model);
     }
 
     @Override
@@ -52,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void addNewProduct(String productName, NewItemJSON properties) {
+    public void addNewProduct(String productName, ItemJSON properties) {
         Object insert = null;
         switch (productName) {
             case "wheels":
@@ -79,7 +84,52 @@ public class ProductServiceImpl implements ProductService {
         productDao.update(product);
     }
 
-    private Object getInsertObject(Class clazz, NewItemJSON properties) {
+    @Override
+    @Transactional(readOnly = true)
+    public ItemJSON getEditItem(Integer id) {
+        Object product = getById(id);
+        return getItemJSONFromProduct(product);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Object getById(Integer id) {
+        Wheel wheel = productDao.getWheelById(id);
+        Accumulator accumulator;
+        if (wheel == null) {
+            accumulator = productDao.getAccumulatorById(id);
+            if (accumulator == null) {
+
+            } else {
+                return accumulator;
+            }
+        } else {
+            return wheel;
+        }
+        return null;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public boolean removeItem(Integer id) {
+        Object product = getById(id);
+        try {
+            Field imageId = product.getClass().getDeclaredField("imageId");
+            imageId.setAccessible(true);
+            Image image = imageDao.getById((Integer)imageId.get(product));
+            if (image != null) {
+                File file = new File(image.getPath());
+                file.delete();
+                imageDao.removeImage(image);
+            }
+            productDao.delete(product);
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            return false;
+        }
+        return true;
+    }
+
+    private Object getInsertObject(Class clazz, ItemJSON properties) {
         if (logger.isTraceEnabled()) {
             logger.trace("Start parse JSON for new product");
         }
@@ -121,7 +171,6 @@ public class ProductServiceImpl implements ProductService {
         return insert;
     }
 
-    @SuppressWarnings("unchecked")
     private void setField(Class clazz, Object insert, PairJSON<String, PairJSON<String, String>> pair, Field field)
             throws NoSuchMethodException,
             IllegalAccessException,
@@ -130,7 +179,7 @@ public class ProductServiceImpl implements ProductService {
 
         field.setAccessible(true);
         String methodName = getMethodName(pair.getSecond().getFirst());
-        Method method = clazz.getMethod("set"+methodName, field.getType());
+        Method method = clazz.getMethod("set" + methodName, field.getType());
         Object insertParam = null;
         if (pair.getFirst().equals("label")) {
             if (field.getType().equals(Integer.class)) {
@@ -147,10 +196,44 @@ public class ProductServiceImpl implements ProductService {
     }
 
     private String getMethodName(String name) {
-        return name.substring(0,1).toUpperCase() + name.substring(1);
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
     }
 
     private Enum getEnumValue(Class clazz, String value) {
         return Enum.valueOf(clazz, value);
+    }
+
+
+    private ItemJSON getItemJSONFromProduct(Object product) {
+        Class clazz = product.getClass();
+        ItemJSON itemJSON = new ItemJSON();
+        for (Field field : clazz.getDeclaredFields()) {
+            try {
+                if (!field.getName().equals("serialVersionUID") && !field.getName().equals("imageId")) {
+                    field.setAccessible(true);
+                    String value = field.get(product).toString();
+                    if (isBasicConstant(field)){
+                        itemJSON.addProperty(new PairJSON<>("enum", new PairJSON<>(field.getName(), value)));
+                    } else {
+                        itemJSON.addProperty(new PairJSON<>("label", new PairJSON<>(field.getName(), value)));
+                    }
+                    if (field.getName().equals("producer")) {
+                        itemJSON.setObjectProducer(value);
+                    } else if (field.getName().equals("model")) {
+                        itemJSON.setObjectModel(value);
+                    }
+                }
+            } catch (IllegalAccessException ignored) {
+            }
+        }
+        return itemJSON;
+    }
+
+    private boolean isBasicConstant(Field field) {
+        Class[] interfaces = field.getType().getInterfaces();
+        for (Class cur : interfaces) {
+            if (cur.equals(BasicConstant.class)) return true;
+        }
+        return false;
     }
 }

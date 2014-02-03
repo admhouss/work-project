@@ -1,6 +1,13 @@
 .add-new {
     margin-bottom:10px;
 }
+.open-file {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.image-alert {
+    margin: 20px 30% 0px;
+}
 
 /*ul.nav li.dropdown:hover ul.dropdown-menu{*/
     /*display: block;*/

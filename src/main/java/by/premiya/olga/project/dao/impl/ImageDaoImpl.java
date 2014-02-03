@@ -22,7 +22,7 @@ public class ImageDaoImpl implements ImageDao {
 
     @Override
     public void save(Image image) {
-        getSession().save(image);
+        getSession().saveOrUpdate(image);
     }
 
     @Override

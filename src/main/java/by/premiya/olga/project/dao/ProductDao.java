@@ -1,5 +1,6 @@
 package by.premiya.olga.project.dao;
 
+import by.premiya.olga.project.entity.Accumulator;
 import by.premiya.olga.project.entity.Wheel;
 
 import java.util.List;
@@ -11,6 +12,12 @@ import java.util.Map;
 public interface ProductDao {
 
     void save(Object product);
+
+    void delete(Object product);
+
+    Wheel getWheelById(Integer id);
+
+    Accumulator getAccumulatorById(Integer id);
 
     Object getProductByModel(String productName, String model);
 

@@ -3,6 +3,8 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="t" tagdir="/WEB-INF/tags" %>
 <%@taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
 
 <%@attribute name="scripts" fragment="true"%>
 <%@attribute name="head" fragment="true"%>
@@ -30,7 +32,17 @@
                     <t:fluidNav/>
                 </div>
                 <div class="span8">
-                    <jsp:invoke fragment="content"/>
+                    <div id="search-row" class="navbar">
+                        <div class="navbar-inner">
+                            <a class="brand"><spring:message code="search.row.brand"/></a>
+                            <form class="navbar-search" action="${contextPath}/search/light" method="get">
+                                <input id="typeahead-models" type="text" class="search-query" name="searchText" placeholder="Поиск по продукции" tabindex="1">
+                            </form>
+                        </div>
+                    </div>
+                    <div class="content">
+                        <jsp:invoke fragment="content"/>
+                    </div>
                 </div>
                 <div class="span2">
 

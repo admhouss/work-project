@@ -54,7 +54,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h3 id="myModalLabel"><spring:message code="users.table.edit"/>&nbsp;<img id="loading" width="16" height="16" alt="Loading" src="${contextPath}/image/gif/util/loading"/></h3>
+                        <h3 id="myModalLabel"><spring:message code="users.table.edit"/>&nbsp;<img id="loading" width="16" height="16" alt="Loading" class="hidden" src="${contextPath}/assets/img/util/loading.gif"/></h3>
                     </div>
                     <div class="modal-body">
                         <form class="form-horizontal">

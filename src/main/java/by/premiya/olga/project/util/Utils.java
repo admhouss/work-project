@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.List;
 
 /**
@@ -38,6 +39,12 @@ public final class Utils {
     private PasswordEncoder passwordEncoder;
 
     private String OS = System.getProperty("os.name").toLowerCase();
+    private String classPath = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
+    private String imagePath = classPath.substring(5, classPath.indexOf("WEB-INF")) + "assets/img/";;
+
+//    {
+//        imagePath = classPath.substring(5, classPath.indexOf("WEB-INF")) + "assets/img/";
+//    }
 
     private Utils() {
     }
@@ -45,6 +52,7 @@ public final class Utils {
     public boolean sendImage(HttpServletResponse res, Integer imageId) {
         ServletOutputStream outputStream = null;
         Image image = imageService.getById(imageId);
+        if (image == null) return sendDefaultImage(res);
         try {
             res.setContentType(image.getContentType());
             outputStream = res.getOutputStream();
@@ -57,49 +65,36 @@ public final class Utils {
 
     public boolean sendGifImage(HttpServletResponse res, String from, String content) {
         res.setContentType("image/gif");
-        String url = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
-        url = url.substring(5, url.indexOf("WEB-INF")) + "assets/img/";
-        ServletOutputStream outputStream = null;
         try {
-            outputStream = res.getOutputStream();
-            return ImageIO.write(ImageIO.read(new File(url + from + "/" + content + ".gif")), "GIF", outputStream);
+            ServletOutputStream outputStream = res.getOutputStream();
+            return ImageIO.write(ImageIO.read(new File(imagePath + from + "/" + content + ".gif")), "GIF", outputStream);
         } catch (IOException e) {
-            logger.error("File '" + url + "' not send");
+            logger.error("File '" + content + ".gif' not send");
             return sendDefaultImage(res);
         }
     }
 
     private boolean sendDefaultImage(HttpServletResponse res) {
         res.setContentType("image/jpeg");
-        String url = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
-        url = url.substring(5, url.indexOf("WEB-INF")) + "assets/img/";
-        ServletOutputStream outputStream = null;
         try {
-            outputStream = res.getOutputStream();
-            return ImageIO.write(ImageIO.read(new File(url + "errors/image_not_available.jpg")), "JPEG", outputStream);
+            ServletOutputStream outputStream = res.getOutputStream();
+            return ImageIO.write(ImageIO.read(new File(imagePath + "errors/image_not_available.jpg")), "JPEG", outputStream);
         } catch (IOException e1) {
-            logger.error("Default image '" + url + "' not send");
+            logger.error("Default image 'image_not_available.jpg' not send");
         }
         return false;
     }
 
     public boolean uploadImage(HttpServletRequest request, String productName, String producer, String model) {
-        boolean isMultipart;
-        String filePath = "";
-        int maxFileSize = 50 * 1024;
-        int maxMemSize = 4 * 1024;
-        File file ;
-
+        boolean isMultipart; String filePath = ""; int maxFileSize = 50 * 1024; int maxMemSize = 4 * 1024;
         isMultipart = ServletFileUpload.isMultipartContent(request);
         if (!isMultipart) {
             return false;
         }
         DiskFileItemFactory factory = new DiskFileItemFactory();
         factory.setSizeThreshold(maxMemSize);
-//        String url = Utils.class.getProtectionDomain().getCodeSource().getLocation().toString();
-//        url = url.substring(5, url.indexOf("WEB-INF")) + "assets/img/" + model;
         if (isWindows()) {
-            filePath = "D:\\Programming\\";
+            filePath = "D:\\Files\\work-project\\" + productName +"\\";
         } else if (isUnix()) {
             filePath = "/home/vlad/Pictures/work-project/" + productName + "/";
         }
@@ -107,19 +102,32 @@ public final class Utils {
         ServletFileUpload upload = new ServletFileUpload(factory);
         upload.setSizeMax(maxFileSize);
         Object product = productService.getProductByModel(productName, model);
+        Image existingImage;
+        try {
+            Field imageId = product.getClass().getDeclaredField("imageId");
+            imageId.setAccessible(true);
+            existingImage = imageService.getById((Integer)imageId.get(product));
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+            return false;
+        }
         try {
             List fileItems = upload.parseRequest(request);
 
             for (Object fileItem : fileItems) {
                 FileItem fi = (FileItem) fileItem;
                 if (!fi.isFormField()) {
-                    String fieldName = fi.getFieldName();
                     String fileName = encodeName(fi.getName(), product);
                     String contentType = fi.getContentType();
-                    boolean isInMemory = fi.isInMemory();
-                    long sizeInBytes = fi.getSize();
-                    file = new File(filePath + fileName);
+                    File file = new File(filePath + fileName);
                     Image image = new Image(getImageType(fileName), contentType, file.getPath());
+                    if (existingImage != null) {
+                        File oldFile = new File(existingImage.getPath());
+                        oldFile.delete();
+                        existingImage.setContentType(image.getContentType());
+                        existingImage.setPath(image.getPath());
+                        existingImage.setType(image.getType());
+                        image = existingImage;
+                    }
                     imageService.save(image);
                     productService.updateProduct(setImageId(product,image.getId()));
                     fi.write(file);
