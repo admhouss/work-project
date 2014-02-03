@@ -18,13 +18,13 @@ import java.util.Map;
 @Table(name = "WHEELS")
 public class Wheel implements Serializable {
 
-    private static final long serialVersionUID = 2191853262571204271L;
+    private static final long serialVersionUID = -5385627996811331834L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-    @Column(name = "PIC_NAME")
-    private String picName;
+    @Column(name = "IMAGE_ID")
+    private Integer imageId = -1;
     @Column(name = "PRODUCER", nullable = false)
     @Enumerated(EnumType.STRING)
     private WheelsProducer producer;
@@ -88,12 +88,12 @@ public class Wheel implements Serializable {
         this.treadPattern = treadPattern;
     }
 
-    public String getPicName() {
-        return picName;
+    public Integer getImageId() {
+        return imageId;
     }
 
-    public void setPicName(String picName) {
-        this.picName = picName;
+    public void setImageId(Integer imageId) {
+        this.imageId = imageId;
     }
 
     public WheelsProducer getProducer() {
@@ -244,7 +244,7 @@ public class Wheel implements Serializable {
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (picName != null ? picName.hashCode() : 0);
+        result = 31 * result + (imageId != null ? imageId.hashCode() : 0);
         result = 31 * result + (producer != null ? producer.hashCode() : 0);
         result = 31 * result + (model != null ? model.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
@@ -268,7 +268,7 @@ public class Wheel implements Serializable {
     public String toString() {
         return "Wheel{" +
                 "id=" + id +
-                ", picName=" + picName +
+                ", imageId=" + imageId +
                 ", producer=" + producer +
                 ", model=" + model +
                 ", price=" + price +

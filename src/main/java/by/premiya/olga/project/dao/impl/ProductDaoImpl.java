@@ -35,6 +35,24 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public void update(Object product) {
+        getSession().saveOrUpdate(product);
+    }
+
+    @Override
+    public Object getProductByModel(String productName, String model) {
+        Query query = null;
+        switch (productName) {
+            case "wheel":
+            case "wheels":
+                query = getSession().createQuery("from Wheel where model=:model");
+                query.setParameter("model", model);
+                break;
+        }
+        return query != null ? query.uniqueResult() : null;
+    }
+
+    @Override
     public List getProducts(String name) {
         List products = new LinkedList<>();
         switch (name) {

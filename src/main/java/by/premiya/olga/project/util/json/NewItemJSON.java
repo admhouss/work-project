@@ -9,10 +9,13 @@ import java.util.List;
  */
 public class NewItemJSON implements Serializable {
 
-    private static final long serialVersionUID = 616167140819619522L;
+    private static final long serialVersionUID = -7424563962258170880L;
     private List<PairJSON<String,PairJSON<String, String>>> properties = new ArrayList<>();
     private List<String> notSetFields = new ArrayList<>();
     private List<String> failedFields = new ArrayList<>();
+    private String objectModel = "";
+    private String objectProducer = "";
+    private String objectProduct = "";
     private boolean success = false;
 
     public List<PairJSON<String, PairJSON<String, String>>> getProperties() {
@@ -45,6 +48,30 @@ public class NewItemJSON implements Serializable {
 
     public boolean addFailedField(String str) {
         return this.failedFields.add(str);
+    }
+
+    public String getObjectModel() {
+        return objectModel;
+    }
+
+    public void setObjectModel(String objectModel) {
+        this.objectModel = objectModel;
+    }
+
+    public String getObjectProducer() {
+        return objectProducer;
+    }
+
+    public void setObjectProducer(String objectProducer) {
+        this.objectProducer = objectProducer;
+    }
+
+    public String getObjectProduct() {
+        return objectProduct;
+    }
+
+    public void setObjectProduct(String objectProduct) {
+        this.objectProduct = objectProduct;
     }
 
     public boolean isSuccess() {

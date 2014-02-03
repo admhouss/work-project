@@ -149,12 +149,12 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
 //            }
 
             if (authenticationIsRequired(username)) {
-                if (Utils.hasCookie(request, "loc")) {
-                    Utils.removeLogoutCookie(response);
-                    processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
-                        private static final long serialVersionUID = 5930005044218950413L;
-                    });
-                }
+//                if (Utils.hasCookie(request, "loc")) {
+//                    Utils.removeLogoutCookie(response);
+//                    processAuthenticationException(request, response, new AuthenticationException("Must be authorised") {
+//                        private static final long serialVersionUID = 5930005044218950413L;
+//                    });
+//                }
 
                 UsernamePasswordAuthenticationToken authRequest =
                         new UsernamePasswordAuthenticationToken(username, tokens[1]);
@@ -198,7 +198,7 @@ public class CustomBasicAuthenticationFilter extends GenericFilterBean {
     private void processAuthenticationException(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         SecurityContextHolder.clearContext();
 
-        Utils.removeLogoutCookie(response);
+//        Utils.removeLogoutCookie(response);
 
         if (logger.isDebugEnabled()) {
             logger.debug("Set logout cookie and send basic authorization");

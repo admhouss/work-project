@@ -50,11 +50,16 @@
     </bean>
 
     <bean id="entityPropertiesLoader" class="by.premiya.olga.project.util.json.EntityPropertiesLoader"/>
+
     <bean id="userDao" class="by.premiya.olga.project.dao.impl.UserDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 
     <bean id="productDao" class="by.premiya.olga.project.dao.impl.ProductDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="imageDao" class="by.premiya.olga.project.dao.impl.ImageDaoImpl">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

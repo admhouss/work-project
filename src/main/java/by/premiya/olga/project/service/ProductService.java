@@ -12,9 +12,13 @@ import java.util.Map;
 public interface ProductService {
     List getProducts(String name);
 
+    Object getProductByModel(String productName, String model);
+
     List<Wheel> getWheels(Map<String, String> searchParams);
 
     void addNewProduct(String productName, NewItemJSON properties);
 
     List<String> getAllModels();
+
+    void updateProduct(Object product);
 }

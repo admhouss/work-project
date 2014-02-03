@@ -12,6 +12,8 @@ public interface ProductDao {
 
     void save(Object product);
 
+    Object getProductByModel(String productName, String model);
+
     List getProducts(String name);
 
     List<Wheel> getWheels(Map<String, String> searchParams);
@@ -21,4 +23,6 @@ public interface ProductDao {
     List<String> getAccumulatorModels();
 
     List<String> getRadiatorModels();
+
+    void update(Object product);
 }

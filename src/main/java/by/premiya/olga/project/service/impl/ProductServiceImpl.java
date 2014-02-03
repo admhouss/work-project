@@ -40,6 +40,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
+    public Object getProductByModel(String productName, String model) {
+        return productDao.getProductByModel(productName,model);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<Wheel> getWheels(Map<String, String> searchParams) {
         return productDao.getWheels(searchParams);
     }
@@ -51,6 +57,7 @@ public class ProductServiceImpl implements ProductService {
         switch (productName) {
             case "wheels":
                 insert = getInsertObject(Wheel.class, properties);
+                properties.setObjectProduct(productName);
                 break;
         }
         if (insert != null) {
@@ -64,6 +71,12 @@ public class ProductServiceImpl implements ProductService {
     public List<String> getAllModels() {
         List<String> models = productDao.getWheelModels();
         return models;
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void updateProduct(Object product) {
+        productDao.update(product);
     }
 
     private Object getInsertObject(Class clazz, NewItemJSON properties) {
@@ -83,6 +96,11 @@ public class ProductServiceImpl implements ProductService {
                     if (pair.getSecond().getSecond() != null) {
                         try {
                             setField(clazz, insert, pair, field);
+                            if (pair.getSecond().getFirst().equals("model")) {
+                                properties.setObjectModel(pair.getSecond().getSecond());
+                            } else if (pair.getSecond().getFirst().equals("producer")) {
+                                properties.setObjectProducer(pair.getSecond().getSecond());
+                            }
                         } catch (IllegalAccessException ignored) {
                         } catch (NoSuchMethodException | InvocationTargetException | NumberFormatException e) {
                             properties.addFailedField(pair.getSecond().getFirst());

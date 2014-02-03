@@ -1,6 +1,7 @@
 function init(contextPath, productName) {
     var fullProperties = {labels: {}, enums:{}}
-      , isPropRendered = false;
+      , isPropRendered = false
+      , insertObjectMetadata = {model: "", producer: "",productName: ""};
     $.ajax({
         url: contextPath+"/auth/administration/editor/get/full/properties/" + productName,
         type: 'POST',
@@ -21,6 +22,25 @@ function init(contextPath, productName) {
             $('#area-title').text("Добавление");
         }
     });
+    $('.pic-upload').click(function(e) {
+        e.preventDefault();
+        var data = new FormData();
+        jQuery.each($('#inputFile')[0].files, function(i, file) {
+            data.append('file-'+i, file);
+        });
+        $.ajax({
+            url: contextPath+"/image/upload/" + insertObjectMetadata.productName + "/" + insertObjectMetadata.producer + "/" + insertObjectMetadata.model,
+            type: 'POST',
+            data: data,
+            processData: false,
+            contentType: false,
+            cashed: false,
+            'success': function (data) {
+                console.log(data);
+            }
+        });
+    });
+
     $('.thumbnail').mouseover(function(e) {
         $(this).find('.offset9').css('visibility','visible');
     });
@@ -160,13 +180,11 @@ function init(contextPath, productName) {
             contentType: 'application/json',
             type: 'POST',
             cashed: false,
-            'fail': function (data) {
-                alert(data);
-            },
             'success': function (properties) {
                 console.log(properties);
                 if (properties.success) {
-                    $('#image-upload').attr('ac')
+                    insertObjectMetadata = {model: properties.objectModel, producer: properties.objectProducer,productName: properties.objectProduct };
+                    $('#imageloadModal').modal('show');
                 } else {
                     var i = 0
                         , $input;
