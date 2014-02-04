@@ -1,9 +1,14 @@
 package by.premiya.olga.project.entity;
 
-import by.premiya.olga.project.entity.constants.accumulator.Polarity;
+import by.premiya.olga.project.constants.accumulator.Polarity;
+import by.premiya.olga.project.constants.producers.AccumulatorsProducer;
+import by.premiya.olga.project.util.json.PairJSON;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author vlad
@@ -11,41 +16,34 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "ACCUMULATORS")
-public class Accumulator implements Serializable{
+public class Accumulator implements Serializable {
 
+    private static final long serialVersionUID = -3763363501863805445L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ID")
     private Integer id;
-
-    @Column(name = "PRODUCER")
-    private String producer = "";
-
-    @Column(name = "MODEL")
+    @Column(name = "IMAGE_ID")
+    private Integer imageId = -1;
+    @Column(name = "PRODUCER", nullable = false)
+    private AccumulatorsProducer producer = AccumulatorsProducer.NAN;
+    @Column(name = "MODEL", nullable = false)
     private String model = "";
-
-    @Column(name = "PRICE",nullable = false)
+    @Column(name = "PRICE", nullable = false)
     private Integer price = 0;
-
-    @Column(name = "VOLTAGE")
+    @Column(name = "VOLTAGE", nullable = false)
     private Integer voltage = 0;
-
     @Column(name = "CAPACITY")
     private Integer capacity = 0;
-
     @Column(name = "COLD_CRANKING")
     private Integer coldСranking = 0;
-
-    @Column(name = "POLARITY")
+    @Column(name = "POLARITY", nullable = false)
     @Enumerated(EnumType.STRING)
     private Polarity polarity = Polarity.NAN;
-
     @Column(name = "LENGTH")
     private Integer length = 0;
-
     @Column(name = "WIDTH")
     private Integer width = 0;
-
     @Column(name = "HEIGHT")
     private Integer height = 0;
 
@@ -57,11 +55,19 @@ public class Accumulator implements Serializable{
         this.id = id;
     }
 
-    public String getProducer() {
+    public Integer getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Integer imageId) {
+        this.imageId = imageId;
+    }
+
+    public AccumulatorsProducer getProducer() {
         return producer;
     }
 
-    public void setProducer(String producer) {
+    public void setProducer(AccumulatorsProducer producer) {
         this.producer = producer;
     }
 
@@ -135,5 +141,44 @@ public class Accumulator implements Serializable{
 
     public void setHeight(Integer height) {
         this.height = height;
+    }
+
+    public Map<String, Object> getStandardInfo() {
+        Map<String, Object> info = new HashMap<>();
+        info.put("model", model);
+        info.put("producer", producer.getString());
+        info.put("list", Arrays.asList(
+                new PairJSON<>("Напряжение", String.valueOf(voltage)),
+                new PairJSON<>("Полярность", this.polarity.getString()),
+                new PairJSON<>("Цена", String.valueOf(this.price))));
+        return info;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Accumulator that = (Accumulator) o;
+
+        return !(id != null ? !id.equals(that.id) : that.id != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (imageId != null ? imageId.hashCode() : 0);
+        result = 31 * result + (producer != null ? producer.hashCode() : 0);
+        result = 31 * result + (model != null ? model.hashCode() : 0);
+        result = 31 * result + (price != null ? price.hashCode() : 0);
+        result = 31 * result + (voltage != null ? voltage.hashCode() : 0);
+        result = 31 * result + (capacity != null ? capacity.hashCode() : 0);
+        result = 31 * result + (coldСranking != null ? coldСranking.hashCode() : 0);
+        result = 31 * result + (polarity != null ? polarity.hashCode() : 0);
+        result = 31 * result + (length != null ? length.hashCode() : 0);
+        result = 31 * result + (width != null ? width.hashCode() : 0);
+        result = 31 * result + (height != null ? height.hashCode() : 0);
+        return result;
     }
 }

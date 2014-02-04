@@ -1,5 +1,7 @@
 package by.premiya.olga.project.util.json;
 
+import by.premiya.olga.project.constants.FieldType;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -13,7 +15,7 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class PropertiesJSON implements Externalizable {
 
-    private static final long serialVersionUID = 2511421981399985911L;
+    private static final long serialVersionUID = -9008803091422078525L;
     private List<PairJSON<String,String>> labels;
     private Map<String, PairJSON<String, List<PairJSON<String, String>>>> enums;
 
@@ -31,6 +33,29 @@ public class PropertiesJSON implements Externalizable {
 
     public void setEnums(Map<String, PairJSON<String, List<PairJSON<String, String>>>> enums) {
         this.enums = enums;
+    }
+
+    public String getName(FieldType type, String fieldName) {
+        switch (type) {
+            case LABEL:
+                return getLabelName(fieldName);
+            case ENUM:
+                return getEnumName(fieldName);
+        }
+        return null;
+    }
+
+    private String getEnumName(String fieldName) {
+        return enums.get(fieldName).getFirst();
+    }
+
+    private String getLabelName(String fieldName) {
+        for (PairJSON<String,String> pair : labels) {
+            if (pair.getFirst().equals(fieldName)) {
+                return pair.getSecond();
+            }
+        }
+        return null;
     }
 
     @Override

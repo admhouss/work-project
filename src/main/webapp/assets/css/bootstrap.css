@@ -853,7 +853,7 @@ dl {
 
 dt,
 dd {
-  line-height: 20px;
+  line-height: 30px;
 }
 
 dt {
@@ -865,6 +865,8 @@ dd {
 }
 
 .dl-horizontal {
+  margin-top: 33px;
+  font-size: 17px;
   *zoom: 1;
 }
 
@@ -881,7 +883,7 @@ dd {
 
 .dl-horizontal dt {
   float: left;
-  width: 160px;
+  width: 270px;
   overflow: hidden;
   clear: left;
   text-align: right;
@@ -890,7 +892,7 @@ dd {
 }
 
 .dl-horizontal dd {
-  margin-left: 180px;
+  margin-left: 290px;
 }
 
 hr {

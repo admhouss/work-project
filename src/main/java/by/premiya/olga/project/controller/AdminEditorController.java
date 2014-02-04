@@ -1,5 +1,7 @@
 package by.premiya.olga.project.controller;
 
+import by.premiya.olga.project.entity.Accumulator;
+import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.ApplicationContextHolder;
 import by.premiya.olga.project.util.Pages;
@@ -56,18 +58,40 @@ public class AdminEditorController {
     }
 
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "get/edit/item/{id}/{productName}", method = RequestMethod.POST)
-    public @ResponseBody ItemJSON getEditItem(@PathVariable Integer id, @PathVariable String productName) {
+    @RequestMapping(value = "get/product/name/{model}", method = RequestMethod.POST)
+    public @ResponseBody String getProductName(@PathVariable String model) {
         ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
-        ItemJSON result = productService.getEditItem(id);
+        return productService.getProductName(model);
+    }
+
+    @PreAuthorize(value = "isAuthenticated()")
+    @RequestMapping(value = "get/edit/item/{model}/{productName}", method = RequestMethod.POST)
+    public @ResponseBody ItemJSON getEditItem(@PathVariable String model, @PathVariable String productName) {
+        ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
+        ItemJSON result = productService.getItem(productName, model);
         result.setObjectProduct(productName);
         return result;
     }
 
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "remove/item/{id}", method = RequestMethod.POST)
-    public @ResponseBody Boolean removeItem(@PathVariable Integer id) {
+    @RequestMapping(value = "remove/item/{model}/{productName}", method = RequestMethod.POST)
+    public @ResponseBody Boolean removeItem(@PathVariable String model, @PathVariable String productName) {
         ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
-        return productService.removeItem(id);
+        return productService.removeItem(productName,model);
+    }
+
+    @PreAuthorize(value = "isAuthenticated()")
+    @RequestMapping(value = "show/product/{model}", method = RequestMethod.GET)
+    public String getItem(ModelMap modelMap, @PathVariable String model) {
+        ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
+        Object product = productService.getProductByModel(productService.getProductName(model), model);
+        if (product instanceof Wheel) {
+            modelMap.put("wheel", product);
+            return Pages.SHOW_WHEEL_PAGE;
+        }else if (product instanceof Accumulator) {
+            modelMap.put("accumulator", product);
+            return Pages.SHOW_WHEEL_PAGE;
+        }
+        return Pages.REDIRECT + Pages.PAGE_404;
     }
 }

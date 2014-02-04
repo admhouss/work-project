@@ -32,4 +32,6 @@ public interface ProductDao {
     List<String> getRadiatorModels();
 
     void update(Object product);
+
+    Object getProductByModel(String model);
 }

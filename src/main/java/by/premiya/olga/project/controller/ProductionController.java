@@ -3,6 +3,7 @@ package by.premiya.olga.project.controller;
 import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.service.ProductService;
 import by.premiya.olga.project.util.Pages;
+import by.premiya.olga.project.util.json.ItemJSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,5 +34,10 @@ public class ProductionController {
     public @ResponseBody List<String> getModels() {
         List<String> list = productService.getAllModels();
         return list;
+    }
+
+    @RequestMapping(value = "/get/{model}/for/show", method = RequestMethod.POST)
+    public @ResponseBody ItemJSON getItemForShow(@PathVariable String model) {
+        return productService.getItemForShow(model);
     }
 }

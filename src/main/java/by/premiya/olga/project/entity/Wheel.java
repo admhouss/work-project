@@ -1,8 +1,8 @@
 package by.premiya.olga.project.entity;
 
-import by.premiya.olga.project.entity.constants.producers.WheelsProducer;
-import by.premiya.olga.project.entity.constants.wheel.*;
-import by.premiya.olga.project.entity.constants.wheel.Version;
+import by.premiya.olga.project.constants.producers.WheelsProducer;
+import by.premiya.olga.project.constants.wheel.*;
+import by.premiya.olga.project.constants.wheel.Version;
 import by.premiya.olga.project.util.json.PairJSON;
 
 import javax.persistence.*;
@@ -136,11 +136,11 @@ public class Wheel implements Serializable {
         return plyRating;
     }
 
-    public void setPlyRating(int plyRating) {
+    public void setPlyRating(Integer plyRating) {
         this.plyRating = plyRating;
     }
 
-    public void setPlyRating(Integer plyRating) {
+    public void setPlyRating(int plyRating) {
         this.plyRating = plyRating;
     }
 

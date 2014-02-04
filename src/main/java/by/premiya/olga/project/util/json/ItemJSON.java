@@ -1,6 +1,6 @@
 package by.premiya.olga.project.util.json;
 
-import java.io.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,14 +9,23 @@ import java.util.List;
  */
 public class ItemJSON implements Serializable {
 
-    private static final long serialVersionUID = -5455539925485031460L;
-    private List<PairJSON<String,PairJSON<String, String>>> properties = new ArrayList<>();
+    private static final long serialVersionUID = -1178662785984180600L;
+    private List<PairJSON<String, PairJSON<String, String>>> properties = new ArrayList<>();
     private List<String> notSetFields = new ArrayList<>();
     private List<String> failedFields = new ArrayList<>();
     private String objectModel = "";
     private String objectProducer = "";
     private String objectProduct = "";
     private boolean success = false;
+    private boolean itemInDB = false;
+
+    public ItemJSON() {
+
+    }
+
+    public ItemJSON(boolean success) {
+        this.success = success;
+    }
 
     public List<PairJSON<String, PairJSON<String, String>>> getProperties() {
         return properties;
@@ -52,6 +61,14 @@ public class ItemJSON implements Serializable {
 
     public boolean addFailedField(String str) {
         return this.failedFields.add(str);
+    }
+
+    public boolean isItemInDB() {
+        return itemInDB;
+    }
+
+    public void setItemInDB(boolean itemInDB) {
+        this.itemInDB = itemInDB;
     }
 
     public String getObjectModel() {

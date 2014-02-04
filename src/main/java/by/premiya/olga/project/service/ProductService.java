@@ -2,6 +2,7 @@ package by.premiya.olga.project.service;
 
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.util.json.ItemJSON;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,13 @@ public interface ProductService {
 
     void updateProduct(Object product);
 
-    ItemJSON getEditItem(Integer id);
+    ItemJSON getItem(String productName, String model);
 
-    Object getById(Integer id);
+    Object getById(String productName, Integer id);
 
-    boolean removeItem(Integer id);
+    boolean removeItem(String productName, String id);
+
+    String getProductName(String model);
+
+    ItemJSON getItemForShow(String model);
 }

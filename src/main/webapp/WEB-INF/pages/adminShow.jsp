@@ -32,12 +32,12 @@
                         <c:if test="${product1 != null}">
                             <div class="thumbnail">
                                 <div class="offset9" style="visibility: hidden">
-                                    <a href="" id="edit-${product1.id}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
-                                    <a href="" id="remove-${product1.id}" class="product-remove"><i class="icon-remove"></i></a>
+                                    <a href="" id="edit-${product1.model}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
+                                    <a href="" id="remove-${product1.model}" class="product-remove"><i class="icon-remove"></i></a>
                                 </div>
-                                <img data-src="holder.js/160x160" alt="${product1.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product1.imageId}">
+                                <a href="${contextPath}/auth/administration/editor/show/product/${product1.model}" class="product-img"><img data-src="holder.js/160x160" alt="${product1.standardInfo['model']}" src="${contextPath}/image/get/${product1.imageId}"></a>
                                 <div class="caption">
-                                    <a href="" class="model-header ">${product1.standardInfo['model']}</a>
+                                    <a href="${contextPath}/auth/administration/editor/show/product/${product1.model}" class="model-name">${product1.standardInfo['model']}</a>
                                     <h6 class="muted">${product1.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product1.standardInfo['list']}" var="pair" >
@@ -55,12 +55,12 @@
                         <c:if test="${product2 != null}">
                             <div class="thumbnail">
                                 <div class="offset9" style="visibility: hidden">
-                                    <a href="" id="edit-${product2.id}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
-                                    <a href="" id="remove-${product2.id}" class="product-remove"><i class="icon-remove"></i></a>
+                                    <a href="" id="edit-${product2.model}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
+                                    <a href="" id="remove-${product2.model}" class="product-remove"><i class="icon-remove"></i></a>
                                 </div>
-                                <img data-src="holder.js/160x160" alt="${product2.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product2.imageId}">
+                                <a href="${contextPath}/auth/administration/editor/show/product/${product2.model}" class="product-img"><img data-src="holder.js/160x160" alt="${product2.standardInfo['model']}" src="${contextPath}/image/get/${product2.imageId}"></a>
                                 <div class="caption">
-                                    <h4 class="model-header">${product2.standardInfo['model']}</h4>
+                                    <a href="${contextPath}/auth/administration/editor/show/product/${product2.model}" class="model-name">${product2.standardInfo['model']}</a>
                                     <h6 class="muted">${product2.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product2.standardInfo['list']}" var="pair" >
@@ -78,12 +78,12 @@
                         <c:if test="${product3 != null}">
                             <div class="thumbnail">
                                 <div class="offset9" style="visibility: hidden">
-                                    <a href="" id="edit-${product3.id}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
-                                    <a href="" id="remove-${product3.id}" class="product-remove"><i class="icon-remove"></i></a>
+                                    <a href="" id="edit-${product3.model}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
+                                    <a href="" id="remove-${product3.model}" class="product-remove"><i class="icon-remove"></i></a>
                                 </div>
-                                <img data-src="holder.js/160x160" alt="${product3.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product3.imageId}">
+                                <a href="${contextPath}/auth/administration/editor/show/product/${product3.model}" class="product-img"><img data-src="holder.js/160x160" alt="${product3.standardInfo['model']}" src="${contextPath}/image/get/${product3.imageId}"></a>
                                 <div class="caption">
-                                    <h4 class="model-header">${product3.standardInfo['model']}</h4>
+                                    <a href="${contextPath}/auth/administration/editor/show/product/${product3.model}" class="model-name">${product3.standardInfo['model']}</a>
                                     <h6 class="muted">${product3.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product3.standardInfo['list']}" var="pair" >
@@ -101,12 +101,12 @@
                         <c:if test="${product4 != null}">
                             <div class="thumbnail">
                                 <div class="offset9" style="visibility: hidden">
-                                    <a href="" id="edit-${product4.id}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
-                                    <a href="" id="remove-${product1.id}" class="product-remove"><i class="icon-remove"></i></a>
+                                    <a href="" id="edit-${product4.model}" class="product-edit"><i class="icon-pencil"></i></a>&nbsp;
+                                    <a href="" id="remove-${product1.model}" class="product-remove"><i class="icon-remove"></i></a>
                                 </div>
-                                <img data-src="holder.js/160x160" alt="${product4.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product4.imageId}">
+                                <a href="${contextPath}/auth/administration/editor/show/product/${product4.model}" class="product-img"><img data-src="holder.js/160x160" alt="${product4.standardInfo['model']}" src="${contextPath}/image/get/${product4.imageId}"></a>
                                 <div class="caption">
-                                    <h4 class="model-header">${product4.standardInfo['model']}</h4>
+                                    <a href="${contextPath}/auth/administration/editor/show/product/${product4.model}" class="model-name">${product4.standardInfo['model']}</a>
                                     <h6 class="muted">${product4.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product4.standardInfo['list']}" var="pair" >

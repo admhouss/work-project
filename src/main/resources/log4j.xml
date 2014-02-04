@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false"
+                     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                     xsi:schemaLocation="http://jakarta.apache.org/log4j/ ">
+    <appender name="FILE" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="work-project.log"/>
+        <param name="Append" value="false"/>
+        <param name="MaxFileSize" value="3MB"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%t] %-5p - %-26.26c{1} - %m\n%n"/>
+        </layout>
+    </appender>
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Target" value="System.out"/>
+        <param name="Threshold" value="TRACE"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d [%t] %-5p - %-26.26c{1} - %m%n"/>
+        </layout>
+    </appender>
+    <category name="com.sample">
+        <priority value="INFO"/>
+    </category>
+    <category name="by.premiya.olga.project">
+        <priority value="TRACE"/>
+    </category>
+    <root>
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+</log4j:configuration>

@@ -1,8 +1,10 @@
 package by.premiya.olga.project.util.json;
 
-import by.premiya.olga.project.entity.constants.BasicConstant;
-import by.premiya.olga.project.entity.constants.producers.WheelsProducer;
-import by.premiya.olga.project.entity.constants.wheel.*;
+import by.premiya.olga.project.constants.BasicConstant;
+import by.premiya.olga.project.constants.accumulator.Polarity;
+import by.premiya.olga.project.constants.producers.AccumulatorsProducer;
+import by.premiya.olga.project.constants.producers.WheelsProducer;
+import by.premiya.olga.project.constants.wheel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,9 +18,11 @@ public class EntityPropertiesLoader implements InitializingBean {
     private Logger logger = LoggerFactory.getLogger(EntityPropertiesLoader.class);
 
     PropertiesJSON wheelsProperties = new PropertiesJSON();
+    PropertiesJSON accumulatorsProperties = new PropertiesJSON();
 
     public EntityPropertiesLoader() {
         initWheels();
+        initAccumulators();
     }
 
     private void initWheels() {
@@ -43,6 +47,22 @@ public class EntityPropertiesLoader implements InitializingBean {
         wheelsProperties.setEnums(enums);
     }
 
+    private void initAccumulators() {
+        accumulatorsProperties.setLabels(Arrays.<PairJSON<String, String>>asList(new PairJSON<>("model","Модель"),
+                new PairJSON<>("price","Цена"),
+                new PairJSON<>("voltage","Напряжение"),
+                new PairJSON<>("capacity","Ёмкость"),
+                new PairJSON<>("coldСranking","coldСranking"),
+                new PairJSON<>("length","Длина"),
+                new PairJSON<>("width","Ширина"),
+                new PairJSON<>("height","Высота")));
+        Map<String, PairJSON<String,List<PairJSON<String,String>>>> enums = new HashMap<>();
+
+        enums.put("producer",new PairJSON<>("Производитель", getEnumValuesToString(AccumulatorsProducer.values())));
+        enums.put("polarity",new PairJSON<>("Полярность", getEnumValuesToString(Polarity.values())));
+        accumulatorsProperties.setEnums(enums);
+    }
+
     private List<PairJSON<String,String>> getEnumValuesToString(Enum[] values) {
         List<PairJSON<String,String>> strings = new LinkedList<>();
         for (Enum val : values) {
@@ -53,7 +73,10 @@ public class EntityPropertiesLoader implements InitializingBean {
 
     public PropertiesJSON getProperties(String entityName) {
         switch (entityName) {
+            case "wheel":
             case "wheels": return wheelsProperties;
+            case "accumulator":
+            case "accumulators": return accumulatorsProperties;
         }
         if (logger.isDebugEnabled()) {
             logger.debug("No such entity \'" + entityName + "\'");

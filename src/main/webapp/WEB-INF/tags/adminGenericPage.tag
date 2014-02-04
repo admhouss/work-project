@@ -35,9 +35,9 @@
                     <div id="search-row" class="navbar">
                         <div class="navbar-inner">
                             <a class="brand"><spring:message code="search.row.brand"/></a>
-                            <form class="navbar-search" action="${contextPath}/search/light" method="get">
+                            <div class="navbar-search" action="${contextPath}/search/light" method="get">
                                 <input id="typeahead-models" type="text" class="search-query" name="searchText" placeholder="Поиск по продукции" tabindex="1">
-                            </form>
+                            </div>
                         </div>
                     </div>
                     <div class="content">

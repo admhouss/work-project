@@ -11,16 +11,25 @@
 .image-alert {
     margin: 20px 30% 0;
 }
-a.model-header {
-    font-size: 17.5px;
+a.model-name {
+    font-size: 17px;
     font-family: inherit;
     font-weight: bold;
     line-height: 20px;
     color: inherit;
     text-rendering: optimizelegibility;
 }
-a.model-header:hover, a.model-header:focus {
+a.model-name:hover, a.model-name:focus {
     text-decoration: underline;
+}
+
+a.product-img > img {
+    width: 160px;
+    height: 160px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 100%;
+    display: block;
 }
 
 

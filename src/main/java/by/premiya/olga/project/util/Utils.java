@@ -1,5 +1,6 @@
 package by.premiya.olga.project.util;
 
+import by.premiya.olga.project.entity.Accumulator;
 import by.premiya.olga.project.entity.Image;
 import by.premiya.olga.project.entity.Wheel;
 import by.premiya.olga.project.service.ImageService;
@@ -154,6 +155,8 @@ public final class Utils {
     private Object setImageId(Object product, Integer imageId) {
         if (product instanceof Wheel) {
             ((Wheel)product).setImageId(imageId);
+        } else if (product instanceof Accumulator) {
+            ((Accumulator)product).setImageId(imageId);
         }
         return product;
     }

@@ -1,6 +1,6 @@
-package by.premiya.olga.project.entity.constants.accumulator;
+package by.premiya.olga.project.constants.accumulator;
 
-import by.premiya.olga.project.entity.constants.BasicConstant;
+import by.premiya.olga.project.constants.BasicConstant;
 
 /**
  * @author vlad

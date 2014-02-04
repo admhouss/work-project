@@ -1,14 +1,17 @@
 package by.premiya.olga.project.service.impl;
 
+import by.premiya.olga.project.constants.FieldType;
 import by.premiya.olga.project.dao.ImageDao;
 import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.entity.Accumulator;
 import by.premiya.olga.project.entity.Image;
 import by.premiya.olga.project.entity.Wheel;
-import by.premiya.olga.project.entity.constants.BasicConstant;
+import by.premiya.olga.project.constants.BasicConstant;
 import by.premiya.olga.project.service.ProductService;
+import by.premiya.olga.project.util.json.EntityPropertiesLoader;
 import by.premiya.olga.project.util.json.ItemJSON;
 import by.premiya.olga.project.util.json.PairJSON;
+import by.premiya.olga.project.util.json.PropertiesJSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
     @Autowired
     private ImageDao imageDao;
+    @Autowired
+    private EntityPropertiesLoader propertiesLoader;
 
     @Override
     @Transactional(readOnly = true)
@@ -60,18 +65,34 @@ public class ProductServiceImpl implements ProductService {
     public void addNewProduct(String productName, ItemJSON properties, String model) {
         Object insert = null;
         switch (productName) {
+            case "wheel":
             case "wheels":
                 insert = getInsertObject(Wheel.class, properties);
                 properties.setObjectProduct(productName);
                 break;
+            case "accumulator":
+            case "accumulators":
+                insert = getInsertObject(Accumulator.class, properties);
+                properties.setObjectProduct(productName);
+                break;
         }
-        if (insert != null) {
-            Object mayBeInBase = productDao.getProductByModel(productName, model);
-            if (mayBeInBase != null) {
+
+        Object mayBeInBase = productDao.getProductByModel(productName, model);
+        if (mayBeInBase != null) {
+            if (insert != null) {
                 productDao.update(setInfo(insert, mayBeInBase));
                 properties.setSuccess(true);
+            }
+            return;
+        } else {
+            mayBeInBase = productDao.getProductByModel(productName, properties.getObjectModel());
+            if (mayBeInBase != null) {
+                properties.setSuccess(false);
+                properties.setItemInDB(true);
                 return;
             }
+        }
+        if (insert != null) {
             productDao.save(insert);
             properties.setSuccess(true);
         }
@@ -81,6 +102,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<String> getAllModels() {
         List<String> models = productDao.getWheelModels();
+        models.addAll(productDao.getAccumulatorModels());
         return models;
     }
 
@@ -92,37 +114,34 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ItemJSON getEditItem(Integer id) {
-        Object product = getById(id);
+    public ItemJSON getItem(String productName, String model) {
+        Object product = productDao.getProductByModel(productName, model);
+//        switch (productName) {
+//            case "wheel":
+//            case "wheels":
+//                product = productDao.getWheelById(id);
+//                break;
+//            case "accumulator":
+//            case "accumulators":
+//                product = productDao.getAccumulatorById(id);
+//        }
+
         return getItemJSONFromProduct(product);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Object getById(Integer id) {
-        Wheel wheel = productDao.getWheelById(id);
-        Accumulator accumulator;
-        if (wheel == null) {
-            accumulator = productDao.getAccumulatorById(id);
-            if (accumulator == null) {
-
-            } else {
-                return accumulator;
-            }
-        } else {
-            return wheel;
-        }
+    public Object getById(String productName, Integer id) {
         return null;
     }
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public boolean removeItem(Integer id) {
-        Object product = getById(id);
+    public boolean removeItem(String productName, String model) {
+        Object product = productDao.getProductByModel(productName, model);
         try {
             Field imageId = product.getClass().getDeclaredField("imageId");
             imageId.setAccessible(true);
-            Image image = imageDao.getById((Integer)imageId.get(product));
+            Image image = imageDao.getById((Integer) imageId.get(product));
             if (image != null) {
                 File file = new File(image.getPath());
                 file.delete();
@@ -133,6 +152,59 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
         return true;
+    }
+
+
+    @Override
+    @Transactional(readOnly = true)
+    public String getProductName(String model) {
+        Object product = productDao.getProductByModel(model);
+        if (product instanceof Wheel) {
+            return "wheels";
+        } else if(product instanceof Accumulator) {
+            return "accumulators";
+        }
+        return null;
+    }
+
+    @Override
+    public ItemJSON getItemForShow(String model) {
+        Object product = productDao.getProductByModel(model);
+        if (product instanceof Wheel) {
+            return getWheelItemJSONForShow(product, propertiesLoader.getProperties("wheel"));
+        } else if(product instanceof Accumulator) {
+            return getWheelItemJSONForShow(product, propertiesLoader.getProperties("accumulator"));
+        }
+        return new ItemJSON(false);
+    }
+
+    private ItemJSON getWheelItemJSONForShow(Object product, PropertiesJSON props) {
+        ItemJSON item = new ItemJSON();
+        Class clazz = product.getClass();
+        for (Field field : clazz.getDeclaredFields()) {
+            try {
+                field.setAccessible(true);
+                if (!(field.getName().equals("serialVersionUID") || field.getName().equals("imageId") || field.getName().equals("id"))) {
+                    field.setAccessible(true);
+                    String value = field.get(product).toString();
+                    if (!("".equals(value) || "0".equals(value) || "0.0".equals(value) || "NAN".equals(value))) {
+                        if (isBasicConstant(field)) {
+                            item.addProperty(new PairJSON<>("enum", new PairJSON<>(props.getName(FieldType.ENUM,field.getName()), ((BasicConstant)field.get(product)).getString())));
+                        } else {
+                            item.addProperty(new PairJSON<>("label", new PairJSON<>(props.getName(FieldType.LABEL,field.getName()), value)));
+                        }
+                        if (field.getName().equals("producer")) {
+                            item.setObjectProducer(value);
+                        } else if (field.getName().equals("model")) {
+                            item.setObjectModel(value);
+                        }
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return item;
     }
 
     private Object setInfo(Object insert, Object inBase) {
@@ -235,7 +307,7 @@ public class ProductServiceImpl implements ProductService {
                 if (!field.getName().equals("serialVersionUID") && !field.getName().equals("imageId")) {
                     field.setAccessible(true);
                     String value = field.get(product).toString();
-                    if (isBasicConstant(field)){
+                    if (isBasicConstant(field)) {
                         itemJSON.addProperty(new PairJSON<>("enum", new PairJSON<>(field.getName(), value)));
                     } else {
                         itemJSON.addProperty(new PairJSON<>("label", new PairJSON<>(field.getName(), value)));

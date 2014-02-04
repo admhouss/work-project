@@ -75,13 +75,6 @@ function init(contextPath, productName) {
     selector.mouseout(function(e) {
         $(this).find('.offset9').css('visibility','hidden');
     });
-//    selector = $(".modal-header");
-//    selector.mouseover(function(e) {
-//        $(this).css('text-decoration','underline');
-//    });
-//    selector.mouseout(function(e) {
-//        $(this).css('text-decoration','none');
-//    });
     function getTitle() {
         var title = $('#area-title')
             , titleText = title.text();
@@ -108,14 +101,11 @@ function init(contextPath, productName) {
         if (totalProps%2 == 0) {
             firstCol = totalProps/2;
         } else {
-           firstCol = totalProps/2-totalProps%2 + 1;
+            firstCol = totalProps/2-totalProps%2 + 1;
         }
-        var addHtml = "<div class='image-alert'><div class='alert alert-success hide' id='success'>Изображение успешно загружено.</div>" +
-                "<div class='alert alert-danger hide image-alert' id='error'>Произошла ошибка при загрузке.\nПопробуйте отправить заного.</div><button id='btn-redirect' class='btn hide'>Назад</button></div>" +
-
-                "<div id='props-area' class='hide'><div class='control-group'>"+
+        var addHtml = "<div id='props-area' class='hide'><div class='control-group'>"+
                 "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button>" +
-                "<button class='btn add-cancel'>Отмена</button></div></div><h3 id='area-title'></h3>" +
+                "<button class='btn add-cancel'>Отмена</button><button class='btn back hide'>Назад</button></div></div><h3 id='area-title'></h3>" +
 
                 "<form id='image-upload' class='form-inline hide'><label>Выберите&nbsp;изображение</label>"+
                 "<input id='inputFile' type='file' name='file' size='50' style='position:absolute; top:-200px;'/>" +
@@ -200,6 +190,10 @@ function init(contextPath, productName) {
             $('.thumbnails').removeClass('hide');
 
         });
+        $('.back').click(function(e) {
+            e.preventDefault();
+            window.location.href = contextPath + "/auth/administration/editor/show/" + productName
+        })
         $('.add-save').click(function(e) {
             e.preventDefault();
             sendNewItem();
@@ -237,12 +231,14 @@ function init(contextPath, productName) {
                 'success': function (result) {
                     if (result == true) {
                         setTitle("Изображение загружено");
+                        $('.add-cancel').addClass('hide');
+                        $('.back').removeClass('hide');
                     } else {
                         setTitle("Ошибка при загрузке изорбажения");
                     }
                 }
             });
-        };
+        }
     }
 
     function count(obj) {
@@ -272,7 +268,6 @@ function init(contextPath, productName) {
             data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
         }
         for (i = 0; i < enums.length; ++i) {
-//            data[name] = $(enums[i]).find('option:selected').text();
             data.properties.push({first: "enum", second: {first: $(enums[i]).attr('name'), second: $(enums[i]).val()}});
         }
         for (i = 0; i  < data.properties.length; ++i) {
@@ -291,20 +286,27 @@ function init(contextPath, productName) {
                     insertObjectMetadata = {model: properties.objectModel, producer: properties.objectProducer,productName: properties.objectProduct };
                     setTitle("Продукт сохранен");
                     $('#image-upload').removeClass('hide');
+                    $('.add-cancel').addClass('hide');
+                    $('.back').removeClass('hide');
                 } else {
-                    var i = 0
-                        , $input;
-                    setTitle("Ошибка при сохранении продкута");
-                    for (i; i < properties.notSetFields.length; ++i) {
-                        $input = $('#input'+properties.notSetFields[i]);
-                        $input.popover({content:"Поле должно быть заполнено", trigger: 'manual'});
-                        $input.popover("show");
+                    if (properties.itemInDB) {
+                        setTitle("Ошибка при сохранении продукта - Такая модель уже существует");
+                    } else {
+                        var i = 0
+                            , $input;
+                        setTitle("Ошибка при сохранении продукта");
+                        for (i; i < properties.notSetFields.length; ++i) {
+                            $input = $('#input'+properties.notSetFields[i]);
+                            $input.popover({content:"Поле должно быть заполнено", trigger: 'manual'});
+                            $input.popover("show");
+                        }
+                        for (i = 0; i < properties.failedFields.length; ++i) {
+                            $input = $('#input'+properties.failedFields[i]);
+                            $input.popover({content:"Данные не верные", trigger: 'manual'});
+                            $input.popover("show");
+                        }
                     }
-                    for (i = 0; i < properties.failedFields.length; ++i) {
-                        $input = $('#input'+properties.failedFields[i]);
-                        $input.popover({content:"Данные не верные", trigger: 'manual'});
-                        $input.popover("show");
-                    }
+
                 }
             }
         });

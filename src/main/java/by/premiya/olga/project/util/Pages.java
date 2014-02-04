@@ -14,7 +14,8 @@ public final class Pages {
     public static final String LOGIN_PAGE = "loginPage";
     public static final String SHOW_PAGE = "show";
     public static final String ADMIN_SHOW_PAGE = "adminShow";
-    public static final String NEW_WHEEL_PAGE = "newWheel";
+    public static final String SHOW_WHEEL_PAGE = "showWheel";
+    public static final String PAGE_404 = "error?code=404&nonav=true";
 
     private Pages() {
 

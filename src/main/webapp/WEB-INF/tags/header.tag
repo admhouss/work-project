@@ -5,6 +5,6 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags" %>
 
 <div class="container" style="margin-top: 5%;margin-bottom: 10px;">
-    <h1>Заговок</h1>
+    <h1>Заголовок</h1>
     <p>Маленькое описание</p>
 </div>

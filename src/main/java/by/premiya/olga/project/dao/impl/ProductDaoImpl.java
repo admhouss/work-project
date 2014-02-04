@@ -3,7 +3,7 @@ package by.premiya.olga.project.dao.impl;
 import by.premiya.olga.project.dao.ProductDao;
 import by.premiya.olga.project.entity.Accumulator;
 import by.premiya.olga.project.entity.Wheel;
-import by.premiya.olga.project.entity.constants.comparators.wheels.WheelsCompare;
+import by.premiya.olga.project.entity.comparators.wheels.WheelsCompare;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -41,6 +41,24 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     @Override
+    public Object getProductByModel(String model) {
+        Query query = null;
+        Object product;
+        query = getSession().createQuery("from Wheel where model=:model");
+        query.setParameter("model", model);
+        product =  query.uniqueResult();
+
+        if (product != null) return product;
+
+        query = getSession().createQuery("from Accumulator where model=:model");
+        query.setParameter("model", model);
+        product =  query.uniqueResult();
+
+        if (product != null) return product;
+        return null;
+    }
+
+    @Override
     public Wheel getWheelById(Integer id) {
         return (Wheel) getSession().get(Wheel.class, id);
     }
@@ -59,6 +77,11 @@ public class ProductDaoImpl implements ProductDao {
                 query = getSession().createQuery("from Wheel where model=:model");
                 query.setParameter("model", model);
                 break;
+            case "accumulator":
+            case "accumulators":
+                query = getSession().createQuery("from Accumulator where model=:model");
+                query.setParameter("model", model);
+                break;
         }
         return query != null ? query.uniqueResult() : null;
     }
@@ -67,11 +90,28 @@ public class ProductDaoImpl implements ProductDao {
     public List getProducts(String name) {
         List products = new LinkedList<>();
         switch (name) {
+            case "wheel":
             case "wheels":
                 products = getWheels(null);
                 break;
+            case "accumulator":
+            case "accumulators":
+                products = getAccumulators(null);
+                break;
         }
         return products;
+    }
+
+    private List getAccumulators(Map<String, String> searchParams) {
+        List<Accumulator> accumulators = new LinkedList<>();
+        if (searchParams == null) {
+            Query query = getSession().createQuery("from Accumulator");
+            accumulators = (List<Accumulator>) query.list();
+//            Collections.sort(wheels, WheelsCompare.BY_NAME);
+        } else {
+
+        }
+        return accumulators;
     }
 
     @Override
@@ -104,7 +144,17 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public List<String> getAccumulatorModels() {
-        return null;
+        List<String> models = new LinkedList<>();
+        Criteria cr = getSession().createCriteria(Accumulator.class)
+                .setProjection(Projections.projectionList()
+                        .add(Projections.property("producer"), "producer")
+                        .add(Projections.property("model"), "model"))
+                .setResultTransformer(Transformers.aliasToBean(Accumulator.class));
+        for (Object accumulator : cr.list()) {
+            Accumulator cur = (Accumulator)accumulator;
+            models.add(cur.getProducer().getString() + " " + cur.getModel());
+        }
+        return models;
     }
 
     @Override
