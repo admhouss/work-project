@@ -16,7 +16,7 @@ public interface ProductService {
 
     List<Wheel> getWheels(Map<String, String> searchParams);
 
-    void addNewProduct(String productName, ItemJSON properties);
+    void addNewProduct(String productName, ItemJSON properties, String model);
 
     List<String> getAllModels();
 

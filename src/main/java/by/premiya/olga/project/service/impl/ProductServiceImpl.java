@@ -57,7 +57,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void addNewProduct(String productName, ItemJSON properties) {
+    public void addNewProduct(String productName, ItemJSON properties, String model) {
         Object insert = null;
         switch (productName) {
             case "wheels":
@@ -66,6 +66,12 @@ public class ProductServiceImpl implements ProductService {
                 break;
         }
         if (insert != null) {
+            Object mayBeInBase = productDao.getProductByModel(productName, model);
+            if (mayBeInBase != null) {
+                productDao.update(setInfo(insert, mayBeInBase));
+                properties.setSuccess(true);
+                return;
+            }
             productDao.save(insert);
             properties.setSuccess(true);
         }
@@ -127,6 +133,23 @@ public class ProductServiceImpl implements ProductService {
             return false;
         }
         return true;
+    }
+
+    private Object setInfo(Object insert, Object inBase) {
+        try {
+            Field idFieldInsert = insert.getClass().getDeclaredField("id");
+            Field idFieldInBase = inBase.getClass().getDeclaredField("id");
+            idFieldInsert.setAccessible(true);
+            idFieldInBase.setAccessible(true);
+            idFieldInsert.set(insert, idFieldInBase.get(inBase));
+            idFieldInsert = insert.getClass().getDeclaredField("imageId");
+            idFieldInBase = inBase.getClass().getDeclaredField("imageId");
+            idFieldInsert.setAccessible(true);
+            idFieldInBase.setAccessible(true);
+            idFieldInsert.set(insert, idFieldInBase.get(inBase));
+        } catch (NoSuchFieldException | IllegalAccessException ignored) {
+        }
+        return insert;
     }
 
     private Object getInsertObject(Class clazz, ItemJSON properties) {

@@ -21,6 +21,7 @@ function init(contextPath, productName) {
             $('.add-new').addClass('hide');
             $('#props-area').removeClass('hide');
             $('#area-title').text("Добавление");
+            isEdit = false;
         }
     });
 
@@ -46,6 +47,7 @@ function init(contextPath, productName) {
                 $('.add-new').addClass('hide');
                 $('#image-upload-edit').removeClass('hide');
                 $('#props-area').removeClass('hide');
+                $('#image-upload').removeClass('hide');
                 $('#area-title').text("Редактирование");
             }
         });
@@ -66,38 +68,59 @@ function init(contextPath, productName) {
         });
     });
 
-    $('.thumbnail').mouseover(function(e) {
+    var selector = $('.thumbnail');
+    selector.mouseover(function(e) {
         $(this).find('.offset9').css('visibility','visible');
     });
-    $('.thumbnail').mouseout(function(e) {
+    selector.mouseout(function(e) {
         $(this).find('.offset9').css('visibility','hidden');
     });
+//    selector = $(".modal-header");
+//    selector.mouseover(function(e) {
+//        $(this).css('text-decoration','underline');
+//    });
+//    selector.mouseout(function(e) {
+//        $(this).css('text-decoration','none');
+//    });
+    function getTitle() {
+        var title = $('#area-title')
+            , titleText = title.text();
+        var index = titleText.indexOf(" ");
+        if (index != -1) {
+            titleText = titleText.substr(0,index);
+        }
+        return titleText;
+    }
+
+    var setTitle = function (str) {
+        var titleTag = $('#area-title');
+        var title = getTitle();
+
+        return (function() {
+            titleTag.text(title + " - " +str);
+        })();
+    };
+
 
     function renderProperties() {
         var totalProps = fullProperties.labels.length + count(fullProperties.enums);
         var firstCol;
-        if (totalProps%2==0) {
+        if (totalProps%2 == 0) {
             firstCol = totalProps/2;
         } else {
            firstCol = totalProps/2-totalProps%2 + 1;
         }
         var addHtml = "<div class='image-alert'><div class='alert alert-success hide' id='success'>Изображение успешно загружено.</div>" +
                 "<div class='alert alert-danger hide image-alert' id='error'>Произошла ошибка при загрузке.\nПопробуйте отправить заного.</div><button id='btn-redirect' class='btn hide'>Назад</button></div>" +
-                "<form id='image-upload' class='form-inline hide' action='' enctype='multipart/form-data'><label>Выберите&nbsp;изображение</label>"+
-                "<input id='inputFile' type='file' name='file' size='50' style='position:absolute; top:-200px;'/>" +
-                "<button class='btn form-control open-file'>Открыть</button>" +
-                "<button class='btn btn-primary pic-upload' disabled='disabled'>Загрузить</button>" +
-                "<img id='loading' width='16' height='16' alt='Loading' class='hidden' src='"+contextPath+"/assets/img/util/loading.gif'/></form>" +
 
                 "<div id='props-area' class='hide'><div class='control-group'>"+
                 "<div class='controls'><button id='save' class='btn btn-primary add-save form-control'>Сохранить</button>" +
                 "<button class='btn add-cancel'>Отмена</button></div></div><h3 id='area-title'></h3>" +
 
-                "<form id='image-upload-edit' class='form-inline hide' action='' enctype='multipart/form-data'><label>Выберите&nbsp;изображение</label>"+
+                "<form id='image-upload' class='form-inline hide'><label>Выберите&nbsp;изображение</label>"+
                 "<input id='inputFile' type='file' name='file' size='50' style='position:absolute; top:-200px;'/>" +
-                "<button class='btn form-control open-file'>Открыть</button>" +
-                "<button class='btn btn-primary pic-upload' disabled='disabled'>Загрузить</button>" +
-                "<img id='loading' width='16' height='16' alt='Loading' class='hidden' src='"+contextPath+"/assets/img/util/loading.gif'/></form>"+
+                "<button class='btn btn-success form-control open-file'>Открыть</button>" +
+                "</form>"+
 
                 "<div class='row-fluid'>" +
                 "<div class='form-horizontal span6'>"
@@ -111,7 +134,7 @@ function init(contextPath, productName) {
                 label = fullProperties.labels[key];
                 addHtml += "<div class='control-group'><label for='input"+label.first+"' class='control-label'>";
                 addHtml += label.second + "</label>";
-                addHtml += "<div class='controls'><input type='text' class='form-control input-label' name='"+label.first+"' id='input"+label.first+"'></div></div>"
+                addHtml += "<div class='controls'><input type='text' class='form-control input-label' name='"+label.first+"' id='input"+label.first+"'></div></div>";
                 ++i;
                 if (i == firstCol) {
                     addHtml += "</div><div class='form-horizontal span6'>"
@@ -188,17 +211,18 @@ function init(contextPath, productName) {
         $('input:file').change(function (){
             var fileName = $(this).val();
             $(".filename").html(fileName);
-            if (fileName !== "") $('.pic-upload').removeAttr('disabled');
+            if (fileName !== "") loadPic();
         });
         $('#btn-redirect').click(function(e) {
             e.preventDefault();
             window.location.href = contextPath + "/auth/administration/editor/show/" + productName
         });
-        $('.pic-upload').click(function(e) {
-            e.preventDefault();
-            $("#loading").removeClass('hide');
+
+
+        function loadPic() {
             $('#success').addClass('hide');
             $('#error').addClass('hide');
+            setTitle("Ожидание...");
             var data = new FormData();
             jQuery.each($('#inputFile')[0].files, function(i, file) {
                 data.append('file-'+i, file);
@@ -211,17 +235,14 @@ function init(contextPath, productName) {
                 contentType: false,
                 cashed: false,
                 'success': function (result) {
-                    $("#loading").addClass('hide');
                     if (result == true) {
-                        $('#image-upload').addClass('hide');
-                        $('#success').removeClass('hide');
-                        $('#btn-redirect').removeClass('hide')
+                        setTitle("Изображение загружено");
                     } else {
-                        $('#error').removeClass('hide');
+                        setTitle("Ошибка при загрузке изорбажения");
                     }
                 }
             });
-        });
+        };
     }
 
     function count(obj) {
@@ -246,6 +267,7 @@ function init(contextPath, productName) {
             , enums = $('.input-enum')
             , data = {properties: []}
             , name;
+        setTitle("Ожидание...");
         for (var i = 0; i < inputs.length; ++i) {
             data.properties.push({first: "label", second: {first: $(inputs[i]).attr('name'), second: $(inputs[i]).val()}});
         }
@@ -256,23 +278,23 @@ function init(contextPath, productName) {
         for (i = 0; i  < data.properties.length; ++i) {
             $('#input'+data.properties[i].second.first).popover('destroy');
         }
-        var temp = data;
         data = JSON.stringify(data);
+        var mode;
         $.ajax({
-            url: contextPath+"/auth/administration/editor/new/" + productName,
+            url: contextPath+"/auth/administration/editor/edit/" + productName + "/" +insertObjectMetadata.model,
             data: data,
             contentType: 'application/json',
             type: 'POST',
             cashed: false,
             'success': function (properties) {
-                console.log(properties);
                 if (properties.success) {
                     insertObjectMetadata = {model: properties.objectModel, producer: properties.objectProducer,productName: properties.objectProduct };
+                    setTitle("Продукт сохранен");
                     $('#image-upload').removeClass('hide');
-                    $('#props-area').addClass('hide');
                 } else {
                     var i = 0
                         , $input;
+                    setTitle("Ошибка при сохранении продкута");
                     for (i; i < properties.notSetFields.length; ++i) {
                         $input = $('#input'+properties.notSetFields[i]);
                         $input.popover({content:"Поле должно быть заполнено", trigger: 'manual'});

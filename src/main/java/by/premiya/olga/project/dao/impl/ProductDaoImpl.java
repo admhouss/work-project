@@ -16,11 +16,9 @@ import java.util.*;
 /**
  * @author Vlad Abramov
  */
-//@Repository
 @SuppressWarnings("unchecked")
 public class ProductDaoImpl implements ProductDao {
 
-    //    @Inject
     private SessionFactory sessionFactory;
 
     public void setSessionFactory(SessionFactory sessionFactory) {
@@ -39,7 +37,7 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public void update(Object product) {
-        getSession().saveOrUpdate(product);
+        getSession().merge(product);
     }
 
     @Override

@@ -22,21 +22,21 @@ public class AdminEditorController {
     @Autowired
     private EntityPropertiesLoader propertiesLoader;
 
-
-
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "",method = RequestMethod.GET)
-    private String adminEditor() {
-        return Pages.ADMIN_HOME_PAGE;
+    @RequestMapping(value = "edit/{productName}/{model}", method = RequestMethod.POST)
+    private @ResponseBody
+    ItemJSON editProduct(@RequestBody ItemJSON json, @PathVariable String productName, @PathVariable String model) {
+        ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
+        productService.addNewProduct(productName, json, model);
+        return json;
     }
 
     @PreAuthorize(value = "isAuthenticated()")
-    @RequestMapping(value = "new/{productName}", method = RequestMethod.POST)
+    @RequestMapping(value = "edit/{productName}", method = RequestMethod.POST)
     private @ResponseBody
-    ItemJSON addNewProduct(@RequestBody ItemJSON json
-            , @PathVariable String productName){
+    ItemJSON addNewProduct(@RequestBody ItemJSON json, @PathVariable String productName) {
         ProductService productService = (ProductService) ApplicationContextHolder.getBean("productServiceImpl");
-        productService.addNewProduct(productName, json);
+        productService.addNewProduct(productName, json, "");
         return json;
     }
 
@@ -51,7 +51,7 @@ public class AdminEditorController {
 
     @PreAuthorize(value = "isAuthenticated()")
     @RequestMapping(value = "get/full/properties/{product}", method = RequestMethod.POST)
-    public @ResponseBody PropertiesJSON getProperties(ModelMap model, @PathVariable String product) {
+    public @ResponseBody PropertiesJSON getProperties(@PathVariable String product) {
         return propertiesLoader.getProperties(product);
     }
 

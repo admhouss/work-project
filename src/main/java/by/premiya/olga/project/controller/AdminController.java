@@ -12,23 +12,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class AdminController {
 
-    @PreAuthorize(value = "isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATOR','ROLE_SUPERVISOR')")
     @RequestMapping(value = "/admin", method = RequestMethod.GET)
     public String admin() {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;
     }
 
-    @PreAuthorize(value = "isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATOR','ROLE_SUPERVISOR')")
     @RequestMapping(value = "/auth", method = RequestMethod.GET)
     public String login() {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;
     }
 
-    @PreAuthorize(value = "isAuthenticated()")
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATOR','ROLE_SUPERVISOR')")
     @RequestMapping(value = "/auth/administration", method = RequestMethod.GET)
     private String defaultAdmin() {
         return Pages.REDIRECT + Pages.ADMIN_EDITOR;
     }
 
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMINISTRATOR','ROLE_SUPERVISOR')")
+    @RequestMapping(value = "/auth/administration/editor",method = RequestMethod.GET)
+    private String adminEditor() {
+        return Pages.ADMIN_HOME_PAGE;
+    }
 
 }

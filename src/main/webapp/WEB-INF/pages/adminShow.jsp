@@ -37,7 +37,7 @@
                                 </div>
                                 <img data-src="holder.js/160x160" alt="${product1.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product1.imageId}">
                                 <div class="caption">
-                                    <h4>${product1.standardInfo['model']}</h4>
+                                    <a href="" class="model-header ">${product1.standardInfo['model']}</a>
                                     <h6 class="muted">${product1.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product1.standardInfo['list']}" var="pair" >
@@ -60,7 +60,7 @@
                                 </div>
                                 <img data-src="holder.js/160x160" alt="${product2.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product2.imageId}">
                                 <div class="caption">
-                                    <h4>${product2.standardInfo['model']}</h4>
+                                    <h4 class="model-header">${product2.standardInfo['model']}</h4>
                                     <h6 class="muted">${product2.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product2.standardInfo['list']}" var="pair" >
@@ -83,7 +83,7 @@
                                 </div>
                                 <img data-src="holder.js/160x160" alt="${product3.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product3.imageId}">
                                 <div class="caption">
-                                    <h4>${product3.standardInfo['model']}</h4>
+                                    <h4 class="model-header">${product3.standardInfo['model']}</h4>
                                     <h6 class="muted">${product3.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product3.standardInfo['list']}" var="pair" >
@@ -106,7 +106,7 @@
                                 </div>
                                 <img data-src="holder.js/160x160" alt="${product4.standardInfo['model']}" style="width: 160px; height: 160px;" src="${contextPath}/image/get/${product4.imageId}">
                                 <div class="caption">
-                                    <h4>${product4.standardInfo['model']}</h4>
+                                    <h4 class="model-header">${product4.standardInfo['model']}</h4>
                                     <h6 class="muted">${product4.standardInfo['producer']}</h6>
                                     <table class="table table-striped">
                                         <c:forEach items="${product4.standardInfo['list']}" var="pair" >
